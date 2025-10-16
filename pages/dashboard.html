@@ -1,0 +1,2216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/images/favicon.png" type="image/x-icon">
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/icofont.min.css">
+    <link rel="stylesheet" href="/css/animate.min.css">
+    <link rel="stylesheet" href="/css/aud-vid-player.css">
+    <link rel="stylesheet" href="/css/chosen.css">
+    <link rel="stylesheet" href="/css/emojies.css">
+    <link rel="stylesheet" href="/css/gifpreview.css">
+    <link rel="stylesheet" href="/css/jquery.mCustomScrollbar.min.css">
+    <link rel="stylesheet" href="/css/lightgallery.css">
+    <link rel="stylesheet" href="/css/materialize.css">
+    <link rel="stylesheet" href="/css/modal-effects.css">
+    <link rel="stylesheet" href="/css/ripple.css">
+    <link rel="stylesheet" href="/css/style_2.css">
+    <link rel="stylesheet" href="/css/color.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+
+    <title>Dashboard - Yabla</title>
+</head>
+
+<body>
+    <div class="bidu-area">
+        <div class="menubar skeleton">
+            <div class="logo"><img src="/images/dash_logo.png" alt=""></div>
+            <ul>
+                <li><a href="#" title="">User</a>
+                    <ul class="submenu">
+                        <li>
+                            <a class="md-trigger" data-modal="modal-6" href="#" title="">Your Profile</a>
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="#" title="">Settings</a>
+                    <ul class="submenu">
+                        <li>
+                            <a class="md-trigger" data-modal="modal-7" href="#" title="">Account Settings</a>
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="#" title="">Wallet</a>
+                    <ul class="submenu">
+                        <li>
+                            <a class="md-trigger" data-modal="modal-8" href="#" title="">Create Group</a>
+                        </li>
+                        <li>
+                            <a class="md-trigger" data-modal="modal-5" href="#" title="">Make Payment</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="bidu-log">
+                <li> <a class="qr-code md-trigger" href="#" title="Scan QR code for Mobile" data-ripple=""
+                        data-modal="modal-3"><img src="/images/qrcode.png" alt=""></a> </li>
+                <li>
+                    <div class="night-mode"> <a href="#" title="Switch To Light Skin" class="light-mode" data-ripple="">
+                            <i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-sun">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                                </svg>
+                            </i> </a> <a href="#" title="Switch To Dark Skin" class="dark-mode" data-ripple=""> <i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-moon">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
+                            </i> </a> </div>
+                </li>
+                <li> <a class="notification" href="#" title="Notifications" data-ripple=""><i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-bell">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                            </svg>
+                        </i></a>
+                    <div class="dropdowns"> <span>4 New Notifications <a href="#" title="">Mark all as
+                                read</a></span>
+                        <ul class="drops-menu">
+                            <li> <a href="#" title=""> <span>Qapp</span>
+                                    <div class="mesg-meta"> <span>Update Your Messenger</span> <i>2 min
+                                            ago</i> </div>
+                                </a> </li>
+                            <li> <a href="#" title="">
+                                    <figure> <img src="/images/resources/friend-avatar10.jpg" alt=""> <span
+                                            class="status f-online"></span> </figure>
+                                    <div class="mesg-meta">
+                                        <h6>Tom Cruse</h6>
+                                        <span>commented on your new profile status</span> <i>2 min ago</i>
+                                    </div>
+                                </a> </li>
+                            <li> <a href="#" title="">
+                                    <figure> <img src="/images/resources/friend-avatar11.jpg" alt=""> <span
+                                            class="status f-online"></span> </figure>
+                                    <div class="mesg-meta">
+                                        <h6>Emaa Watson</h6>
+                                        <span>Nicholas Grissom just became friends. Write on his
+                                            wall.</span> <i>4 hours ago</i>
+                                        <figure> <span>Today is Marina Valentine’s Birthday! wish for
+                                                celebrating</span> <img src="/images/birthday.png" alt="">
+                                        </figure>
+                                    </div>
+                                </a> </li>
+                            <li> <a href="#" title="">
+                                    <figure> <img src="/images/resources/friend-avatar12.jpg" alt=""> <span
+                                            class="status f-online"></span> </figure>
+                                    <div class="mesg-meta">
+                                        <h6>Sarah K</h6>
+                                        <span>commented on your photo.</span> <i>Sunday</i>
+                                        <figure> <span>"Celebrity looks Beautiful in that outfit! We should
+                                                see
+                                                each"</span> <img src="/images/resources/friend-avatar9.jpg" alt="">
+                                        </figure>
+                                    </div>
+                                </a> </li>
+                            <li> <a href="#" title="">
+                                    <figure> <img src="/images/resources/friend-avatar13.jpg" alt=""> <span
+                                            class="status f-online"></span> </figure>
+                                    <div class="mesg-meta">
+                                        <h6>Minda Tik</h6>
+                                        <span>nvited you to attend to his event Goo in</span> <i>May 19</i>
+                                    </div>
+                                </a> </li>
+                            <li> <a href="#" title="">
+                                    <figure> <img src="/images/resources/friend-avatar14.jpg" alt=""> <span
+                                            class="status f-online"></span> </figure>
+                                    <div class="mesg-meta">
+                                        <h6>Xing Chang</h6>
+                                        <span>Andrew Changed his profile picture. </span> <i>dec 18</i>
+                                    </div>
+                                </a> </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a class="logout md-trigger" data-modal="modal-4" href="#" title="Logout From Desktop"
+                        data-ripple="">
+                        <i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-power">
+                                <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                                <line x1="12" y1="2" x2="12" y2="12"></line>
+                            </svg>
+                        </i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- top menubar -->
+        <div class="bidu-sidebar">
+            <div class="bidu-head">
+                <div class="bidu-admin">
+                    <div class="bidu_div">
+                        <figure data-ripple="" data-modal="modal-7" class="md-trigger skeleton"> <img class=""
+                                src="/images/resources/avatar-female-1.jpg" alt=""> </figure>
+                        <div class="admin-meta skeleton"> <span>Sophia</span>
+                            <select class="disable-search">
+                                <option>Online</option>
+                                <option>Away</option>
+                                <option>invisible</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="more-optns">
+                        <i class="skeleton">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-more-vertical">
+                                <circle cx="12" cy="12" r="1"></circle>
+                                <circle cx="12" cy="5" r="1"></circle>
+                                <circle cx="12" cy="19" r="1"></circle>
+                            </svg>
+                        </i>
+                        <ul>
+                            <li><a href="#" title="">+Add Friend</a></li>
+                            <li><a href="#" title="">+Invite User</a></li>
+                            <li><a title="" href="#" data-modal="modal-8" class="md-trigger">+Create
+                                    Group</a></li>
+                            <li><a title="" href="#" data-modal="modal-5" class="md-trigger">-Go Premium</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="friend-list">
+                <div id="searchDir" class="skeleton"></div>
+                <ul class="nav nav-tabs tab-btn">
+                    <li class="nav-item skeleton"> <a class="active" title="Chat" href="#" data-ripple=""
+                            data-bs-toggle="tab" data-bs-target="#link1"> <i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-home">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                </svg>
+                            </i> </a> </li>
+                    <li class="nav-item skeleton"> <a class="" title="Groups" href="#" data-ripple=""
+                            data-bs-toggle="tab" data-bs-target="#link3"> <i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-user-plus">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="8.5" cy="7" r="4"></circle>
+                                    <line x1="20" y1="8" x2="20" y2="14"></line>
+                                    <line x1="23" y1="11" x2="17" y2="11"></line>
+                                </svg>
+                            </i> </a> </li>
+                    <li class="nav-item skeleton"> <a class="#" title="Status" href="#" data-ripple=""
+                            data-bs-toggle="tab" data-bs-target="#link4"> <i>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-stop-circle">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <rect x="9" y="9" width="6" height="6"></rect>
+                                </svg>
+                            </i> </a> </li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane active fade show " id="link1">
+                        <h4 class="heading skeleton">Messages</h4>
+                        <ul id="people-list" class="friendz-list">
+                            <li class="unread">
+                                <figure class="skeleton"> <img src="/images/resources/friend-avatar.jpg" alt="">
+                                    <span class="status online"></span>
+                                </figure>
+                                <div class="friendz-meta skeleton"> <a data-ripple="" href="#" title="">bucky
+                                        barnes</a> <i>helo friends how are you today</i>
+                                    <span>3</span> <ins>2:45PM</ins>
+                                </div>
+                            </li>
+                            <li class="unread">
+                                <figure class="skeleton"> <img src="/images/resources/friend-avatar2.jpg" alt="">
+                                    <span class="status online"></span>
+                                </figure>
+                                <div class="friendz-meta skeleton"> <a href="#" title="" data-ripple="">Susan
+                                        Miller</a> <i>Hi, i wana meet 😔 </i>
+                                    <span>1</span> <ins>12:22PM</ins>
+                                </div>
+                            </li>
+                            <li class="">
+                                <figure class="skeleton"> <img src="/images/resources/friend-avatar3.jpg" alt="">
+                                    <span class="status away"></span>
+                                </figure>
+                                <div class="friendz-meta skeleton"> <a href="#" title="" data-ripple="">Alan
+                                        Bernaby</a> <i>Love you sweety 💔 </i> <ins>1:05PM</ins> </div>
+                            </li>
+                            <li class="">
+                                <figure class="skeleton"> <img src="/images/resources/friend-avatar4.jpg" alt="">
+                                    <span class="status online"></span>
+                                </figure>
+                                <div class="friendz-meta skeleton"> <a href="#" title="" data-ripple="">Lucie
+                                        Logan</a> <i>My Money? 💰 </i>
+                                    <ins>3:43PM</ins>
+                                </div>
+                            </li>
+                            <li class="">
+                                <figure class="skeleton"> <img src="/images/resources/friend-avatar5.jpg" alt="">
+                                    <span class="status offline"></span>
+                                </figure>
+                                <div class="friendz-meta skeleton"> <a href="#" title="" data-ripple="">Patrick
+                                        Trik</a> <i>i was looking for someone</i>
+                                    <ins>Yesterday</ins>
+                                </div>
+                            </li>
+                            <li class="">
+                                <figure class="skeleton"> <img src="/images/resources/friend-avatar6.jpg" alt="">
+                                    <span class="status away"></span>
+                                </figure>
+                                <div class="friendz-meta skeleton"> <a href="#" title="" data-ripple="">Matt
+                                        Losam</a> <i>ahahah my dear </i> <ins>1 day ago</ins> </div>
+                            </li>
+                            <li class="">
+                                <figure class="skeleton"> <img src="/images/resources/friend-avatar7.jpg" alt="">
+                                    <span class="status offline"></span>
+                                </figure>
+                                <div class="friendz-meta skeleton"> <a href="#" title="" data-ripple="">Lucy
+                                        Will</a> <i>i miss you my heart </i> <ins>2 day ago</ins> </div>
+                            </li>
+                            <li class="">
+                                <figure class="skeleton"> <img src="/images/resources/friend-avatar8.jpg" alt="">
+                                    <span class="status offline"></span>
+                                </figure>
+                                <div class="friendz-meta skeleton"> <a href="#" title="" data-ripple="">Sarah k</a>
+                                    <i>Ok let's see tomorrow </i> <ins>2 day
+                                        ago</ins>
+                                </div>
+                            </li>
+                            <li class="">
+                                <figure class="skeleton"> <img src="/images/resources/friend-avatar9.jpg" alt="">
+                                    <span class="status away"></span>
+                                </figure>
+                                <div class="friendz-meta skeleton"> <a href="#" title="" data-ripple="">Alan
+                                        Bernaby</a> <i>Love you sweety 💔 </i> <ins>1:05PM</ins> </div>
+                            </li>
+                            <li class="">
+                                <figure class="skeleton"> <img src="/images/resources/friend-avatar10.jpg" alt="">
+                                    <span class="status online"></span>
+                                </figure>
+                                <div class="friendz-meta skeleton"> <a href="#" title="" data-ripple="">Fawad K.</a>
+                                    <i>My Money? 💰 </i> <ins>3:43PM</ins>
+                                </div>
+                            </li>
+                            <li class="">
+                                <figure class="skeleton"> <img src="/images/resources/friend-avatar11.jpg" alt="">
+                                    <span class="status away"></span>
+                                </figure>
+                                <div class="friendz-meta skeleton"> <a href="#" title="" data-ripple="">Anjlina</a>
+                                    <i>ahahah my dear.. </i> <ins>1 day
+                                        ago</ins>
+                                </div>
+                            </li>
+                            <li class="">
+                                <figure class="skeleton"> <img src="/images/resources/friend-avatar12.jpg" alt="">
+                                    <span class="status online"></span>
+                                </figure>
+                                <div class="friendz-meta skeleton"> <a href="#" title="" data-ripple="">Shurti
+                                        Hasan</a> <i>My Money? 💰 </i>
+                                    <ins>3:43PM</ins>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-pane fade" id="link3">
+                        <h4 class="heading">Groups</h4>
+                        <ul class="groups">
+                            <li class="friend">
+                                <figure class="group-chat"> <img alt="" src="/images/resources/friend-avatar10.jpg">
+                                    <img alt="" src="/images/resources/friend-avatar11.jpg" class="two"> <span
+                                        class="status online"></span>
+                                </figure>
+                                <div class="friendz-meta"> <a href="#" title="" data-ripple="">Boys Fun</a>
+                                    <i>helo friends how are you today</i> <span>3</span> <ins>2:34AM</ins>
+                                </div>
+                            </li>
+                            <li class="friend">
+                                <figure class="group-chat"> <img alt="" src="/images/resources/friend-avatar9.jpg">
+                                    <img alt="" src="/images/resources/friend-avatar8.jpg" class="two"> <span
+                                        class="status online"></span>
+                                </figure>
+                                <div class="friendz-meta"> <a href="#" title="" data-ripple="">Filmi
+                                        World</a> <i>comeon guys for watching</i> <span>3</span>
+                                    <ins>12:30AM</ins>
+                                </div>
+                            </li>
+                            <li class="friend">
+                                <figure class="group-chat"> <img alt="" src="/images/resources/friend-avatar5.jpg">
+                                    <img alt="" src="/images/resources/friend-avatar7.jpg" class="two"> <span
+                                        class="status away"></span>
+                                </figure>
+                                <div class="friendz-meta"> <a href="#" title="" data-ripple="">School
+                                        Fellow</a> <i>Hello where are you now a days</i> <ins>12:30AM</ins>
+                                </div>
+                            </li>
+                            <li class="friend">
+                                <figure class="group-chat"> <img alt="" src="/images/resources/friend-avatar7.jpg">
+                                    <img alt="" src="/images/resources/friend-avatar6.jpg" class="two"> <span
+                                        class="status away"></span>
+                                </figure>
+                                <div class="friendz-meta"> <a href="#" title="" data-ripple="">Science
+                                        Group</a> <i>The last formula of the world circle</i>
+                                    <ins>12:30AM</ins>
+                                </div>
+                            </li>
+                            <li class="friend">
+                                <figure class="group-chat"> <img alt="" src="/images/resources/friend-avatar.jpg">
+                                    <img alt="" src="/images/resources/friend-avatar2.jpg" class="two"> <span
+                                        class="status away"></span>
+                                </figure>
+                                <div class="friendz-meta"> <a href="#" title="" data-ripple="">Cusions
+                                        Hoby</a> <i>Helo, i want to see you first time </i>
+                                    <ins>12:30AM</ins>
+                                </div>
+                            </li>
+                            <li class="friend">
+                                <figure class="group-chat"> <img alt="" src="/images/resources/friend-avatar3.jpg">
+                                    <img alt="" src="/images/resources/friend-avatar4.jpg" class="two"> <span
+                                        class="status away"></span>
+                                </figure>
+                                <div class="friendz-meta"> <a href="#" title="" data-ripple="">My Family</a>
+                                    <i>Hy, andrew where are you now ?</i> <ins>12:30AM</ins>
+                                </div>
+                            </li>
+                            <li class="friend">
+                                <figure class="group-chat"> <img alt="" src="/images/resources/friend-avatar5.jpg">
+                                    <img alt="" src="/images/resources/friend-avatar6.jpg" class="two"> <span
+                                        class="status away"></span>
+                                </figure>
+                                <div class="friendz-meta"> <a href="#" title="" data-ripple="">Science
+                                        Group</a> <i>The last formula of the world circle</i>
+                                    <ins>12:30AM</ins>
+                                </div>
+                            </li>
+                            <li class="friend">
+                                <figure class="group-chat"> <img alt="" src="/images/resources/friend-avatar10.jpg">
+                                    <img alt="" src="/images/resources/friend-avatar11.jpg" class="two"> <span
+                                        class="status online"></span>
+                                </figure>
+                                <div class="friendz-meta"> <a href="#" title="" data-ripple="">Boys Fun</a>
+                                    <i>helo friends how are you today</i> <span>3</span> <ins>2:34AM</ins>
+                                </div>
+                            </li>
+                            <li class="friend">
+                                <figure class="group-chat"> <img alt="" src="/images/resources/friend-avatar9.jpg">
+                                    <img alt="" src="/images/resources/friend-avatar8.jpg" class="two"> <span
+                                        class="status online"></span>
+                                </figure>
+                                <div class="friendz-meta"> <a href="#" title="" data-ripple="">Filmi
+                                        World</a> <i>comeon guys for watching</i> <span>3</span>
+                                    <ins>12:30AM</ins>
+                                </div>
+                            </li>
+                            <li class="friend">
+                                <figure class="group-chat"> <img alt="" src="/images/resources/friend-avatar5.jpg">
+                                    <img alt="" src="/images/resources/friend-avatar7.jpg" class="two"> <span
+                                        class="status away"></span>
+                                </figure>
+                                <div class="friendz-meta"> <a href="#" title="" data-ripple="">School
+                                        Fellow</a> <i>Hello where are you now a days</i> <ins>12:30AM</ins>
+                                </div>
+                            </li>
+                            <li class="friend">
+                                <figure class="group-chat"> <img alt="" src="/images/resources/friend-avatar7.jpg">
+                                    <img alt="" src="/images/resources/friend-avatar6.jpg" class="two"> <span
+                                        class="status away"></span>
+                                </figure>
+                                <div class="friendz-meta"> <a href="#" title="" data-ripple="">Science
+                                        Group</a> <i>The last formula of the world circle</i>
+                                    <ins>12:30AM</ins>
+                                </div>
+                            </li>
+                            <li class="friend">
+                                <figure class="group-chat"> <img alt="" src="/images/resources/friend-avatar.jpg">
+                                    <img alt="" src="/images/resources/friend-avatar2.jpg" class="two"> <span
+                                        class="status away"></span>
+                                </figure>
+                                <div class="friendz-meta"> <a href="#" title="" data-ripple="">Cusions
+                                        Hoby</a> <i>Helo, i want to see you first time </i>
+                                    <ins>12:30AM</ins>
+                                </div>
+                            </li>
+                            <li class="friend">
+                                <figure class="group-chat"> <img alt="" src="/images/resources/friend-avatar3.jpg">
+                                    <img alt="" src="/images/resources/friend-avatar4.jpg" class="two"> <span
+                                        class="status away"></span>
+                                </figure>
+                                <div class="friendz-meta"> <a href="#" title="" data-ripple="">My Family</a>
+                                    <i>Hy, andrew where are you now ?</i> <ins>12:30AM</ins>
+                                </div>
+                            </li>
+                            <li class="friend">
+                                <figure class="group-chat"> <img alt="" src="/images/resources/friend-avatar5.jpg">
+                                    <img alt="" src="/images/resources/friend-avatar6.jpg" class="two"> <span
+                                        class="status away"></span>
+                                </figure>
+                                <div class="friendz-meta"> <a href="#" title="" data-ripple="">Science
+                                        Group</a> <i>The last formula of the world circle</i>
+                                    <ins>12:30AM</ins>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-pane fade" id="link4">
+                        <h4 class="heading">Status</h4>
+                        <div class="status-head">
+                            <figure><img src="/images/resources/avatar-female-2.jpg" alt=""></figure>
+                            <div class="status-meta"> <span>My Status</span>
+                                <p>Add to my status</p>
+                            </div>
+                            <ul class="edit-meta">
+                                <li><a href="#" title="" data-ripple=""><i>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round"
+                                                class="feather feather-camera">
+                                                <path
+                                                    d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
+                                                </path>
+                                                <circle cx="12" cy="13" r="4"></circle>
+                                            </svg>
+                                        </i></a></li>
+                                <li><a href="#" title="" data-ripple=""><i>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round"
+                                                class="feather feather-edit">
+                                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7">
+                                                </path>
+                                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z">
+                                                </path>
+                                            </svg>
+                                        </i></a></li>
+                            </ul>
+                        </div>
+                        <div class="users-status"> <span>View Updates</span>
+                            <ul>
+                                <li class="story-user" data-ripple="">
+                                    <figure><img src="/images/resources/avatar-male-1.jpg" alt=""></figure>
+                                    <div class="statusr"> <span>Emily kate</span> <i>21h ago</i> </div>
+                                </li>
+                                <li class="story-user" data-ripple="">
+                                    <figure><img src="/images/resources/friend-avatar13.jpg" alt=""></figure>
+                                    <div class="statusr"> <span>Dasha danial</span> <i>22h ago</i> </div>
+                                </li>
+                                <li class="story-user" data-ripple="">
+                                    <figure><img src="/images/resources/friend-avatar10.jpg" alt=""></figure>
+                                    <div class="statusr"> <span>Jawan king</span> <i>1 day ago</i> </div>
+                                </li>
+                                <li class="story-user" data-ripple="">
+                                    <figure><img src="/images/resources/friend-avatar3.jpg" alt=""></figure>
+                                    <div class="statusr"> <span>Mikal</span> <i>2 day ago</i> </div>
+                                </li>
+                                <li class="story-user" data-ripple="">
+                                    <figure><img src="/images/resources/friend-avatar5.jpg" alt=""></figure>
+                                    <div class="statusr"> <span>Frank Bob</span> <i>3 day ago</i> </div>
+                                </li>
+                                <li class="story-user" data-ripple="">
+                                    <figure><img src="/images/resources/friend-avatar5.jpg" alt=""></figure>
+                                    <div class="statusr"> <span>Frank Bob</span> <i>3 day ago</i> </div>
+                                </li>
+                                <li class="story-user" data-ripple="">
+                                    <figure><img src="/images/resources/avatar-male-1.jpg" alt=""></figure>
+                                    <div class="statusr"> <span>Emily kate</span> <i>21h ago</i> </div>
+                                </li>
+                                <li class="story-user" data-ripple="">
+                                    <figure><img src="/images/resources/friend-avatar13.jpg" alt=""></figure>
+                                    <div class="statusr"> <span>Dasha danial</span> <i>22h ago</i> </div>
+                                </li>
+                                <li class="story-user" data-ripple="">
+                                    <figure><img src="/images/resources/friend-avatar10.jpg" alt=""></figure>
+                                    <div class="statusr"> <span>Jawan king</span> <i>1 day ago</i> </div>
+                                </li>
+                                <li class="story-user" data-ripple="">
+                                    <figure><img src="/images/resources/friend-avatar3.jpg" alt=""></figure>
+                                    <div class="statusr"> <span>Mikal</span> <i>2 day ago</i> </div>
+                                </li>
+                                <li class="story-user" data-ripple="">
+                                    <figure><img src="/images/resources/friend-avatar5.jpg" alt=""></figure>
+                                    <div class="statusr"> <span>Frank Bob</span> <i>3 day ago</i> </div>
+                                </li>
+                                <li class="story-user" data-ripple="">
+                                    <figure><img src="/images/resources/friend-avatar5.jpg" alt=""></figure>
+                                    <div class="statusr"> <span>Frank Bob</span> <i>3 day ago</i> </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- left sidebar -->
+        <div class="bidu-chat-area">
+            <div class="chatarea-head"> <span class="close-chat"><i>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-x">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </i></span>
+                <figure class="see-info skeleton" data-ripple=""><img src="/images/resources/avatar-male-2.jpg" alt="">
+                </figure>
+                <div class="user-name skeleton">
+                    <span>Georg Peterson</span>
+                    <i class="">last seen today at 9:48 AM</i>
+                </div>
+            </div>
+            <div class="chat-content skeleton">
+                <ul class="bidu-chat">
+                    <li class="left"> <span>+353 87 1234 567 ~ Georg</span>
+                        <div class="text"> Hi, baby how are you sweetie? 😀<br>
+                            i fount tasty donunt 🍩 for you. it's
+                            waiting you at home. <ins class="seen-time">seen 10:24PM <i>
+                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15px"
+                                        height="15px" viewBox="0 0 594.149 594.149">
+                                        <g>
+                                            <g>
+                                                <path fill="currentColor"
+                                                    d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1l-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z" />
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </i> </ins> </div>
+                        <div class="text"> <img src="/images/resources/avatar-female-5.jpg" alt=""> <i>see
+                                this your old
+                                picture </i> <ins class="seen-time">seen 10:24PM <i>
+                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15px"
+                                        height="15px" viewBox="0 0 594.149 594.149">
+                                        <g>
+                                            <g>
+                                                <path fill="currentColor"
+                                                    d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1l-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z" />
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </i> </ins> </div>
+                        <div class="chat-date"><span>Yesterday</span></div>
+                    </li>
+                    <li class="right"> <span>+353 87 1234 567</span>
+                        <div class="text"> Hi, Thanks darling 💔 <ins class="seen-time">seen 10:24PM <i>
+                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15px"
+                                        height="15px" viewBox="0 0 594.149 594.149">
+                                        <g>
+                                            <g>
+                                                <path fill="currentColor"
+                                                    d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1l-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z" />
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </i> </ins> </div>
+                        <div class="text"> i am so busy today in my office, i can't come today, can you
+                            please send me $200
+                            urgently, i ll retun it from my salary.😔 <ins class="seen-time">seen 10:24PM
+                                <i>
+                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15px"
+                                        height="15px" viewBox="0 0 594.149 594.149">
+                                        <g>
+                                            <g>
+                                                <path fill="currentColor"
+                                                    d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1l-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z" />
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </i> </ins> </div>
+                        <div class="chat-date"><span>Yesterday</span></div>
+                    </li>
+                    <li class="left"> <span>+353 87 1234 567 ~ Georg</span>
+                        <div class="text"> NO Problem Love you babe 💔 <ins class="seen-time">seen 10:24PM
+                                <i>
+                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15px"
+                                        height="15px" viewBox="0 0 594.149 594.149">
+                                        <g>
+                                            <g>
+                                                <path fill="currentColor"
+                                                    d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1l-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z" />
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </i> </ins> </div>
+                        <div class="text"> <em>😔</em> <ins class="seen-time">seen 10:24PM <i>
+                                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="10px"
+                                        height="10px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;"
+                                        xml:space="preserve">
+                                        <g>
+                                            <g>
+                                                <path fill="#a5aacc" stroke="#a5aacc" d="M504.502,75.496c-9.997-9.998-26.205-9.998-36.204,0L161.594,382.203L43.702,264.311c-9.997-9.998-26.205-9.997-36.204,0
+														c-9.998,9.997-9.998,26.205,0,36.203l135.994,135.992c9.994,9.997,26.214,9.99,36.204,0L504.502,111.7
+														C514.5,101.703,514.499,85.494,504.502,75.496z" />
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </i> </ins> </div>
+                        <div class="chat-date"><span>5/23/2021</span></div>
+                    </li>
+                    <li class="right"> <span>Emmawatson ~ MAK</span>
+                        <div class="aud-vid">
+                            <audio id="plyr-audio-player" class="audio-player" controls>
+                                <source
+                                    src="https://cdn.plyr.io/static/demo/Kishi_Bashi_-_It_All_Began_With_a_Burst.mp3"
+                                    type="audio/mp3" />
+                                <source
+                                    src="https://cdn.plyr.io/static/demo/Kishi_Bashi_-_It_All_Began_With_a_Burst.ogg"
+                                    type="audio/ogg" />
+                            </audio>
+                            <ins class="seen-time">seen 10:24PM <i>
+                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15px"
+                                        height="15px" viewBox="0 0 594.149 594.149">
+                                        <g>
+                                            <g>
+                                                <path fill="currentColor"
+                                                    d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1l-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z" />
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </i> </ins>
+                        </div>
+                        <div class="more-optns"> <i>
+                                <svg class="feather feather-more-vertical" stroke-linejoin="round"
+                                    stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none"
+                                    viewBox="0 0 24 24" height="16" width="16" xmlns="http://www.w3.org/2000/svg">
+                                    <circle r="1" cy="12" cx="12" />
+                                    <circle r="1" cy="5" cx="12" />
+                                    <circle r="1" cy="19" cx="12" />
+                                </svg>
+                            </i>
+                            <ul>
+                                <li><a title="" href="#">Reply</a></li>
+                                <li><a title="" href="#">Farward</a></li>
+                                <li><a title="" href="#">Download</a></li>
+                                <li><a title="" href="#">Delete</a></li>
+                                <li><a title="" href="#">Hide</a></li>
+                            </ul>
+                        </div>
+                        <div class="chat-date"><span>5/23/2021</span></div>
+                    </li>
+                    <li> <span>+353 87 1234 567 ~ Georg</span>
+                        <div class="aud-vid">
+                            <div class="video-player">
+                                <iframe
+                                    src="https://www.youtube.com/embed/RBfJR4oRC0k?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1"
+                                    allowfullscreen> </iframe>
+                            </div>
+                            <i>Hi, Honey watch this viral video</i> <ins class="seen-time">seen 10:24PM <i>
+                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15px"
+                                        height="15px" viewBox="0 0 594.149 594.149">
+                                        <g>
+                                            <g>
+                                                <path fill="currentColor"
+                                                    d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1l-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z" />
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </i> </ins>
+                        </div>
+                        <div class="more-optns"> <i>
+                                <svg class="feather feather-more-vertical" stroke-linejoin="round"
+                                    stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none"
+                                    viewBox="0 0 24 24" height="16" width="16" xmlns="http://www.w3.org/2000/svg">
+                                    <circle r="1" cy="12" cx="12" />
+                                    <circle r="1" cy="5" cx="12" />
+                                    <circle r="1" cy="19" cx="12" />
+                                </svg>
+                            </i>
+                            <ul>
+                                <li><a title="" href="#">Reply</a></li>
+                                <li><a title="" href="#">Farward</a></li>
+                                <li><a title="" href="#">Download</a></li>
+                                <li><a title="" href="#">Delete</a></li>
+                                <li><a title="" href="#">Hide</a></li>
+                            </ul>
+                        </div>
+                        <div class="chat-date"><span>5/23/2021</span></div>
+                    </li>
+                    <li class="left"> <span>+353 87 1234 567 ~ Georg</span>
+                        <div class="text"> Hi, baby how are you sweetie? 😀<br>
+                            i fount tasty donunt 🍩 for you. it's
+                            waiting you at home. <ins class="seen-time">seen 10:24PM <i>
+                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15px"
+                                        height="15px" viewBox="0 0 594.149 594.149">
+                                        <g>
+                                            <g>
+                                                <path fill="currentColor"
+                                                    d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1l-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z" />
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </i> </ins> </div>
+                        <div class="text">
+                            <figure class="doc-ment"><img src="/images/doc.png" alt=""></figure>
+                            <div class="doc-meta"> <span>Document.xlsx</span> <em>20MB</em> </div>
+                            <ins class="seen-time">seen 10:24PM <i>
+                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15px"
+                                        height="15px" viewBox="0 0 594.149 594.149">
+                                        <g>
+                                            <g>
+                                                <path fill="currentColor"
+                                                    d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1l-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z" />
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </i> </ins>
+                            <div class="more-optns"> <i>
+                                    <svg class="feather feather-more-vertical" stroke-linejoin="round"
+                                        stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none"
+                                        viewBox="0 0 24 24" height="16" width="16" xmlns="http://www.w3.org/2000/svg">
+                                        <circle r="1" cy="12" cx="12" />
+                                        <circle r="1" cy="5" cx="12" />
+                                        <circle r="1" cy="19" cx="12" />
+                                    </svg>
+                                </i>
+                                <ul>
+                                    <li><a title="" href="#">Reply</a></li>
+                                    <li><a title="" href="#">Farward</a></li>
+                                    <li><a title="" href="#">Download</a></li>
+                                    <li><a title="" href="#">Delete</a></li>
+                                    <li><a title="" href="#">Hide</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="chat-date"><span>5/23/2021</span></div>
+                    </li>
+                    <li class="right"> <span>Emmawatson ~ MAK</span>
+                        <div class="text automated"> <img class="gif" src="/images/giphy.png"
+                                data-gif="/images/giphy-sample.gif" alt=""> <ins class="seen-time">seen
+                                10:24PM <i>
+                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15px"
+                                        height="15px" viewBox="0 0 594.149 594.149">
+                                        <g>
+                                            <g>
+                                                <path fill="currentColor"
+                                                    d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1l-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z" />
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </i> </ins>
+                            <div class="more-optns"> <i>
+                                    <svg class="feather feather-more-vertical" stroke-linejoin="round"
+                                        stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none"
+                                        viewBox="0 0 24 24" height="16" width="16" xmlns="http://www.w3.org/2000/svg">
+                                        <circle r="1" cy="12" cx="12" />
+                                        <circle r="1" cy="5" cx="12" />
+                                        <circle r="1" cy="19" cx="12" />
+                                    </svg>
+                                </i>
+                                <ul>
+                                    <li><a title="" href="#">Reply</a></li>
+                                    <li><a title="" href="#">Farward</a></li>
+                                    <li><a title="" href="#">Download</a></li>
+                                    <li><a title="" href="#">Delete</a></li>
+                                    <li><a title="" href="#">Hide</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="chat-date"><span>5/23/2021</span></div>
+                    </li>
+                    <li class="left"> <span>+353 87 1234 567 ~ Georg</span>
+                        <div class="text"> i am sending you the pictures album of my beautiful pictures.
+                            <ins class="seen-time">seen 10:24PM <i>
+                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15px"
+                                        height="15px" viewBox="0 0 594.149 594.149">
+                                        <g>
+                                            <g>
+                                                <path fill="currentColor"
+                                                    d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1l-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z" />
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </i> </ins>
+                        </div>
+                        <div class="album">
+                            <div class="images-album" id="lightgallery">
+                                <figure data-src="/images/resources/avatar-female-2.jpg" data-responsive=""
+                                    data-sub-html=""> <a href="#" title=""> <img
+                                            src="/images/resources/avatar-female-2.jpg" alt=""> </a>
+                                </figure>
+                                <figure data-src="/images/resources/avatar-female-1.jpg" data-responsive=""
+                                    data-sub-html=""> <a href="#" title=""> <img
+                                            src="/images/resources/avatar-female-1.jpg" alt=""> </a>
+                                </figure>
+                                <figure data-src="/images/resources/avatar-female-3.jpg" data-responsive=""
+                                    data-sub-html=""> <a href="#" title=""> <img
+                                            src="/images/resources/avatar-female-3.jpg" alt=""> </a>
+                                </figure>
+                                <figure data-src="/images/resources/avatar-female-5.jpg" data-responsive=""
+                                    data-sub-html=""> <span>12+</span> <a href="#" title=""> <img
+                                            src="/images/resources/avatar-female-5.jpg" alt=""> </a>
+                                </figure>
+                            </div>
+                            <div class="more-optns"> <i>
+                                    <svg class="feather feather-more-vertical" stroke-linejoin="round"
+                                        stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none"
+                                        viewBox="0 0 24 24" height="16" width="16" xmlns="http://www.w3.org/2000/svg">
+                                        <circle r="1" cy="12" cx="12" />
+                                        <circle r="1" cy="5" cx="12" />
+                                        <circle r="1" cy="19" cx="12" />
+                                    </svg>
+                                </i>
+                                <ul>
+                                    <li><a title="" href="#">Reply</a></li>
+                                    <li><a title="" href="#">Farward</a></li>
+                                    <li><a title="" href="#">Download</a></li>
+                                    <li><a title="" href="#">Delete</a></li>
+                                    <li><a title="" href="#">Hide</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="right"> <span>+353 87 1234 567</span>
+                        <div class="emoji-icon"> <img src="/images/thumb.png" alt=""> <ins class="seen-time">seen
+                                10:24PM <i>
+                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15px"
+                                        height="15px" viewBox="0 0 594.149 594.149">
+                                        <g>
+                                            <g>
+                                                <path fill="currentColor"
+                                                    d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1l-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z" />
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </i> </ins> </div>
+                        <div class="chat-date"><span>5/23/2021</span></div>
+                    </li>
+                </ul>
+                <div class="type-area skeleton">
+                    <div class="typing-indigator">
+                        <div class="loader-bar-2"></div>
+                        <div class="loader-bar-2"></div>
+                        <div class="loader-bar-2"></div>
+                    </div>
+                    <textarea id="emojionearea1" placeholder="Type a Message..."></textarea>
+                    <div class="toggle-sticker"> <span class="">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="currentColor"
+                                    d="M13.177 12.013l-.001-.125v-.541-.512c0-.464 0-.827-.002-1.178a.723.723 0 0 0-.557-.7.715.715 0 0 0-.826.4c-.05.115-.072.253-.073.403-.003 1.065-.003 1.917-.002 3.834v.653c0 .074.003.136.009.195a.72.72 0 0 0 .57.619c.477.091.878-.242.881-.734.002-.454.003-.817.002-1.633l-.001-.681zm-3.21-.536a35.751 35.751 0 0 0-1.651-.003c-.263.005-.498.215-.565.48a.622.622 0 0 0 .276.7.833.833 0 0 0 .372.104c.179.007.32.008.649.005l.137-.001v.102c-.001.28-.001.396.003.546.001.044-.006.055-.047.081-.242.15-.518.235-.857.275-.767.091-1.466-.311-1.745-1.006a2.083 2.083 0 0 1-.117-1.08 1.64 1.64 0 0 1 1.847-1.41c.319.044.616.169.917.376.196.135.401.184.615.131a.692.692 0 0 0 .541-.562c.063-.315-.057-.579-.331-.766-.789-.542-1.701-.694-2.684-.482-2.009.433-2.978 2.537-2.173 4.378.483 1.105 1.389 1.685 2.658 1.771.803.054 1.561-.143 2.279-.579.318-.193.498-.461.508-.803.014-.52.015-1.046.001-1.578-.009-.362-.29-.669-.633-.679zM18 4.25H6A4.75 4.75 0 0 0 1.25 9v6A4.75 4.75 0 0 0 6 19.75h12A4.75 4.75 0 0 0 22.75 15V9A4.75 4.75 0 0 0 18 4.25zM21.25 15A3.25 3.25 0 0 1 18 18.25H6A3.25 3.25 0 0 1 2.75 15V9A3.25 3.25 0 0 1 6 5.75h12A3.25 3.25 0 0 1 21.25 9v6zm-2.869-6.018H15.3c-.544 0-.837.294-.837.839V14.309c0 .293.124.525.368.669.496.292 1.076-.059 1.086-.651.005-.285.006-.532.004-1.013v-.045l-.001-.46v-.052h1.096l1.053-.001a.667.667 0 0 0 .655-.478c.09-.298-.012-.607-.271-.757a.985.985 0 0 0-.468-.122 82.064 82.064 0 0 0-1.436-.006h-.05l-.523.001h-.047v-1.051h1.267l1.22-.001c.458-.001.768-.353.702-.799-.053-.338-.35-.56-.737-.561z">
+                                </path>
+                            </svg>
+                        </span>
+                        <div class="sticker-sub-contain">
+                            <ul>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker1.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker2.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker3.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker4.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker5.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker6.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker7.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker8.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker9.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker10.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker11.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker12.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker13.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker14.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker15.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker16.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker17.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker18.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker19.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker20.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker21.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker22.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker23.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker24.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker25.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker26.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker27.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker28.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker29.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker30.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker31.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker32.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker33.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker34.gif" alt="sticker" /></a>
+                                </li>
+                                <li><a href="#"><img class="" src="/images/stickers/sticker35.gif" alt="sticker" /></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="upload-media"> <span><i class="icofont-paper-clip"></i></span>
+                        <ul class="upload-items">
+                            <li><a href="#" title=""><i class="icofont-user-alt-3"></i></a>
+                                <span>Contact</span>
+                            </li>
+                            <li>
+                                <a href="#" title=""><i class="icofont-camera"></i></a> <span>Camera</span>
+                            </li>
+                            <li>
+                                <a href="#" title=""><i class="icofont-image"></i></a> <span>Photos &
+                                    Video</span>
+                            </li>
+                            <li>
+                                <a href="#" title=""><i class="icofont-location-pin"></i></a> <span>Send
+                                    loacation</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <button type="submit" class="send-mesg" data-ripple=""><i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-send">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </i></button>
+                </div>
+            </div>
+        </div>
+        <!-- central content -->
+        <div class="info-area"> <span class="close-area"> <i>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="feather feather-x">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </i>
+            </span>
+
+            <div class="nav_div">
+                <span class="skeleton">
+                    <i>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-trash-2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                            </path>
+                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                        </svg>
+                    </i>Vaciar chat
+                </span>
+
+
+
+                <div class="search-mesg skeleton" title="Search in Chat"><i>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-search">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </i> </div>
+                <form method="" class="searchinchat">
+                    <input type="text" placeholder="Search Messages...">
+                    <button type="submit"></button>
+                </form>
+
+                <div class="more-optns">
+                    <i class="skeleton">
+                        <svg class="feather feather-more-vertical" stroke-linejoin="round" stroke-linecap="round"
+                            stroke-width="2" stroke="currentColor" fill="none" viewBox="0 0 24 24" height="16"
+                            width="16" xmlns="http://www.w3.org/2000/svg">
+                            <circle r="1" cy="12" cx="12" />
+                            <circle r="1" cy="5" cx="12" />
+                            <circle r="1" cy="19" cx="12" />
+                        </svg>
+                    </i>
+
+                    <ul>
+                        <li><a title="" href="#"><i><img src="/images/check-box.png" alt=""></i> Select
+                                Messages</a></li>
+                        <li><a title="" href="#"><i><img src="/images/hide.png" alt=""></i> Hide Messages</a>
+                        </li>
+                        <li><a title="" href="#"><i><img src="/images/mute.png" alt=""></i> Mute Notification</a>
+                        </li>
+                        <li><a title="" href="#"><i><img src="/images/user.png" alt=""></i> Block</a></li>
+                        <li><a title="" href="#"><i><img src="/images/close.png" alt=""></i> Close Chat</a></li>
+                    </ul>
+                </div>
+            </div>
+
+
+            <div class="user-info">
+                <div class="user-dp">
+                    <figure class="skeleton"><img src="/images/resources/avatar-male-2.jpg" alt=""></figure>
+                    <div class="active-uzr-name skeleton">
+                        <h6>Georg Peterson</h6>
+                        <span class="status online"></span> <i>is active now</i>
+                    </div>
+                </div>
+                <div class="media-uploadvert">
+                    <span class="skeleton p_left">Media Send & Receive <i>106</i></span>
+                    <ul class="pic-vid" id="lightgallery2">
+                        <li class="skeleton" data-src="/images/resources/avatar-female-1.jpg" data-responsive=""
+                            data-sub-html=""> <a href="#" title=""> <img src="/images/resources/avatar-female-1.jpg"
+                                    alt=""> </a> </li>
+                        <li class="skeleton" data-src="/images/resources/avatar-male-1.jpg" data-responsive=""
+                            data-sub-html=""> <a href="#" title=""> <img src="/images/resources/avatar-male-1.jpg"
+                                    alt=""> </a> </li>
+                        <li class="skeleton" data-src="/images/resources/avatar-female-3.jpg" data-responsive=""
+                            data-sub-html=""> <a href="#" title=""> <img src="/images/resources/avatar-female-3.jpg"
+                                    alt=""> </a> </li>
+                        <li class="skeleton" data-src="/images/resources/avatar-female-6.jpg" data-responsive=""
+                            data-sub-html=""> <a href="#" title=""> <img src="/images/resources/avatar-female-6.jpg"
+                                    alt=""> </a> </li>
+                        <li class="skeleton" data-src="/images/resources/avatar-female-5.jpg" data-responsive=""
+                            data-sub-html=""> <a href="#" title=""> <img src="/images/resources/avatar-female-5.jpg"
+                                    alt=""> </a> </li>
+                        <li class="skeleton" data-src="/images/resources/avatar-female-2.jpg" data-responsive=""
+                            data-sub-html=""> <a href="#" title=""> <img src="/images/resources/avatar-female-2.jpg"
+                                    alt=""> </a> </li>
+                        <li class="skeleton" data-src="/images/resources/avatar-male-2.jpg" data-responsive=""
+                            data-sub-html=""> <a href="#" title=""> <img src="/images/resources/avatar-male-2.jpg"
+                                    alt=""> </a> </li>
+                        <li class="skeleton" data-src="/images/resources/avatar-male-3.jpg" data-responsive=""
+                            data-sub-html=""> <a href="#" title=""> <img src="/images/resources/avatar-male-3.jpg"
+                                    alt=""> </a> </li>
+                    </ul>
+                    <ol class="bunch skeleton">
+                        <li><a href="#" title=""><img src="/images/resources/avatar-female-2.jpg" alt=""></a>
+                        </li>
+                        <li><a href="#" title=""><img src="/images/resources/avatar-female-5.jpg" alt=""></a>
+                        </li>
+                        <li><a href="#" title=""><img src="/images/resources/avatar-female-3.jpg" alt=""></a>
+                        </li>
+                        <li><a href="#" title=""><img src="/images/resources/avatar-female-6.jpg" alt=""></a>
+                        </li>
+                        <li><a href="#" title=""><img src="/images/resources/avatar-female-1.jpg" alt=""></a>
+                        </li>
+                        <li class="more-files"><a href="#" title="">20+ More</a></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- stories -->
+    <div class="stories-wraper">
+        <div class="status-story"> <span class="close-story"><i class="icofont-close-circled"></i></span>
+            <div id="btns-wrapper"></div>
+            <div id="slideshow"> <img class="slide" src="/images/story1.jpg" alt="1" /> <img class="slide"
+                    src="/images/story4.gif" alt="2" /> <img class="slide" src="/images/story2.jpg" alt="3" /> <img
+                    class="slide" src="/images/story3.jpg" alt="4" /> </div>
+        </div>
+    </div>
+
+    <!--- Modal popup -->
+    <div class="md-modal md-effect-1" id="modal-1">
+        <div class="modal__dialog">
+            <div class="md-content">
+                <div class="bg-image"
+                    style="background-image: url(/images/resources/avatar-male-2.jpg); filter: blur(15px);"></div>
+                <div class="audio-call">
+                    <span>End to End Encrypted</span>
+                    <div id="basicUsage">00:00:00</div>
+                    <h6 class="call-in-out">Incoming Call...</h6>
+                    <figure><img src="/images/resources/avatar-male-2.jpg" alt=""></figure>
+                    <h4>Georg Peterson</h4>
+                    <ins>+971-58-2235010</ins>
+                    <div class="callz-btns">
+                        <button title="call-accept" class="call-animation">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-phone-call">
+                                <path
+                                    d="M15.05 5A5 5 0 0 1 19 8.95M15.05 1A9 9 0 0 1 23 8.94m-1 7.98v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                                </path>
+                            </svg>
+                        </button>
+                        <button title="call Reject" class="md-close cancelcall">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-phone">
+                                <path
+                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- audio call popup -->
+
+    <div class="md-modal md-effect-1 video-call" id="modal-2">
+        <div class="modal__dialog">
+            <div class="md-content">
+                <div class="bg-image"
+                    style="background-image: url(/images/resources/avatar-male-2.jpg); filter: blur(15px);"></div>
+                <div class="audio-call">
+                    <span>End to End Encrypted</span>
+                    <div id="basicUsage2">00:00:00</div>
+                    <h6 class="call-in-out">Incoming Video Call...</h6>
+                    <div class="group-call">
+                        <span>My Group</span>
+                        <a href="#" title="You">You</a>
+                        <a href="#" title="Georg"><img src="/images/resources/avatar-male-1.jpg" alt=""></a>
+                        <a href="#" title="Emy"><img src="/images/resources/avatar-female-3.jpg" alt=""></a>
+                    </div>
+                    <figure><img src="/images/resources/avatar-male-2.jpg" alt=""></figure>
+                    <figure class="your-came"><img src="/images/resources/videocall.jpg" alt=""></figure>
+                    <h4>Georg Peterson</h4>
+                    <ins>+971-58-2235010</ins>
+                    <div class="callz-btns">
+                        <button title="call-accept" class="call-animation">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-phone-call">
+                                <path
+                                    d="M15.05 5A5 5 0 0 1 19 8.95M15.05 1A9 9 0 0 1 23 8.94m-1 7.98v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                                </path>
+                            </svg>
+                        </button>
+                        <button class="md-close cancelcall">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-phone">
+                                <path
+                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- video call popup -->
+
+    <div class="md-modal md-effect-1" id="modal-3">
+        <div class="modal__dialog">
+            <div class="md-content">
+                <div class="qr-code-popup">
+                    <button class="md-close">
+                        <i class="icofont-close"></i>
+                    </button>
+                    <div class="qr-meta">
+                        <h6>To use this messenger on your phone</h6>
+                        <ol>
+                            <li>Open your phone</li>
+                            <li>Go to the left side button</li>
+                            <li>Tap menu : or settings : and select Messenger Web</li>
+                            <li>Point your phone camera to this screen to capture the code.</li>
+                        </ol>
+                        <a href="#" title="">Need Help</a>
+                    </div>
+                    <div class="qr-captcha">
+                        <img src="/images/qrcode.png" alt="">
+                        <form method="">
+                            <input class="qrcode-rem" type="checkbox" id="scales" name="scales" checked>
+                            <label for="scales">Keep me sign in</label>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- qr code popup -->
+
+    <div class="md-modal md-effect-1" id="modal-4">
+        <div class="modal__dialog">
+            <div class="md-content">
+                <div class="logout-popup">
+                    <span>are you sure you want to logout </span>
+                    <button class="md-close logout">No</button>
+                    <a href="/" class="a_close">Yes</a>
+                </div>
+            </div>
+        </div>
+    </div><!-- logout popup -->
+
+    <div class="md-modal md-effect-1" id="modal-5">
+        <div class="modal__dialog">
+            <div class="md-content">
+                <div class="wallet-popup">
+                    <button class="md-close">
+                        <i class="icofont-close"></i>
+                    </button>
+                    <div class="wallet-head">
+                        <h6>Wallet</h6>
+                        <span>Qapp Payment</span>
+                    </div>
+                    <div class="wallet-subico">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="sub-box">
+                                    <i class="icofont-diamond"></i>
+                                    <span>Balance: $304.06</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="sub-box">
+                                    <i class="icofont-card"></i>
+                                    <span>Cards</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="payment-wallet">
+                        <li><a title="" href="#"><i class="icofont-pay"></i> Quick Pay</a></li>
+                        <li><a title="" href="#"><i class="icofont-bank-transfer"></i> Transfer</a></li>
+                        <li><a title="" href="#" class="invite-new"><i class="icofont-stock-mobile"></i> Mobile
+                                Topup</a></li>
+                        <li><a title="" href="#"><i class="icofont-credit-card"></i> Card Repay</a></li>
+                        <li><a title="" href="#"><i class="icofont-bill"></i> utilities</a></li>
+                        <li><a title="" href="#"><i class="icofont-air-ticket"></i> Airlines Tickets</a></li>
+                        <li><a title="" href="#"><i class="icofont-space"></i> Specials</a></li>
+                        <li><a title="" href="#"><i class="icofont-taxi"></i> Order Taxi</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div><!-- wallet popup -->
+
+    <div class="md-modal md-effect-1" id="modal-6">
+        <div class="modal__dialog">
+            <div class="md-content">
+                <div class="porfile-popup">
+                    <button class="md-close">
+                        <i class="icofont-close"></i>
+                    </button>
+                    <div class="wallet-head">
+                        <h6>Profile</h6>
+                        <span>Edit Your Profile</span>
+                    </div>
+                    <div class="profile-box">
+                        <div class="profile-head">
+                            <div class="avatar-upload">
+                                <div class="avatar-edit">
+                                    <input type="file" id="imageUpload1" accept=".png, .jpg, .jpeg" />
+                                    <label for="imageUpload1"></label>
+                                </div>
+                                <div class="avatar-preview">
+                                    <div id="imagePreview1"
+                                        style="background-image: url(/images/resources/avatar-female-1.jpg);">
+                                    </div>
+                                </div>
+                            </div>
+                            <span contenteditable>Sophia <i class="icofont-edit-alt"></i></span>
+                            <ul class="socials">
+                                <li><a class="facebook" href="#" title=""><i class="icofont-facebook"></i></a></li>
+                                <li><a class="twitter" href="#" title=""><i class="icofont-twitter"></i></a></li>
+                                <li><a class="instagram" href="#" title=""><i class="icofont-instagram"></i></a>
+                                </li>
+                                <li><a class="reddit" href="#" title=""><i class="icofont-reddit"></i></a></li>
+                            </ul>
+                        </div>
+                        <ul class="usr-info">
+                            <li>
+                                <span>Nick Name</span>
+                                <ins contenteditable>~Georg <i class="icofont-edit-alt"></i></ins>
+                            </li>
+                            <li>
+                                <span>User Name:</span>
+                                <ins contenteditable>Sophia <i class="icofont-edit-alt"></i></ins>
+                            </li>
+                            <li>
+                                <span>Email:</span>
+                                <ins contenteditable><a href="/cdn-cgi/l/email-protection" class="__cf_email__"
+                                        data-cfemail="f0b59d9d91b0919293de939f9d">[email&#160;protected]</a> <i
+                                        class="icofont-edit-alt"></i></ins>
+                            </li>
+                            <li>
+                                <span>Location:</span>
+                                <ins contenteditable>Ontario, Canada <i class="icofont-edit-alt"></i></ins>
+                            </li>
+                            <li>
+                                <span>Birthday:</span>
+                                <ins contenteditable>02 Jan, 2000 <i class="icofont-edit-alt"></i></ins>
+                            </li>
+                        </ul>
+                        <a href="#" title="" class="main-btn">Save Update</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- your profile popup -->
+
+    <div class="md-modal md-effect-1" id="modal-7">
+        <div class="modal__dialog">
+            <div class="md-content">
+                <div class="settings-popup">
+                    <button class="md-close">
+                        <i class="icofont-close"></i>
+                    </button>
+                    <div class="wallet-head">
+                        <h6>Settings</h6>
+                        <span>Edit Your Account</span>
+                    </div>
+                    <div class="settings-box">
+                        <div class="about">
+                            <div class="d-flex flex-row mt-2">
+                                <ul class="nav nav-tabs nav-tabs--vertical nav-tabs--left">
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link" data-bs-toggle="tab"
+                                            data-bs-target="#gen-setting"><i class="fa fa-gear"></i> General
+                                            Setting</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link active" data-bs-toggle="tab"
+                                            data-bs-target="#edit-profile"><i class="fa fa-pencil"></i> Edit
+                                            Profile</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link" data-bs-toggle="tab" data-bs-target="#notifi"><i
+                                                class="fa fa-bell"></i> Notification</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link" data-bs-toggle="tab" data-bs-target="#messages"><i
+                                                class="fa fa-comment"></i> Messages</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link" data-bs-toggle="tab" data-bs-target="#privacy"><i
+                                                class="fa fa-shield"></i> Privacy &
+                                            Data</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link" data-bs-toggle="tab" data-bs-target="#security"><i
+                                                class="fa fa-lock"></i> Security</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link" data-bs-toggle="tab" data-bs-target="#apps"><i
+                                                class="fa fa-th"></i> Apps</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane fade" id="gen-setting">
+                                        <div class="set-title">
+                                            <h5>General Setting</h5>
+                                            <span>Set your login preference, help us personalize your experience and
+                                                make big account change here.</span>
+                                        </div>
+                                        <div class="onoff-options ">
+                                            <form method="">
+                                                <div class="setting-row">
+                                                    <span>Sub users</span>
+                                                    <p>Enable this if you want people to follow you</p>
+                                                    <input type="checkbox" id="switch00" />
+                                                    <label for="switch00" data-on-label="ON"
+                                                        data-off-label="OFF"></label>
+                                                </div>
+                                                <div class="setting-row">
+                                                    <span>Enable follow me</span>
+                                                    <p>Enable this if you want people to follow you</p>
+                                                    <input type="checkbox" id="switch01" />
+                                                    <label for="switch01" data-on-label="ON"
+                                                        data-off-label="OFF"></label>
+                                                </div>
+                                                <div class="setting-row">
+                                                    <span>Send me notifications</span>
+                                                    <p>Send me notification emails my friends like, share or message
+                                                        me</p>
+                                                    <input type="checkbox" id="switch02" />
+                                                    <label for="switch02" data-on-label="ON"
+                                                        data-off-label="OFF"></label>
+                                                </div>
+                                                <div class="setting-row">
+                                                    <span>Text messages</span>
+                                                    <p>Send me messages to my cell phone</p>
+                                                    <input type="checkbox" id="switch03" />
+                                                    <label for="switch03" data-on-label="ON"
+                                                        data-off-label="OFF"></label>
+                                                </div>
+                                                <div class="setting-row">
+                                                    <span>Enable tagging</span>
+                                                    <p>Enable my friends to tag me on their posts</p>
+                                                    <input type="checkbox" id="switch04" />
+                                                    <label for="switch04" data-on-label="ON"
+                                                        data-off-label="OFF"></label>
+                                                </div>
+                                                <div class="setting-row">
+                                                    <span>Enable sound Notification</span>
+                                                    <p>You'll hear notification sound when someone sends you a
+                                                        private message</p>
+                                                    <input type="checkbox" id="switch05" checked="" />
+                                                    <label for="switch05" data-on-label="ON"
+                                                        data-off-label="OFF"></label>
+                                                </div>
+
+                                                <div class="submit-btns">
+                                                    <button type="button" class="main-btn"
+                                                        data-ripple=""><span>Save</span></button>
+                                                    <button type="button" class="main-btn2"
+                                                        data-ripple=""><span>Cancel</span></button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="account-delete">
+                                            <h5>Account Changes</h5>
+                                            <div>
+                                                <span>Delete your account and data </span>
+                                                <button type="button" class="main-btn"><span>Deactivate
+                                                        account</span></button>
+                                            </div>
+                                        </div>
+                                    </div><!-- general setting -->
+                                    <div class="tab-pane fade show active" id="edit-profile">
+                                        <div class="set-title">
+                                            <h5>Edit Profile</h5>
+                                            <span>People on Qapp will get to know you with the info below</span>
+                                        </div>
+                                        <div class="setting-meta">
+                                            <div class="change-photo">
+                                                <div class="avatar-upload">
+                                                    <div class="avatar-edit">
+                                                        <input type="file" id="imageUpload2"
+                                                            accept=".png, .jpg, .jpeg" />
+                                                        <label for="imageUpload2"></label>
+                                                    </div>
+                                                    <div class="avatar-preview">
+                                                        <div id="imagePreview"
+                                                            style="background-image: url(/images/resources/avatar-female-1.jpg);">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="stg-form-area">
+                                            <form method="" class="c-form">
+                                                <div>
+                                                    <label>Display Name</label>
+                                                    <input type="text" placeholder="Jack Carter">
+                                                </div>
+
+                                                <div class="uzer-nam">
+                                                    <label>User Name</label>
+                                                    <span>www.Qapp.com/</span><input type="text"
+                                                        placeholder="jackcarter4023">
+                                                </div>
+                                                <div>
+                                                    <label>Email Address</label>
+                                                    <input type="text" placeholder="abc@Qappmail.com">
+                                                </div>
+                                                <div>
+                                                    <label>Gender</label>
+                                                    <div class="form-radio">
+                                                        <div class="radio">
+                                                            <label>
+                                                                <input type="radio" checked="checked" name="radio"><i
+                                                                    class="check-box"></i>Male
+                                                            </label>
+                                                        </div>
+                                                        <div class="radio">
+                                                            <label>
+                                                                <input type="radio" name="radio"><i
+                                                                    class="check-box"></i>Female
+                                                            </label>
+                                                        </div>
+                                                        <div class="radio">
+                                                            <label>
+                                                                <input type="radio" name="radio"><i
+                                                                    class="check-box"></i>Custom
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <label>about your profile</label>
+                                                    <textarea rows="3"
+                                                        placeholder="write someting about yourself"></textarea>
+                                                </div>
+
+                                                <div>
+                                                    <label>Location</label>
+                                                    <input type="text" placeholder="Ex.San Francisco, CA">
+                                                </div>
+                                                <div>
+                                                    <label>Country</label>
+                                                    <select>
+                                                        <option value="country">Country</option>
+                                                        <option value="AFG">Afghanistan</option>
+                                                        <option value="ALA">Ƭand Islands</option>
+                                                        <option value="ALB">Albania</option>
+                                                        <option value="DZA">Algeria</option>
+                                                        <option value="ASM">American Samoa</option>
+                                                        <option value="AND">Andorra</option>
+                                                        <option value="AGO">Angola</option>
+                                                        <option value="AIA">Anguilla</option>
+
+                                                        <option value="ATA">Antarctica</option>
+                                                        <option value="ATG">Antigua and Barbuda</option>
+                                                        <option value="ARG">Argentina</option>
+                                                        <option value="ARM">Armenia</option>
+                                                        <option value="ABW">Aruba</option>
+                                                        <option value="AUS">Australia</option>
+                                                        <option value="AUT">Austria</option>
+                                                        <option value="AZE">Azerbaijan</option>
+                                                        <option value="BHS">Bahamas</option>
+                                                        <option value="BHR">Bahrain</option>
+                                                        <option value="BGD">Bangladesh</option>
+                                                        <option value="BRB">Barbados</option>
+                                                        <option value="BLR">Belarus</option>
+                                                        <option value="BEL">Belgium</option>
+                                                        <option value="BLZ">Belize</option>
+                                                        <option value="BEN">Benin</option>
+                                                        <option value="BMU">Bermuda</option>
+                                                        <option value="BTN">Bhutan</option>
+                                                        <option value="BOL">Bolivia, Plurinational State of</option>
+                                                        <option value="BES">Bonaire, Sint Eustatius and Saba
+                                                        </option>
+                                                        <option value="BIH">Bosnia and Herzegovina</option>
+                                                        <option value="BWA">Botswana</option>
+                                                        <option value="BVT">Bouvet Island</option>
+                                                        <option value="BRA">Brazil</option>
+                                                        <option value="IOT">British Indian Ocean Territory</option>
+                                                        <option value="BRN">Brunei Darussalam</option>
+                                                        <option value="BGR">Bulgaria</option>
+                                                        <option value="BFA">Burkina Faso</option>
+                                                        <option value="BDI">Burundi</option>
+                                                        <option value="KHM">Cambodia</option>
+                                                        <option value="CMR">Cameroon</option>
+                                                        <option value="CAN">Canada</option>
+                                                        <option value="CPV">Cape Verde</option>
+                                                        <option value="CYM">Cayman Islands</option>
+                                                        <option value="CAF">Central African Republic</option>
+                                                        <option value="TCD">Chad</option>
+                                                        <option value="CHL">Chile</option>
+                                                        <option value="CHN">China</option>
+                                                        <option value="CXR">Christmas Island</option>
+                                                        <option value="CCK">Cocos (Keeling) Islands</option>
+                                                        <option value="COL">Colombia</option>
+                                                        <option value="COM">Comoros</option>
+                                                        <option value="COG">Congo</option>
+                                                        <option value="COD">Congo, the Democratic Republic of the
+                                                        </option>
+                                                        <option value="COK">Cook Islands</option>
+                                                        <option value="CRI">Costa Rica</option>
+                                                        <option value="CIV">C𴥠d'Ivoire</option>
+                                                        <option value="HRV">Croatia</option>
+                                                        <option value="CUB">Cuba</option>
+                                                        <option value="CUW">Cura袯</option>
+                                                        <option value="CYP">Cyprus</option>
+                                                        <option value="CZE">Czech Republic</option>
+                                                        <option value="DNK">Denmark</option>
+                                                        <option value="DJI">Djibouti</option>
+                                                        <option value="DMA">Dominica</option>
+                                                        <option value="DOM">Dominican Republic</option>
+                                                        <option value="ECU">Ecuador</option>
+                                                        <option value="EGY">Egypt</option>
+                                                        <option value="SLV">El Salvador</option>
+                                                        <option value="GNQ">Equatorial Guinea</option>
+                                                        <option value="ERI">Eritrea</option>
+                                                        <option value="EST">Estonia</option>
+                                                        <option value="ETH">Ethiopia</option>
+                                                        <option value="FLK">Falkland Islands (Malvinas)</option>
+                                                        <option value="FRO">Faroe Islands</option>
+                                                        <option value="FJI">Fiji</option>
+                                                        <option value="FIN">Finland</option>
+                                                        <option value="FRA">France</option>
+                                                        <option value="GUF">French Guiana</option>
+                                                        <option value="PYF">French Polynesia</option>
+                                                        <option value="ATF">French Southern Territories</option>
+                                                        <option value="GAB">Gabon</option>
+                                                        <option value="GMB">Gambia</option>
+                                                        <option value="GEO">Georgia</option>
+                                                        <option value="DEU">Germany</option>
+                                                        <option value="GHA">Ghana</option>
+                                                        <option value="GIB">Gibraltar</option>
+                                                        <option value="GRC">Greece</option>
+                                                        <option value="GRL">Greenland</option>
+                                                        <option value="GRD">Grenada</option>
+                                                        <option value="GLP">Guadeloupe</option>
+                                                        <option value="GUM">Guam</option>
+                                                        <option value="GTM">Guatemala</option>
+                                                        <option value="GGY">Guernsey</option>
+                                                        <option value="GIN">Guinea</option>
+                                                        <option value="GNB">Guinea-Bissau</option>
+                                                        <option value="GUY">Guyana</option>
+                                                        <option value="HTI">Haiti</option>
+                                                        <option value="HMD">Heard Island and McDonald Islands
+                                                        </option>
+                                                        <option value="VAT">Holy See (Vatican City State)</option>
+                                                        <option value="HND">Honduras</option>
+                                                        <option value="HKG">Hong Kong</option>
+                                                        <option value="HUN">Hungary</option>
+                                                        <option value="ISL">Iceland</option>
+                                                        <option value="IND">India</option>
+                                                        <option value="IDN">Indonesia</option>
+                                                        <option value="IRN">Iran, Islamic Republic of</option>
+                                                        <option value="IRQ">Iraq</option>
+                                                        <option value="IRL">Ireland</option>
+                                                        <option value="IMN">Isle of Man</option>
+                                                        <option value="ISR">Israel</option>
+                                                        <option value="ITA">Italy</option>
+                                                        <option value="JAM">Jamaica</option>
+                                                        <option value="JPN">Japan</option>
+                                                        <option value="JEY">Jersey</option>
+                                                        <option value="JOR">Jordan</option>
+                                                        <option value="KAZ">Kazakhstan</option>
+                                                        <option value="KEN">Kenya</option>
+                                                        <option value="KIR">Kiribati</option>
+                                                        <option value="PRK">Korea, Democratic People's Republic of
+                                                        </option>
+                                                        <option value="KOR">Korea, Republic of</option>
+                                                        <option value="KWT">Kuwait</option>
+                                                        <option value="KGZ">Kyrgyzstan</option>
+                                                        <option value="LAO">Lao People's Democratic Republic
+                                                        </option>
+                                                        <option value="LVA">Latvia</option>
+                                                        <option value="LBN">Lebanon</option>
+                                                        <option value="LSO">Lesotho</option>
+                                                        <option value="LBR">Liberia</option>
+                                                        <option value="LBY">Libya</option>
+                                                        <option value="LIE">Liechtenstein</option>
+                                                        <option value="LTU">Lithuania</option>
+                                                        <option value="LUX">Luxembourg</option>
+                                                        <option value="MAC">Macao</option>
+                                                        <option value="MKD">Macedonia, the former Yugoslav Republic
+                                                            of</option>
+                                                        <option value="MDG">Madagascar</option>
+                                                        <option value="MWI">Malawi</option>
+                                                        <option value="MYS">Malaysia</option>
+                                                        <option value="MDV">Maldives</option>
+                                                        <option value="MLI">Mali</option>
+                                                        <option value="MLT">Malta</option>
+                                                        <option value="MHL">Marshall Islands</option>
+                                                        <option value="MTQ">Martinique</option>
+                                                        <option value="MRT">Mauritania</option>
+                                                        <option value="MUS">Mauritius</option>
+                                                        <option value="MYT">Mayotte</option>
+                                                        <option value="MEX">Mexico</option>
+                                                        <option value="FSM">Micronesia, Federated States of</option>
+                                                        <option value="MDA">Moldova, Republic of</option>
+                                                        <option value="MCO">Monaco</option>
+                                                        <option value="MNG">Mongolia</option>
+                                                        <option value="MNE">Montenegro</option>
+                                                        <option value="MSR">Montserrat</option>
+                                                        <option value="MAR">Morocco</option>
+                                                        <option value="MOZ">Mozambique</option>
+                                                        <option value="MMR">Myanmar</option>
+                                                        <option value="NAM">Namibia</option>
+                                                        <option value="NRU">Nauru</option>
+                                                        <option value="NPL">Nepal</option>
+                                                        <option value="NLD">Netherlands</option>
+                                                        <option value="NCL">New Caledonia</option>
+                                                        <option value="NZL">New Zealand</option>
+                                                        <option value="NIC">Nicaragua</option>
+                                                        <option value="NER">Niger</option>
+                                                        <option value="NGA">Nigeria</option>
+                                                        <option value="NIU">Niue</option>
+                                                        <option value="NFK">Norfolk Island</option>
+                                                        <option value="MNP">Northern Mariana Islands</option>
+                                                        <option value="NOR">Norway</option>
+                                                        <option value="OMN">Oman</option>
+                                                        <option value="PAK">Pakistan</option>
+                                                        <option value="PLW">Palau</option>
+                                                        <option value="PSE">Palestinian Territory, Occupied</option>
+                                                        <option value="PAN">Panama</option>
+                                                        <option value="PNG">Papua New Guinea</option>
+                                                        <option value="PRY">Paraguay</option>
+                                                        <option value="PER">Peru</option>
+                                                        <option value="PHL">Philippines</option>
+                                                        <option value="PCN">Pitcairn</option>
+                                                        <option value="POL">Poland</option>
+                                                        <option value="PRT">Portugal</option>
+                                                        <option value="PRI">Puerto Rico</option>
+                                                        <option value="QAT">Qatar</option>
+                                                        <option value="REU">R궮ion</option>
+                                                        <option value="ROU">Romania</option>
+                                                        <option value="RUS">Russian Federation</option>
+                                                        <option value="RWA">Rwanda</option>
+                                                        <option value="BLM">Saint Barthꭥmy</option>
+                                                        <option value="SHN">Saint Helena, Ascension and Tristan da
+                                                            Cunha</option>
+                                                        <option value="KNA">Saint Kitts and Nevis</option>
+                                                        <option value="LCA">Saint Lucia</option>
+                                                        <option value="MAF">Saint Martin (French part)</option>
+                                                        <option value="SPM">Saint Pierre and Miquelon</option>
+                                                        <option value="VCT">Saint Vincent and the Grenadines
+                                                        </option>
+                                                        <option value="WSM">Samoa</option>
+                                                        <option value="SMR">San Marino</option>
+                                                        <option value="STP">Sao Tome and Principe</option>
+                                                        <option value="SAU">Saudi Arabia</option>
+                                                        <option value="SEN">Senegal</option>
+                                                        <option value="SRB">Serbia</option>
+                                                        <option value="SYC">Seychelles</option>
+                                                        <option value="SLE">Sierra Leone</option>
+                                                        <option value="SGP">Singapore</option>
+                                                        <option value="SXM">Sint Maarten (Dutch part)</option>
+                                                        <option value="SVK">Slovakia</option>
+                                                        <option value="SVN">Slovenia</option>
+                                                        <option value="SLB">Solomon Islands</option>
+                                                        <option value="SOM">Somalia</option>
+                                                        <option value="ZAF">South Africa</option>
+                                                        <option value="SGS">South Georgia and the South Sandwich
+                                                            Islands</option>
+                                                        <option value="SSD">South Sudan</option>
+                                                        <option value="ESP">Spain</option>
+                                                        <option value="LKA">Sri Lanka</option>
+                                                        <option value="SDN">Sudan</option>
+                                                        <option value="SUR">Suriname</option>
+                                                        <option value="SJM">Svalbard and Jan Mayen</option>
+                                                        <option value="SWZ">Swaziland</option>
+                                                        <option value="SWE">Sweden</option>
+                                                        <option value="CHE">Switzerland</option>
+                                                        <option value="SYR">Syrian Arab Republic</option>
+                                                        <option value="TWN">Taiwan, Province of China</option>
+                                                        <option value="TJK">Tajikistan</option>
+                                                        <option value="TZA">Tanzania, United Republic of</option>
+                                                        <option value="THA">Thailand</option>
+                                                        <option value="TLS">Timor-Leste</option>
+                                                        <option value="TGO">Togo</option>
+                                                        <option value="TKL">Tokelau</option>
+                                                        <option value="TON">Tonga</option>
+                                                        <option value="TTO">Trinidad and Tobago</option>
+                                                        <option value="TUN">Tunisia</option>
+                                                        <option value="TUR">Turkey</option>
+                                                        <option value="TKM">Turkmenistan</option>
+                                                        <option value="TCA">Turks and Caicos Islands</option>
+                                                        <option value="TUV">Tuvalu</option>
+                                                        <option value="UGA">Uganda</option>
+                                                        <option value="UKR">Ukraine</option>
+                                                        <option value="ARE">United Arab Emirates</option>
+                                                        <option value="GBR">United Kingdom</option>
+                                                        <option value="USA" selected>United States</option>
+                                                        <option value="UMI">United States Minor Outlying Islands
+                                                        </option>
+                                                        <option value="URY">Uruguay</option>
+                                                        <option value="UZB">Uzbekistan</option>
+                                                        <option value="VUT">Vanuatu</option>
+                                                        <option value="VEN">Venezuela, Bolivarian Republic of
+                                                        </option>
+                                                        <option value="VNM">Viet Nam</option>
+                                                        <option value="VGB">Virgin Islands, British</option>
+                                                        <option value="VIR">Virgin Islands, U.S.</option>
+                                                        <option value="WLF">Wallis and Futuna</option>
+                                                        <option value="ESH">Western Sahara</option>
+                                                        <option value="YEM">Yemen</option>
+                                                        <option value="ZMB">Zambia</option>
+                                                        <option value="ZWE">Zimbabwe</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <button class="main-btn" type="submit"
+                                                        data-ripple="">Cancel</button>
+                                                    <button class="main-btn2" type="submit" data-ripple="">Save</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div><!-- edit profile -->
+                                    <div class="tab-pane fade" id="notifi" role="tabpanel">
+                                        <div class="set-title">
+                                            <h5>Notification Setting</h5>
+                                            <span>Select push and email notifications you'd like to receive.</span>
+                                        </div>
+                                        <div class="notifi-seting">
+                                            <div class="form-radio">
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" checked="checked" name="radio"><i
+                                                            class="check-box"></i>
+                                                        Send Me emails about my activity except emails i have
+                                                        unsubscribe from
+                                                    </label>
+                                                </div>
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" name="radio"><i class="check-box"></i>
+                                                        Only send me required services announcements.
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="set-title">
+                                                <h6>i'd like to receive emails and updates from Qapp about</h6>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
+                                                    Always General announcement, updates, posts, and videos.
+                                                </label>
+                                                <label>
+                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
+                                                    Personalise tips for my page.
+                                                </label>
+                                                <label>
+                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
+                                                    Announcements and recommendations.
+                                                </label>
+                                                <p><a href="#" title="">learn more</a> about emails from Qapp</p>
+                                            </div>
+                                            <div class="set-title">
+                                                <h6>Other Notifications</h6>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
+                                                    Recommended videos.
+                                                </label>
+                                                <label>
+                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
+                                                    activity on my page or channel.
+                                                </label>
+                                                <label>
+                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
+                                                    Activity on my comments.
+                                                </label>
+                                                <label>
+                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
+                                                    Reply to comments.
+                                                </label>
+                                                <label>
+                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
+                                                    Mentions.
+                                                </label>
+
+                                            </div>
+                                            <div class="set-title">
+                                                <h6>Language Preference</h6>
+                                                <span>Select your email language</span>
+                                            </div>
+                                            <select class="select">
+                                                <option value="">Eglish US</option>
+                                                <option value="">Eglish UK</option>
+                                                <option value="">Russia</option>
+                                            </select>
+                                            <p>
+                                                you will always get notifications you have turned on for individual
+                                                <a href="#" title="">Manage All Subscriptions</a>
+                                            </p>
+                                        </div>
+                                    </div><!-- notification -->
+                                    <div class="tab-pane fade" id="messages" role="tabpanel">
+                                        <div class="set-title">
+                                            <h5>Messages Setting</h5>
+                                            <span>Set your login preference, help us personalize your experience and
+                                                make big account change here.</span>
+                                        </div>
+                                        <div class="mesg-seting">
+
+                                            <div class="set-title">
+                                                <h6>i'd like to receive emails and updates from Qapp about</h6>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
+                                                    Always General announcement, updates, posts, and videos.
+                                                </label>
+                                                <label>
+                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
+                                                    Personalise tips for my page.
+                                                </label>
+                                                <label>
+                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
+                                                    Announcements and recommendations.
+                                                </label>
+                                                <p><a href="#" title="">learn more</a> about emails from Qapp</p>
+                                            </div>
+                                            <div class="set-title">
+                                                <h6>Other Messages</h6>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
+                                                    From Recommended videos.
+                                                </label>
+                                                <label>
+                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
+                                                    Messages from activity on my page or channel.
+                                                </label>
+                                                <label>
+                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
+                                                    Message me the replyer Activity on my comments.
+                                                </label>
+                                                <label>
+                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
+                                                    Reply to comments.
+                                                </label>
+                                                <label>
+                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
+                                                    Mentions.
+                                                </label>
+
+                                            </div>
+                                            <div class="set-title">
+                                                <h6>Language Preference</h6>
+                                                <span>Select your Messages language</span>
+                                            </div>
+                                            <select class="select">
+                                                <option value="">Eglish US</option>
+                                                <option value="">Eglish UK</option>
+                                                <option value="">Russia</option>
+                                            </select>
+                                            <p>
+                                                you will always get notifications you have turned on for individual
+                                                <a href="#" title="">Manage All Subscriptions</a>
+                                            </p>
+                                        </div>
+
+                                    </div><!-- messages -->
+                                    <div class="tab-pane fade" id="privacy" role="tabpanel">
+                                        <div class="set-title">
+                                            <h5>Privacy & data</h5>
+                                            <span>Deceide whether your profile will be hidden from search engine and
+                                                what kind of data you want to use to imporve the recommendation and
+                                                advert you see <a href="#" title="">Learn more</a></span>
+                                        </div>
+                                        <div class="onoff-options ">
+                                            <form method="">
+                                                <div class="setting-row">
+                                                    <span>Search Privacy</span>
+                                                    <p>Hide your profile from search engine (Ex.google) <a href="#"
+                                                            title="">Learn more</a>
+                                                    </p>
+                                                    <input type="checkbox" id="switch0001" />
+                                                    <label for="switch0001" data-on-label="ON"
+                                                        data-off-label="OFF"></label>
+                                                </div>
+                                                <div class="set-title">
+                                                    <h5>Personalization</h5>
+                                                </div>
+                                                <div class="setting-row">
+                                                    <span>Search Privacy</span>
+                                                    <p>use sites you visit to improve which recommendation and
+                                                        advert you see. <a href="#" title="">Learn more</a>
+                                                    </p>
+                                                    <input type="checkbox" id="switch0002" />
+                                                    <label for="switch0002" data-on-label="ON"
+                                                        data-off-label="OFF"></label>
+                                                </div>
+                                                <div class="setting-row">
+                                                    <span>Search Privacy</span>
+                                                    <p>use information from our partners to improve which advert you
+                                                        see<a href="#" title="">Learn more</a>
+                                                    </p>
+                                                    <input type="checkbox" id="switch0003" />
+                                                    <label for="switch0003" data-on-label="ON"
+                                                        data-off-label="OFF"></label>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div><!-- privacy -->
+                                    <div class="tab-pane fade" id="security" role="tabpanel">
+                                        <div class="set-title">
+                                            <h5>Security Setting</h5>
+                                            <span>trun on two factor authentication and check your list of connected
+                                                device to keep your account posts safe <a href="#" title="">Learn
+                                                    More</a>.</span>
+                                        </div>
+                                        <div class="seting-box">
+                                            <p>to turn on two-factor authentication, you must <a href="#" title="">
+                                                    confirm Your Email </a> and <a href="#" title="">Set
+                                                    Password</a></p>
+                                            <div class="set-title">
+                                                <h5>Connected Devicese</h5>
+                                            </div>
+                                            <p>This is a list of devices that have logged into your account, Revok
+                                                any session that you do not recognize. <a href="#" title="">Hide
+                                                    Sessions</a></p>
+                                            <span>Last Accessed</span>
+                                            <p>August 30, 2020 12:25AM</p>
+                                            <span>Location</span>
+                                            <p>Berlin, Germany (based on IP = 103.233.24.5)</p>
+                                            <span>Device Type</span>
+                                            <p>Chrome on windows 10</p>
+                                        </div>
+                                    </div><!-- security -->
+                                    <div class="tab-pane fade" id="apps" role="tabpanel">
+                                        <div class="set-title">
+                                            <h5>Apps</h5>
+                                            <span>Keep track of everywhere you have login with your pintik profile
+                                                and remove access from apps you are no longer using with Qapp <a
+                                                    href="#" title="">Learn more</a></span>
+                                        </div>
+                                        <p class="p-info">You have not approved any app</p>
+                                    </div><!-- apps -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- Settings popup -->
+
+    <div class="md-modal md-effect-1" id="modal-8">
+        <div class="modal__dialog">
+            <div class="md-content">
+                <div class="group-popup">
+                    <button class="md-close">
+                        <i class="icofont-close"></i>
+                    </button>
+                    <div class="wallet-head">
+                        <h6>Create New Group</h6>
+                        <span>Qapp Group Chat</span>
+                    </div>
+                    <div class="group-create">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <form method="" class="c-form">
+                                    <div>
+                                        <label>Group Name</label>
+                                        <input type="text" placeholder="Type Here Group Name">
+                                    </div>
+                                    <div class="form-radio">
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" checked="checked" name="group">
+                                                <i class="check-box"></i>Private Group </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" checked="checked" name="group">
+                                                <i class="check-box"></i>Public Group </label>
+                                        </div>
+                                    </div>
+                                    <div class="avatar-upload">
+                                        <div class="avatar-edit">
+                                            <input type="file" id="imageUpload" accept=".png, .jpg, .jpeg" />
+                                            <label for="imageUpload"></label>
+                                        </div>
+                                        <div class="avatar-preview">
+                                            <div id="imgprew"
+                                                style="background-image: url(/images/resources/avatar-female-1.jpg);">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="search-people">
+                                    <form method="" class="c-form">
+                                        <label>Search People</label>
+                                        <input type="text" placeholder="Search">
+                                        <button class="searchbtn" type="submit"><i
+                                                class="icofont-search-1"></i></button>
+                                    </form>
+                                    <ul class="public-list">
+                                        <li>
+                                            <figure><span class="status online"></span><img
+                                                    src="/images/resources/friend-avatar.jpg" alt=""></figure>
+                                            <div class="user-meta">
+                                                <span>Bob Frank</span>
+                                                <i>online</i>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <figure><span class="status online"></span><img
+                                                    src="/images/resources/friend-avatar2.jpg" alt=""></figure>
+                                            <div class="user-meta">
+                                                <span>Sarah K.</span>
+                                                <i>online</i>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <figure><span class="status offline"></span><img
+                                                    src="/images/resources/friend-avatar3.jpg" alt=""></figure>
+                                            <div class="user-meta">
+                                                <span>Andrew</span>
+                                                <i>online</i>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
+                                                </label>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <figure><span class="status away"></span><img
+                                                    src="/images/resources/friend-avatar4.jpg" alt=""></figure>
+                                            <div class="user-meta">
+                                                <span>Diana will</span>
+                                                <i>online</i>
+                                            </div>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
+                                                </label>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <button class="main-btn" type="submit">Create Group</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="md-overlay"></div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="/scripts/jquery.js"></script>
+    <script src="/scripts/bootstrap.js"></script>
+    <script src="/scripts/aud-vid-player.js"></script>
+    <script src="/scripts/call-timer.js"></script>
+    <script src="/scripts/chosen.jquery.js"></script>
+    <script src="/scripts/emojies.js"></script>
+    <script src="/scripts/gifpreview.js"></script>
+    <script src="/scripts/image-upload.js"></script>
+    <script src="/scripts/jquery.mCustomScrollbar.js"></script>
+    <script src="/scripts/jquery-stories.js"></script>
+    <script src="/scripts/lightgallery-all.min.js"></script>
+    <script src="/scripts/lightgallery.mousewheel.min.js"></script>
+    <script src="/scripts/modal-popup.js"></script>
+    <script src="/scripts/modal-effects.js"></script>
+    <script src="/scripts/ripple.js"></script>
+    <script src="/scripts/TimelineMax.js"></script>
+    <script src="/scripts/script.js"></script>
+    <script defer src="/scripts/scripts.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,328 @@
+@media screen and (max-width: 1600px) and (min-width: 1439px) {
+  .chat-content {
+    height: 69vh;
+  }
+  .doc-files {
+    max-height: 322px;
+    min-height: 322px;
+    height: 322px;
+  }
+}
+@media screen and (max-width: 1440px) and (min-width: 1366px) {
+  .friendz-list,
+  .calls-details,
+  .groups {
+    max-height: 560px;
+    min-height: 560px;
+    height: 560px;
+  }
+  .chat-content {
+    height: 69.4vh;
+  }
+  .doc-files {
+    max-height: 320px;
+    min-height: 320px;
+    height: 320px;
+  }
+}
+@media screen and (max-width: 1367px) {
+  .doc-files {
+    max-height: 125px;
+    min-height: 125px;
+    height: 125px;
+  }
+  .friendz-list,
+  .calls-details,
+  .groups {
+    max-height: 360px;
+    min-height: 360px;
+    height: 360px;
+  }
+  .chat-content {
+    height: 67vh;
+  }
+  .album {
+    width: 38%;
+  }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1281px) {
+  .doc-files {
+    max-height: 237px;
+    min-height: 237px;
+    height: 237px;
+  }
+  .bidu-chat {
+    max-height: 552px;
+    min-height: 552px;
+    height: 552px;
+  }
+  .friendz-list,
+  .calls-details,
+  .groups {
+    max-height: 494;
+    min-height: 494px;
+    height: 494;
+  }
+  .users-status ul {
+    max-height: 273px;
+    min-height: 395px;
+    height: 273px;
+  }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1180px) {
+  .album {
+    width: 45%;
+  }
+  .bidu-chat-area {
+    width: 504px;
+  }
+}
+
+/*--- tablet landscape ---*/
+@media screen and (min-width: 991px) and (max-width: 1024px) {
+  .bidu-sidebar {
+    width: 300px;
+  }
+  .bidu-chat-area {
+    width: 450px;
+  }
+  .pic-vid > li {
+    width: 48px;
+  }
+  .album {
+    width: 65%;
+  }
+  .doc-files {
+    max-height: 157px;
+    min-height: 157px;
+    height: 157px;
+  }
+  .friendz-list,
+  .calls-details,
+  .groups {
+    min-height: 400px;
+  }
+  .bidu-chat {
+    max-height: 508px;
+    min-height: 508px;
+    height: 508px;
+  }
+}
+
+/*--- tablet view ---*/
+
+@media screen and (max-width: 990px) {
+  .bidu-area {
+    border-radius: 0;
+    margin-top: 0;
+    max-width: 100%;
+  }
+  .friendz-list,
+  .calls-details,
+  .groups,
+  .users-status ul {
+    height: 70vh;
+    max-height: 70vh;
+    min-height: 70vh;
+  }
+  .admin-meta {
+    width: 86%;
+  }
+  .menubar > ul > li > a,
+  .menubar > ul > li .night-mode > a {
+    font-size: 12px;
+  }
+
+  .doc-files {
+    height: 300px;
+    max-height: 300px;
+    min-height: 300px;
+  }
+
+  .bidu-chat {
+    height: 89vh;
+    max-height: 89vh;
+    min-height: 89vh;
+    padding-left: 0;
+  }
+  .bidu-chat li {
+    padding-left: 0;
+  }
+  .sign-form {
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 812px) {
+  .admin-meta {
+    width: 83%;
+  }
+  .images-album > figure {
+    max-width: 120px;
+  }
+  .md-modal {
+    max-width: 90%;
+    min-width: 90%;
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .admin-meta {
+    width: 82%;
+  }
+  .images-album > figure {
+    max-width: 115px;
+  }
+  .md-modal.video-call {
+    min-width: 95%;
+    width: 95%;
+  }
+  .payment-wallet > li {
+    width: 32%;
+  }
+}
+
+@media screen and (max-width: 736px) {
+  .admin-meta {
+    width: 81%;
+  }
+  .images-album > figure {
+    max-width: 110px;
+  }
+}
+
+@media screen and (max-width: 667px) {
+  .admin-meta {
+    width: 79%;
+  }
+  .images-album > figure {
+    max-width: 95px;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .admin-meta {
+    width: 78%;
+  }
+}
+
+@media screen and (max-width: 568px) {
+  .admin-meta {
+    width: 75%;
+  }
+  .album {
+    width: 43%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .admin-meta {
+    width: 70%;
+  }
+  .album {
+    width: 51%;
+  }
+  .info-area.resp {
+    width: 100%;
+  }
+  .searchinchat {
+    width: 80%;
+  }
+  .usr-info > li > span {
+    width: 100%;
+  }
+  .sign-image img {
+    max-width: 150px;
+  }
+  .sign-form {
+    margin-top: 20px;
+  }
+  .register-form .form-group {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    margin: 20px 0;
+  }
+  .register-form .form-group label {
+    font-size: 13px;
+  }
+  .chatarea-head {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+  .calls-btns {
+    float: unset;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .admin-meta {
+    width: 64%;
+  }
+  .album {
+    width: 60%;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .admin-meta {
+    width: 60%;
+  }
+  .album {
+    width: 67%;
+  }
+  .bidu-area {
+    height: 100vh;
+    max-height: 100vh;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .admin-meta {
+    width: 58%;
+  }
+  .album {
+    width: 71%;
+  }
+  .sticker-sub-contain > ul > li {
+    max-width: 50px;
+  }
+  .sticker-sub-contain {
+    left: -70px;
+    width: 340px;
+  }
+  .close-chat {
+    margin-right: 3px;
+  }
+  .calls-btns > li {
+    margin-right: 5px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .admin-meta {
+    width: 52%;
+  }
+  .logo {
+    margin-right: 15px;
+  }
+  .nav.nav-tabs.tab-btn > li > a {
+    padding: 5px 25.4px;
+  }
+  .album {
+    width: 80%;
+  }
+}

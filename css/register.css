@@ -1,0 +1,246 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  background-color: #85abdf;
+  background-image: -webkit-linear-gradient(
+      top,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.35)
+    ),
+    url(/images/bg02.webp);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.register-wrapper {
+  width: 100%;
+  max-width: 900px;
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  background-color: #fff;
+  opacity: 0;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  animation: fadeInBlur 0.3s ease-out 0.1s forwards;
+  overflow: hidden;
+  gap: 20px;
+}
+
+@keyframes fadeInBlur {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+.register-container {
+  width: 100%;
+  max-width: 500px;
+  padding: 0 10px 10px 10px;
+}
+
+.image-container img {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  object-fit: cover;
+}
+
+/*-------- 2cond pannel ----------*/
+
+.hidden {
+  display: none;
+}
+
+.slide-out-left {
+  animation: slideOutLeftBlur 0.5s forwards;
+}
+
+@keyframes slideOutLeftBlur {
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+    filter: blur(10px);
+  }
+}
+
+.fade-in-right-blur {
+  animation: fadeInRightBlur 0.5s forwards;
+}
+
+@keyframes fadeInRightBlur {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+}
+
+.fade-in-left-blur {
+  animation: fadeInLeftBlur 0.5s forwards;
+}
+
+@keyframes fadeInLeftBlur {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+}
+
+.onboarding-container {
+  display: none;
+  width: 800px;
+  padding: 10px;
+}
+
+/*------------------*/
+
+.back-button {
+  width: 35px;
+  height: 35px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #232323;
+  color: #fff;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #353535;
+}
+
+.back-button .material-icons-outlined {
+  font-size: 22px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1e1e1e;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.label {
+  font-size: 14px;
+  color: #333;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.input {
+  width: 100%;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+  outline: none;
+}
+
+.passinput {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  font-size: 16px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+  outline: none;
+}
+
+.button, a {
+  width: 100%;
+  display: inline-block;
+  color: #fff !important;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  margin-top: 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  text-align: center;
+  background-color: #232323;
+  transition: background 0.3s ease;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #353535;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.toggle-password {
+  height: 100%;
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #777;
+  user-select: none;
+  padding: 12px 0 12px 10px;
+  border-left: 1px solid #dcdcdc;
+  transition: color 0.2s ease;
+  cursor: pointer;
+}
+
+.toggle-password:hover {
+  color: #1e1e1e;
+}
+
+@media (max-width: 768px) {
+  .register-wrapper {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .image-container,
+  .register-container {
+    max-width: 100%;
+  }
+}

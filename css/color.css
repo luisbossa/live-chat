@@ -1,0 +1,54 @@
+/*=========================
+	FONT COLOR
+
+.submenu > li > a:hover,
+.menubar > ul > li:hover > a,
+.bal-total,
+.calls-btns > li i svg,
+.bunch > li.more-files > a,
+.audio-call > ins,
+.qr-meta > a,
+.mesg-meta figure span,
+.dropdowns > span a,
+.main-btn2,
+a.main-btn2,
+.nav-tabs--left .nav-link.active,
+.nav-tabs--left .nav-link.active > i,
+.stick-images > li > a,
+.signup-image-link {
+  color: #fff;
+}
+=========================*/
+
+.bidu-background::before,
+.friendz-meta > span,
+button.send-mesg,
+.group-call > a,
+.drops-menu li > a > span,
+.main-btn,
+a.main-btn,
+.change-photo .fileContainer:hover,
+.stick-images > li > a:hover {
+  background: #6092d5;
+  text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.5);
+  background-image: -webkit-linear-gradient(
+      top,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.35)
+    ),
+    url(/images/bg02.webp);
+}
+
+.stroke-solid {
+  fill: #6092d5;
+}
+
+/*=========================
+	BORDER COLOR
+=========================*/
+.emojionearea.emojionearea-inline,
+.main-btn2,
+a.main-btn2,
+.stick-images > li > a {
+  border-color: #ccc;
+}

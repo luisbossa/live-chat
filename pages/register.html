@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/images/favicon.png" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link rel="stylesheet" href="/css/register.css">
+    <link rel="stylesheet" href="/css/icofont.min.css">
+    <link rel="stylesheet" href="/css/style_2.css">
+    <title>Registro - Yabla</title>
+</head>
+
+<body>
+
+
+    <div class="register-wrapper">
+        <div class="register-container fade-in-delayed" id="registerContainer">
+            <a href="/" class="back-button" aria-label="Volver al inicio">
+                <span class="material-icons-outlined">arrow_back</span>
+            </a>
+
+            <h1 class="title">Crear cuenta</h1>
+            <p class="subtitle">Únete a Yabla y empieza a chatear con tus amigos</p>
+
+            <form action="#" id="registerForm">
+                <label for="name" class="label">Nombre completo</label>
+                <input type="text" id="name" name="name" class="input" placeholder="Tu nombre" required>
+
+                <label for="email" class="label">Correo electrónico</label>
+                <input type="email" id="email" name="email" class="input" placeholder="Correo electrónico" required>
+
+                <label for="password" class="label">Contraseña</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" class="passinput"
+                        placeholder="Crea una contraseña" required>
+                    <span class="material-icons-outlined toggle-password" data-target="password">visibility</span>
+                </div>
+
+                <button type="submit" class="button">Registrarse</button>
+            </form>
+        </div>
+
+        <div class="onboarding-container hidden" id="onboardingContainer">
+            <a href="#" class="back-button" id="backToRegister" aria-label="Volver al registro">
+                <span class="material-icons-outlined">arrow_back</span>
+            </a>
+
+            <h2 class="title">Complete su perfil</h2>
+
+            <form id="onboardingForm">
+                <div class="avatar-upload magin_30">
+                    <div class="avatar-edit">
+                        <input type="file" id="imageUpload1" accept=".png, .jpg, .jpeg" />
+                        <label for="imageUpload1"></label>
+                    </div>
+                    <div class="avatar-preview">
+                        <div id="imagePreview1" style="background-image: url(/images/resources/avatar-female-1.jpg);">
+                        </div>
+                    </div>
+                </div>
+
+                <label for="username" class="label">Nombre de usuario</label>
+                <input type="text" id="username" name="username" class="input"
+                    placeholder="Ingresa tu nombre de usuario">
+
+
+                <a href="/pages/dashboard.html" class="button">Entrar al chat</a>
+            </form>
+        </div>
+        <div class="image-container">
+            <img src="/images/phone.webp" alt="Imagen ilustrativa de chat">
+        </div>
+    </div>
+
+    <script src="/scripts/register.js"></script>
+</body>
+
+</html>
