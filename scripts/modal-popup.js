@@ -1,57 +1,64 @@
-/**
- * modalEffects.js v1.0.0
- * http://www.codrops.com
- *
- * Licensed under the MIT license.
- * http://www.opensource.org/licenses/mit-license.php
- * 
- * Copyright 2013, Codrops
- * http://www.codrops.com
- */
 var ModalEffects = (function() {
 
-	function init() {
+    function init() {
 
-		var overlay = document.querySelector( '.md-overlay' );
+        var overlay = document.querySelector('.md-overlay');  // Overlay de fondo
 
-		[].slice.call( document.querySelectorAll( '.md-trigger' ) ).forEach( function( el, i ) {
+        // Recorremos todos los botones de activación del modal
+        [].slice.call(document.querySelectorAll('.md-trigger')).forEach(function(el, i) {
 
-			var modal = document.querySelector( '#' + el.getAttribute( 'data-modal' ) ),
-				close = modal.querySelector( '.md-close' );
+            var modal = document.querySelector('#' + el.getAttribute('data-modal')), // Seleccionamos el modal usando el ID
+                close = modal.querySelector('.md-close'),  // Selector para el botón de cierre .md-close
+                logoutClose = modal.querySelector('.logout-close');  // Selector para el botón .logout-close
 
-			function removeModal( hasPerspective ) {
-				classie.remove( modal, 'md-show' );
+            // Función para eliminar la clase 'md-show' y cerrar el modal
+            function removeModal(hasPerspective) {
+                classie.remove(modal, 'md-show');  // Eliminamos la clase que muestra el modal
 
-				if( hasPerspective ) {
-					classie.remove( document.documentElement, 'md-perspective' );
-				}
-			}
+                if (hasPerspective) {
+                    classie.remove(document.documentElement, 'md-perspective');  // Elimina perspectiva si la hay
+                }
+            }
 
-			function removeModalHandler() {
-				removeModal( classie.has( el, 'md-setperspective' ) ); 
-			}
+            // Función manejadora para el cierre del modal
+            function removeModalHandler() {
+                removeModal(classie.has(el, 'md-setperspective'));
+            }
 
-			el.addEventListener( 'click', function( ev ) {
-				classie.add( modal, 'md-show' );
-				overlay.removeEventListener( 'click', removeModalHandler );
-				overlay.addEventListener( 'click', removeModalHandler );
+            // Evento para abrir el modal al hacer clic en un trigger
+            el.addEventListener('click', function(ev) {
+                classie.add(modal, 'md-show');  // Mostramos el modal
+                overlay.removeEventListener('click', removeModalHandler);
+                overlay.addEventListener('click', removeModalHandler);
 
-				if( classie.has( el, 'md-setperspective' ) ) {
-					setTimeout( function() {
-						classie.add( document.documentElement, 'md-perspective' );
-					}, 25 );
-				}
-			});
+                // Agregamos una clase para efectos de perspectiva si corresponde
+                if (classie.has(el, 'md-setperspective')) {
+                    setTimeout(function() {
+                        classie.add(document.documentElement, 'md-perspective');
+                    }, 25);
+                }
+            });
 
-			close.addEventListener( 'click', function( ev ) {
-				ev.stopPropagation();
-				removeModalHandler();
-			});
+            // Cerrar el modal con el botón .md-close
+            if (close) {
+                close.addEventListener('click', function(ev) {
+                    ev.stopPropagation();  // Prevenimos que el evento se propague
+                    removeModalHandler();  // Llamamos a la función para cerrar el modal
+                });
+            }
 
-		} );
+            // Cerrar el modal con el botón .logout-close
+            if (logoutClose) {
+                logoutClose.addEventListener('click', function(ev) {
+                    ev.stopPropagation();  // Prevenimos que el evento se propague
+                    removeModalHandler();  // Llamamos a la función para cerrar el modal
+                });
+            }
 
-	}
+        });
 
-	init();
+    }
+
+    init();
 
 })();
