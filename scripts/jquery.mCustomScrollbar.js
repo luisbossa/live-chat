@@ -1,41 +1,3 @@
-/*
-== malihu jquery custom scrollbar plugin == 
-Version: 3.1.5 
-Plugin URI: http://manos.malihu.gr/jquery-custom-content-scroller 
-Author: malihu
-Author URI: http://manos.malihu.gr
-License: MIT License (MIT)
-*/
-
-/*
-Copyright Manos Malihutsakis (email: manos@malihu.gr)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-
-/*
-The code below is fairly long, fully commented and should be normally used in development. 
-For production, use either the minified jquery.mCustomScrollbar.min.js script or 
-the production-ready jquery.mCustomScrollbar.concat.min.js which contains the plugin 
-and dependencies (minified). 
-*/
-
 (function(factory){
 	if(typeof define==="function" && define.amd){
 		define(["jquery"],factory);
@@ -61,316 +23,50 @@ and dependencies (minified).
 	}
 	init();
 }(function(){
-	
-	/* 
-	----------------------------------------
-	PLUGIN NAMESPACE, PREFIX, DEFAULT SELECTOR(S) 
-	----------------------------------------
-	*/
-	
 	var pluginNS="mCustomScrollbar",
 		pluginPfx="mCS",
 		defaultSelector=".mCustomScrollbar",
-	
-	
-		
-	
-	
-	/* 
-	----------------------------------------
-	DEFAULT OPTIONS 
-	----------------------------------------
-	*/
-	
+
 		defaults={
-			/*
-			set element/content width/height programmatically 
-			values: boolean, pixels, percentage 
-				option						default
-				-------------------------------------
-				setWidth					false
-				setHeight					false
-			*/
-			/*
-			set the initial css top property of content  
-			values: string (e.g. "-100px", "10%" etc.)
-			*/
 			setTop:0,
-			/*
-			set the initial css left property of content  
-			values: string (e.g. "-100px", "10%" etc.)
-			*/
 			setLeft:0,
-			/* 
-			scrollbar axis (vertical and/or horizontal scrollbars) 
-			values (string): "y", "x", "yx"
-			*/
 			axis:"y",
-			/*
-			position of scrollbar relative to content  
-			values (string): "inside", "outside" ("outside" requires elements with position:relative)
-			*/
 			scrollbarPosition:"inside",
-			/*
-			scrolling inertia
-			values: integer (milliseconds)
-			*/
 			scrollInertia:950,
-			/* 
-			auto-adjust scrollbar dragger length
-			values: boolean
-			*/
 			autoDraggerLength:true,
-			/*
-			auto-hide scrollbar when idle 
-			values: boolean
-				option						default
-				-------------------------------------
-				autoHideScrollbar			false
-			*/
-			/*
-			auto-expands scrollbar on mouse-over and dragging
-			values: boolean
-				option						default
-				-------------------------------------
-				autoExpandScrollbar			false
-			*/
-			/*
-			always show scrollbar, even when there's nothing to scroll 
-			values: integer (0=disable, 1=always show dragger rail and buttons, 2=always show dragger rail, dragger and buttons), boolean
-			*/
 			alwaysShowScrollbar:0,
-			/*
-			scrolling always snaps to a multiple of this number in pixels
-			values: integer, array ([y,x])
-				option						default
-				-------------------------------------
-				snapAmount					null
-			*/
-			/*
-			when snapping, snap with this number in pixels as an offset 
-			values: integer
-			*/
 			snapOffset:0,
-			/* 
-			mouse-wheel scrolling
-			*/
 			mouseWheel:{
-				/* 
-				enable mouse-wheel scrolling
-				values: boolean
-				*/
 				enable:true,
-				/* 
-				scrolling amount in pixels
-				values: "auto", integer 
-				*/
 				scrollAmount:"auto",
-				/* 
-				mouse-wheel scrolling axis 
-				the default scrolling direction when both vertical and horizontal scrollbars are present 
-				values (string): "y", "x" 
-				*/
 				axis:"y",
-				/* 
-				prevent the default behaviour which automatically scrolls the parent element(s) when end of scrolling is reached 
-				values: boolean
-					option						default
-					-------------------------------------
-					preventDefault				null
-				*/
-				/*
-				the reported mouse-wheel delta value. The number of lines (translated to pixels) one wheel notch scrolls.  
-				values: "auto", integer 
-				"auto" uses the default OS/browser value 
-				*/
 				deltaFactor:"auto",
-				/*
-				normalize mouse-wheel delta to -1 or 1 (disables mouse-wheel acceleration) 
-				values: boolean
-					option						default
-					-------------------------------------
-					normalizeDelta				null
-				*/
-				/*
-				invert mouse-wheel scrolling direction 
-				values: boolean
-					option						default
-					-------------------------------------
-					invert						null
-				*/
-				/*
-				the tags that disable mouse-wheel when cursor is over them
-				*/
 				disableOver:["select","option","keygen","datalist","textarea"]
 			},
-			/* 
-			scrollbar buttons
-			*/
 			scrollButtons:{ 
-				/*
-				enable scrollbar buttons
-				values: boolean
-					option						default
-					-------------------------------------
-					enable						null
-				*/
-				/*
-				scrollbar buttons scrolling type 
-				values (string): "stepless", "stepped"
-				*/
 				scrollType:"stepless",
-				/*
-				scrolling amount in pixels
-				values: "auto", integer 
-				*/
 				scrollAmount:"auto"
-				/*
-				tabindex of the scrollbar buttons
-				values: false, integer
-					option						default
-					-------------------------------------
-					tabindex					null
-				*/
 			},
-			/* 
-			keyboard scrolling
-			*/
 			keyboard:{ 
-				/*
-				enable scrolling via keyboard
-				values: boolean
-				*/
 				enable:true,
-				/*
-				keyboard scrolling type 
-				values (string): "stepless", "stepped"
-				*/
 				scrollType:"stepless",
-				/*
-				scrolling amount in pixels
-				values: "auto", integer 
-				*/
 				scrollAmount:"auto"
 			},
-			/*
-			enable content touch-swipe scrolling 
-			values: boolean, integer, string (number)
-			integer values define the axis-specific minimum amount required for scrolling momentum
-			*/
 			contentTouchScroll:25,
-			/*
-			enable/disable document (default) touch-swipe scrolling 
-			*/
 			documentTouchScroll:true,
-			/*
-			advanced option parameters
-			*/
 			advanced:{
-				/*
-				auto-expand content horizontally (for "x" or "yx" axis) 
-				values: boolean, integer (the value 2 forces the non scrollHeight/scrollWidth method, the value 3 forces the scrollHeight/scrollWidth method)
-					option						default
-					-------------------------------------
-					autoExpandHorizontalScroll	null
-				*/
-				/*
-				auto-scroll to elements with focus
-				*/
 				autoScrollOnFocus:"input,textarea,select,button,datalist,keygen,a[tabindex],area,object,[contenteditable='true']",
-				/*
-				auto-update scrollbars on content, element or viewport resize 
-				should be true for fluid layouts/elements, adding/removing content dynamically, hiding/showing elements, content with images etc. 
-				values: boolean
-				*/
 				updateOnContentResize:true,
-				/*
-				auto-update scrollbars each time each image inside the element is fully loaded 
-				values: "auto", boolean
-				*/
 				updateOnImageLoad:"auto",
-				/*
-				auto-update scrollbars based on the amount and size changes of specific selectors 
-				useful when you need to update the scrollbar(s) automatically, each time a type of element is added, removed or changes its size 
-				values: boolean, string (e.g. "ul li" will auto-update scrollbars each time list-items inside the element are changed) 
-				a value of true (boolean) will auto-update scrollbars each time any element is changed
-					option						default
-					-------------------------------------
-					updateOnSelectorChange		null
-				*/
-				/*
-				extra selectors that'll allow scrollbar dragging upon mousemove/up, pointermove/up, touchend etc. (e.g. "selector-1, selector-2")
-					option						default
-					-------------------------------------
-					extraDraggableSelectors		null
-				*/
-				/*
-				extra selectors that'll release scrollbar dragging upon mouseup, pointerup, touchend etc. (e.g. "selector-1, selector-2")
-					option						default
-					-------------------------------------
-					releaseDraggableSelectors	null
-				*/
-				/*
-				auto-update timeout 
-				values: integer (milliseconds)
-				*/
 				autoUpdateTimeout:60
 			},
-			/* 
-			scrollbar theme 
-			values: string (see CSS/plugin URI for a list of ready-to-use themes)
-			*/
 			theme:"light",
-			/*
-			user defined callback functions
-			*/
 			callbacks:{
-				/*
-				Available callbacks: 
-					callback					default
-					-------------------------------------
-					onCreate					null
-					onInit						null
-					onScrollStart				null
-					onScroll					null
-					onTotalScroll				null
-					onTotalScrollBack			null
-					whileScrolling				null
-					onOverflowY					null
-					onOverflowX					null
-					onOverflowYNone				null
-					onOverflowXNone				null
-					onImageLoad					null
-					onSelectorChange			null
-					onBeforeUpdate				null
-					onUpdate					null
-				*/
 				onTotalScrollOffset:0,
 				onTotalScrollBackOffset:0,
 				alwaysTriggerOffsets:true
 			}
-			/*
-			add scrollbar(s) on all elements matching the current selector, now and in the future 
-			values: boolean, string 
-			string values: "on" (enable), "once" (disable after first invocation), "off" (disable)
-			liveSelector values: string (selector)
-				option						default
-				-------------------------------------
-				live						false
-				liveSelector				null
-			*/
 		},
-	
-	
-	
-	
-	
-	/* 
-	----------------------------------------
-	VARS, CONSTANTS 
-	----------------------------------------
-	*/
-	
 		totalInstances=0, /* plugin instances amount */
 		liveTimers={}, /* live option timers */
 		oldIE=(window.attachEvent && !window.addEventListener) ? 1 : 0, /* detect IE < 9 */
@@ -382,10 +78,6 @@ and dependencies (minified).
 			"mCSB_buttonUp","mCSB_buttonDown","mCSB_buttonLeft","mCSB_buttonRight"
 		],
 		
-	
-	
-	
-	
 	/* 
 	----------------------------------------
 	METHODS 
@@ -393,13 +85,6 @@ and dependencies (minified).
 	*/
 	
 		methods={
-			
-			/* 
-			plugin initialization method 
-			creates the scrollbar(s), plugin data object and options
-			----------------------------------------
-			*/
-			
 			init:function(options){
 				
 				var options=$.extend(true,{},defaults,options),

@@ -21770,9 +21770,7 @@ var vD = `
     (e.FontOpenType = "--framer-input-font-open-type-features"),
     (e.PlaceholderColor = "--framer-input-placeholder-color"),
     (e.BoxShadow = "--framer-input-box-shadow"),
-    (e.FocusedBorderColor = "--framer-input-focused-border-color"),
     (e.FocusedBorderWidth = "--framer-input-focused-border-width"),
-    (e.FocusedBorderStyle = "--framer-input-focused-border-style"),
     (e.FocusedBackground = "--framer-input-focused-background"),
     (e.FocusedBoxShadow = "--framer-input-focused-box-shadow"),
     (e.FocusedTransition = "--framer-input-focused-transition"),
@@ -34799,11 +34797,9 @@ var A6 = {
     }),
     G(`.${et}:focus-within::after, .${et}.${Tw}::after`, {
       borderColor: G.variable(
-        "--framer-input-focused-border-color",
         "--framer-input-border-color"
       ),
       borderStyle: G.variable(
-        "--framer-input-focused-border-style",
         "--framer-input-border-style"
       ),
       borderWidth: G.variable("--framer-input-focused-border-width", DD),
