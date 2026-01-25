@@ -51,7 +51,6 @@ a:hover,
 a:focus,
 a:active {
   outline: none;
-  color: inherit;
   -webkit-text-decoration: none;
   -ms-text-decoration: none;
   -o-text-decoration: none;
@@ -249,7 +248,6 @@ textarea {
   height: 100%;
 }
 .display-table-cell {
-  display: table-cell;
   vertical-align: middle;
 }
 iframe {
@@ -471,9 +469,9 @@ iframe {
 }
 
 .bidu-sidebar {
+  grid-area: bidu-sidebar;
   width: 320px;
   height: 100%;
-  display: table-cell;
 }
 .bidu-head {
   display: inline-block;
@@ -627,11 +625,12 @@ figure.md-trigger.skeleton:before {
   list-style: outside none none;
 }
 .friendz-list li {
+  width: 100%;
   display: inline-block;
   padding: 5px 5px 5px 10px;
   position: relative;
-  width: 100%;
   border-radius: 50px 0 0 50px;
+  cursor: pointer;
 }
 .friendz-list li figure {
   display: inline-block;
@@ -731,13 +730,25 @@ figure.md-trigger.skeleton:before {
   width: 100%;
   position: relative;
 }
-.friendz-list,
-.calls-details,
-.groups {
-  height: 530px;
+
+.friendz-list {
+  height: 100%;
   border-top: 1px solid #dee2e6;
   border-bottom: 1px solid #dee2e6;
 }
+
+.groups {
+  height: 100%;
+  border-top: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.calls-details {
+  height: 100%;
+  border-top: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
+}
+
 .calls-details,
 .groups {
   display: inline-block;
@@ -815,11 +826,11 @@ figure.md-trigger.skeleton:before {
 }
 /*--- groups tab ---*/
 .friend {
-  display: inline-block;
-  position: relative;
   width: 100%;
   padding: 5px 10px;
-  border-bottom: 1px solid #dadada;
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
 }
 
 .friend > figure .status::before {
@@ -918,31 +929,34 @@ figure.md-trigger.skeleton:before {
   transform: scale(1.1);
 }
 /*--- status tab ---*/
+
 .users-status {
-  display: inline-block;
-  padding: 6px 5px;
   width: 100%;
+  display: inline-block;
+  padding: 6px 0 6px 0;
 }
+
 .users-status > span {
   color: #62626e;
   display: inline-block;
   font-size: 13px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   padding: 0 10px;
   width: 100%;
 }
 .users-status ul {
+  width: 100%;
+  height: 273px;
+  min-height: 273px;
   display: inline-block;
   list-style: outside none none;
   margin-bottom: 0;
   padding-left: 5px;
   padding-right: 0;
-  width: 100%;
-  max-height: 273px;
-  min-height: 273px;
-  height: 273px;
   overflow: hidden;
   position: relative;
+  border-top: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
 }
 .users-status .mCSB_inside > .mCSB_container {
   margin-right: 0;
@@ -992,9 +1006,8 @@ figure.md-trigger.skeleton:before {
 }
 /*--- chat area ---*/
 .bidu-chat-area {
-  height: 100vh;
-  padding: 15px;
-  display: table-cell;
+  grid-area: bidu-chat-area;
+  padding-top: 15px;
   vertical-align: top;
   position: relative;
   border: 1px solid #dee2e6;
@@ -1002,9 +1015,10 @@ figure.md-trigger.skeleton:before {
   border-top: 0;
 }
 .chatarea-head {
+  width: 100%;
+  padding: 0 15px;
   display: inline-block;
   position: relative;
-  width: 100%;
 }
 .chatarea-head > figure {
   display: inline-block;
@@ -1072,10 +1086,10 @@ figure.md-trigger.skeleton:before {
 }
 /*--- user info area ---*/
 .info-area {
+  grid-area: info-area;
   width: 320px;
   height: 100%;
   padding: 15px 0;
-  display: table-cell;
   position: relative;
 }
 .info-area > span {
@@ -1389,13 +1403,13 @@ figure.md-trigger.skeleton:before {
 }
 /*--- chat content ---*/
 .bidu-chat {
+  width: 100%;
   float: left;
-  height: inherit;
+  max-height: 700px;
   list-style: outside none disc;
   margin-bottom: 0;
   padding-left: 0px;
   position: relative;
-  width: 100%;
 }
 .bidu-chat li {
   display: inline-block;
@@ -1485,8 +1499,7 @@ figure.md-trigger.skeleton:before {
 }
 .chat-content {
   width: 100%;
-  height: 630px;
-  padding-top: 15px;
+  height: 96%;
   position: relative;
   display: inline-block;
 }
@@ -1713,6 +1726,18 @@ figure.md-trigger.skeleton:before {
   position: relative;
   width: 100%;
 }
+
+.type-div {
+  width: 100%;
+  position: absolute;
+  top: 86%;
+  left: 50%;
+  padding: 1rem;
+  transform: translateX(-50%);
+  background-color: #fff;
+  z-index: 50;
+}
+
 .type-area.skeleton button.send-mesg {
   display: none;
 }
@@ -2213,16 +2238,34 @@ li.right .more-optns ul {
   width: 100%;
 }
 .md-close {
-  background: #dbddea;
-  border-radius: 100%;
+  width: 30px;
   height: 30px;
   line-height: 30px;
   position: absolute;
   right: 10px;
   text-align: center;
   top: 10px;
-  width: 30px;
   border: none;
+  border-radius: 100%;
+  background: #dbddea;
+}
+
+.logout-close {
+  width: auto;
+  color: #fff;
+  padding: 4px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50px;
+  background: #6092d5;
+  background-image: -webkit-linear-gradient(
+      top,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.35)
+    ),
+    url(/images/bg02.webp);
 }
 
 .md-close > i {
@@ -2398,6 +2441,7 @@ li.right .more-optns ul {
 .logout-popup > span {
   display: inline-block;
   text-transform: uppercase;
+  font-weight: 500;
   vertical-align: sub;
 }
 .logout-popup > button {
@@ -2415,19 +2459,17 @@ li.right .more-optns ul {
   background: #232323;
 }
 
-.logout-popup > .a_close {
+.a_close {
   width: auto;
-  height: auto;
-  position: unset;
   color: #fff;
-  float: right;
-  font-weight: 600;
-  line-height: initial;
-  margin: 0 5px;
-  padding: 5px 25px;
-  border-radius: 20px;
-  background: #6092d5;
-  border: none;
+  padding: 4px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  border: 0;
+  border-radius: 50px;
+  background: #7d7f83;
 }
 /*--- search message popup ---*/
 .searchinchat {
@@ -3403,7 +3445,6 @@ a.main-btn2 {
   position: relative;
 }
 .sign-image > figure {
-  display: table-cell;
   vertical-align: middle;
   width: 100%;
 }
@@ -3950,4 +3991,49 @@ body.dark-theme {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.three-colums-div {
+  height: 90.7vh;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 2.8fr 1fr;
+  grid-template-areas: "bidu-sidebar bidu-chat-area info-area";
+}
+
+.answer-div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+@media (max-width: 1160px) {
+  .bidu-area {
+    height: 100%;
+    border-radius: 0;
+    overflow-y: auto;
+  }
+
+  .three-colums-div {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "bidu-chat-area"
+      "bidu-sidebar"
+      "info-area";
+    gap: 10px;
+  }
+
+  .bidu-sidebar,
+  .bidu-chat-area,
+  .info-area {
+    width: 100%;
+  }
+
+  .bidu-chat-area {
+    padding-left: 15px;
+  }
 }
