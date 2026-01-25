@@ -151,7 +151,7 @@ timer.start();
 
 	function listFilter(searchDir, list) { 
 	  var form = $("<form>").attr({"class":"filterform","action":"#"}),
-	  input = $("<input>").attr({"class":"filterinput","type":"text","placeholder":"Search Contacts..."});
+	  input = $("<input>").attr({"class":"filterinput","type":"text","placeholder":"Buscar contactos..."});
 	  $(form).append(input).appendTo(searchDir);
 
 	  $(input)

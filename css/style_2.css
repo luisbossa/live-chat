@@ -308,6 +308,7 @@ iframe {
   font-size: 13px;
   padding: 4px 10px;
   vertical-align: middle;
+  color: #ebebeb;
   -webkit-transition: all 0.2s linear 0s;
   -o-transition: all 0.2s linear 0s;
   transition: all 0.2s linear 0s;
@@ -350,10 +351,11 @@ iframe {
   width: 100%;
 }
 .submenu > li > a {
+  width: 100%;
   display: inline-block;
   font-size: 13px;
   text-transform: capitalize;
-  width: 100%;
+  color: #ebebeb;
   -webkit-transition: all 0.2s linear 0s;
   -o-transition: all 0.2s linear 0s;
   transition: all 0.2s linear 0s;
