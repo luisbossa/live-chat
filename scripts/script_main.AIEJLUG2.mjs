@@ -1309,50 +1309,12 @@ async function Yr({ routeId: r, pathVariables: a, localeId: n }) {
       routes: ie,
       collectionUtils: Ee,
       framerSiteId: Ct,
-      notFoundPage: z(() =>
-        import("./_oAZKosqjZssM2CkyJqupQ_5zCx8GRINwAmz418cCdY.HCXA3O53.mjs")
-      ),
       isReducedMotion: void 0,
       localeId: n,
       locales: De,
       preserveQueryParams: void 0,
-      siteCanonicalURL: "https://soonix.framer.website",
-      EditorBar:
-        typeof l > "u"
-          ? void 0
-          : (() => {
-              if (
-                !/bot|-google|google-|yandex|ia_archiver|crawl|spider/iu.test(
-                  Y.userAgent
-                )
-              )
-                return z(async () => {
-                  let { createEditorBar: i } = await import(
-                    "https://edit.framer.com/init.mjs"
-                  );
-                  return {
-                    default: i({
-                      dependencies: {
-                        __version: 1,
-                        framer: {
-                          useCurrentRoute: Je,
-                          useLocaleInfo: C,
-                          useRouter: he,
-                        },
-                        react: {
-                          createElement: T,
-                          memo: He,
-                          useCallback: We,
-                          useEffect: je,
-                          useRef: U,
-                          useState: Qe,
-                        },
-                        "react-dom": { createPortal: qe },
-                      },
-                    }),
-                  };
-                });
-            })(),
+      siteCanonicalURL: "",
+      EditorBar: void 0,
       LayoutTemplate: Gr,
     }),
     c = T(ot, {
@@ -1402,8 +1364,7 @@ async function Ut(r, a) {
         return;
     } else
       console.error(
-        `Fatal crash has happened. If you are the author of this website, please report this issue to the Framer team via https://www.framer.community/:
-`,
+        `Fatal crash has happened. If you are the author of this website, please report this issue to the Framer team via`,
         t,
         u
       );

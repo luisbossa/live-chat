@@ -19189,8 +19189,6 @@ var VC = class {
       return (
         pA(
           "Animatable()",
-          "2.0.0",
-          "the new animation API (https://www.framer.com/api/animation/)"
         ),
         Wn(t) ? t : new gA(t)
       );
@@ -22986,7 +22984,7 @@ var L3 =
               ? `${String(t)} is not available in this version of Framer.`
               : `${String(
                   t
-                )} is only available inside of Framer. https://www.framer.com/`
+                )} is only available inside of Framer.`
           );
     },
   },
@@ -24611,11 +24609,6 @@ var Xi = {
   },
   c5 = class {
     constructor() {
-      T(this, "warning", () => {
-        is(
-          "The Navigator API is only available inside of Framer: https://www.framer.com/"
-        );
-      }),
         T(this, "goBack", () => this.warning()),
         T(this, "instant", () => this.warning()),
         T(this, "fade", () => this.warning()),
@@ -26626,31 +26619,6 @@ var Q9 = S.forwardRef(function (
     static getDerivedStateFromError(e) {
       return { error: e };
     }
-    componentDidCatch(e, t) {
-      if (!Zw(e)) return;
-      let n = t?.componentStack;
-      console.error(
-        `Caught an error in SynchronousSuspenseErrorBoundary:
-
-`,
-        e,
-        `
-
-Component stack:
-`,
-        n,
-        `
-
-This error indicates a state update wasn\u2019t wrapped with startTransition. Some of the UI might flash as a result. If you are the author of this website, check recently added custom code, and if the issue persists, report it to the Framer team via https://www.framer.community/.`
-      );
-      let r =
-        e instanceof Error && typeof e.stack == "string" ? e.stack : void 0;
-      Lr("published_site_load_recoverable_error", {
-        message: String(e),
-        stack: r,
-        componentStack: r ? void 0 : n,
-      });
-    }
     render() {
       let e = this.state.error;
       if (e === void 0) return this.props.children;
@@ -27102,12 +27070,7 @@ var w7 = class extends Se {
       super(...arguments),
         T(this, "state", { error: void 0 }),
         T(this, "message", "Made UI non-interactive due to an error"),
-        T(this, "messageFatal", "Fatal error"),
-        T(
-          this,
-          "messageReport",
-          "If you are the author of this website, please report this issue to the Framer team via https://www.framer.community/"
-        );
+        T(this, "messageFatal", "Fatal error")
     }
     static getDerivedStateFromError(e) {
       return { error: e };

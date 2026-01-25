@@ -1616,7 +1616,6 @@ var L = [
     "YinYang",
     "YoutubeLogo",
   ],
-  Z = "https://framer.com/m/phosphor-icons/",
   N = ["thin", "light", "regular", "bold", "fill", "duotone"],
   K = L.reduce((e, r) => ((e[r.toLowerCase()] = r), e), {});
 function i(e) {
