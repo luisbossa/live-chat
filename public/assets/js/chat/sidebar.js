@@ -46,7 +46,7 @@ function convItem(conv) {
   return `
     <li>
       <button class="${classes}" data-conv="${conv.id}">
-        <span class="avatar ${peer?.online ? "is-online" : ""}"><img src="${convAvatar(conv)}" alt="" loading="lazy"></span>
+        <span class="avatar ${peer?.online ? "is-online" : ""}" data-status="${peer?.status || "available"}"><img src="${convAvatar(conv)}" alt="" loading="lazy"></span>
         <span class="conv-body">
           <span class="conv-row">
             <span class="conv-name">${escapeHTML(convTitle(conv))}${peer?.official ? icon("verified", "badge-verified") : ""}</span>
@@ -61,6 +61,8 @@ function convItem(conv) {
               ${conv.muted ? icon("bell-off", "icon-muted") : ""}
               ${conv.pinned ? icon("pin", "icon-muted") : ""}
               ${conv.archived && !showArchived ? icon("archive", "icon-muted") : ""}
+              ${conv.disappearAfter ? icon("timer", "icon-muted") : ""}
+              ${conv.mentions ? `<b class="badge badge-mention" title="Te mencionaron">@</b>` : ""}
               ${conv.unread ? `<b class="badge ${conv.muted ? "is-muted" : ""}">${conv.unread > 99 ? "99+" : conv.unread}</b>` : ""}
               <span class="conv-more" role="button" tabindex="0" data-conv-menu="${conv.id}" aria-label="Opciones del chat">${icon("chevron-down", "icon-sm")}</span>
             </span>

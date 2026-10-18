@@ -48,7 +48,15 @@ const COLUMN_MIGRATIONS = [
   ["users", "balance_crc_cents", "INTEGER NOT NULL DEFAULT 25000000"],
   ["transactions", "currency", "TEXT NOT NULL DEFAULT 'USD'"],
   ["conversation_members", "archived", "INTEGER NOT NULL DEFAULT 0"],
+  ["conversations", "disappear_after", "INTEGER NOT NULL DEFAULT 0"],
+  ["messages", "expires_at", "INTEGER"],
+  ["users", "presence_status", "TEXT NOT NULL DEFAULT 'available'"],
+  ["users", "profile_color", "TEXT NOT NULL DEFAULT 'blue'"],
+  ["users", "birthday", "TEXT"],
 ];
+
+// Índices sobre columnas añadidas por migración (deben crearse después de ellas)
+const POST_MIGRATION = ["CREATE INDEX IF NOT EXISTS idx_messages_expires ON messages(expires_at) WHERE expires_at IS NOT NULL"];
 
 async function migrate() {
   for (const [table, column, definition] of COLUMN_MIGRATIONS) {
@@ -58,6 +66,7 @@ async function migrate() {
       console.log(`Migración: columna ${table}.${column} añadida`);
     }
   }
+  for (const sql of POST_MIGRATION) await client.execute(sql);
 }
 
 const db = {

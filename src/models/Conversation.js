@@ -2,14 +2,18 @@ const db = require("../config/database");
 const User = require("./User");
 const Message = require("./Message");
 
-// Conversaciones de un usuario con su estado de membresía y número de no leídos
+// Conversaciones de un usuario con su estado de membresía, no leídos y menciones sin leer
+const UNREAD_WHERE = `
+  x.conversation_id = c.id
+  AND x.id > m.last_read_id AND x.id > m.cleared_id
+  AND x.deleted_at IS NULL AND x.type <> 'system'
+  AND (x.expires_at IS NULL OR x.expires_at > CAST(strftime('%s', 'now') AS INTEGER) * 1000)
+  AND (x.sender_id IS NULL OR x.sender_id <> m.user_id)`;
+
 const LIST_SQL = `
   SELECT c.*, m.role, m.last_read_id, m.cleared_id, m.muted, m.pinned, m.archived,
-    (SELECT COUNT(*) FROM messages x
-      WHERE x.conversation_id = c.id
-        AND x.id > m.last_read_id AND x.id > m.cleared_id
-        AND x.deleted_at IS NULL AND x.type <> 'system'
-        AND (x.sender_id IS NULL OR x.sender_id <> m.user_id)) AS unread
+    (SELECT COUNT(*) FROM messages x WHERE ${UNREAD_WHERE}) AS unread,
+    (SELECT COUNT(*) FROM messages x, json_each(x.meta, '$.mentions') j WHERE ${UNREAD_WHERE} AND j.value = m.user_id) AS mentions
   FROM conversation_members m
   JOIN conversations c ON c.id = m.conversation_id
   WHERE m.user_id = ? AND m.hidden = 0`;
@@ -37,6 +41,17 @@ const SQL = {
     SET last_delivered_id = MAX(last_delivered_id, @delivered),
         last_read_id = MAX(last_read_id, @read)
     WHERE conversation_id = @conversationId AND user_id = @userId`,
+  receiptEvent: "INSERT INTO receipt_events (conversation_id, user_id, kind, up_to_id, at) VALUES (?, ?, ?, ?, ?)",
+  setDisappearing: "UPDATE conversations SET disappear_after = ? WHERE id = ?",
+  pinnedFor: (n) => `
+    SELECT p.conversation_id, p.pinned_by, p.pinned_at, x.*
+    FROM pinned_messages p JOIN messages x ON x.id = p.message_id
+    WHERE p.conversation_id IN (${placeholders(n)}) AND x.deleted_at IS NULL
+    ORDER BY p.pinned_at`,
+  scheduledCount: (n) => `
+    SELECT conversation_id, COUNT(*) AS n FROM scheduled_messages
+    WHERE sender_id = ? AND conversation_id IN (${placeholders(n)})
+    GROUP BY conversation_id`,
   deliverAll: `
     UPDATE conversation_members
     SET last_delivered_id = (SELECT COALESCE(last_message_id, 0) FROM conversations WHERE id = conversation_id)
@@ -82,11 +97,36 @@ async function membersOf(conversationIds) {
   return grouped;
 }
 
-/** Filas de conversación → objetos para el cliente, con 2 consultas extra en total (no por chat). */
+/** Mensajes fijados de varias conversaciones → Map(conversationId → [{ ...mensaje, pinnedBy, pinnedAt }]). */
+async function pinnedOf(rows) {
+  const grouped = new Map(rows.map((r) => [r.id, []]));
+  if (!rows.length) return grouped;
+  const now = Date.now();
+  const cleared = new Map(rows.map((r) => [r.id, r.cleared_id || 0]));
+  const pins = (await db.all(SQL.pinnedFor(rows.length), rows.map((r) => r.id))).filter(
+    (p) => p.id > cleared.get(p.conversation_id) && (!p.expires_at || p.expires_at > now)
+  );
+  const hydrated = await Message.hydrate(pins);
+  pins.forEach((p, i) => grouped.get(p.conversation_id).push({ ...hydrated[i], pinnedBy: p.pinned_by, pinnedAt: p.pinned_at }));
+  return grouped;
+}
+
+async function scheduledOf(rows, viewer) {
+  if (!rows.length) return new Map();
+  const counts = await db.all(SQL.scheduledCount(rows.length), [viewer.id, ...rows.map((r) => r.id)]);
+  return new Map(counts.map((c) => [c.conversation_id, c.n]));
+}
+
+/** Filas de conversación → objetos para el cliente, con unas pocas consultas en total (no por chat). */
 async function serializeAll(rows, viewer) {
   if (!rows.length) return [];
   const lastIds = rows.filter((r) => r.last_message_id && r.last_message_id > r.cleared_id).map((r) => r.last_message_id);
-  const [lastMessages, members] = await Promise.all([Message.findMany(lastIds), membersOf(rows.map((r) => r.id))]);
+  const [lastMessages, members, pinned, scheduled] = await Promise.all([
+    Message.findMany(lastIds),
+    membersOf(rows.map((r) => r.id)),
+    pinnedOf(rows),
+    scheduledOf(rows, viewer),
+  ]);
 
   return rows.map((row) => ({
     id: row.id,
@@ -101,6 +141,10 @@ async function serializeAll(rows, viewer) {
     pinned: Boolean(row.pinned),
     archived: Boolean(row.archived),
     unread: row.unread || 0,
+    mentions: row.mentions || 0,
+    disappearAfter: row.disappear_after || 0,
+    pinnedMessages: pinned.get(row.id),
+    scheduledCount: scheduled.get(row.id) || 0,
     clearedId: row.cleared_id || 0,
     lastMessage: lastMessages.get(row.last_message_id) || null,
     members: members.get(row.id).map((m) => memberView(m, viewer)),
@@ -182,14 +226,43 @@ const Conversation = {
     });
   },
 
-  async updateReceipts(conversationId, userId, { delivered = 0, read = 0 }) {
+  /** Avanza entregado/leído y guarda el momento (para "Info del mensaje"). `at` permite fechas pasadas (datos demo). */
+  async updateReceipts(conversationId, userId, { delivered = 0, read = 0, at = Date.now() }) {
+    const before = await Conversation.getMember(conversationId, userId);
     await db.run(SQL.receipts, { conversationId, userId, delivered: Math.max(delivered, read), read });
-    return Conversation.getMember(conversationId, userId);
+    const after = await Conversation.getMember(conversationId, userId);
+    if (before && after) {
+      const events = [];
+      if (after.last_delivered_id > before.last_delivered_id) events.push([SQL.receiptEvent, [conversationId, userId, "delivered", after.last_delivered_id, at]]);
+      if (after.last_read_id > before.last_read_id) events.push([SQL.receiptEvent, [conversationId, userId, "read", after.last_read_id, at]]);
+      if (events.length) await db.batch(events);
+    }
+    return after;
   },
 
   /** Al conectarse, todo lo pendiente pasa a "entregado". */
   async markAllDelivered(userId) {
-    return (await db.all(SQL.deliverAll, [userId])).map((r) => ({ conversationId: r.conversation_id, deliveredId: r.last_delivered_id }));
+    const rows = await db.all(SQL.deliverAll, [userId]);
+    const now = Date.now();
+    if (rows.length) await db.batch(rows.map((r) => [SQL.receiptEvent, [r.conversation_id, userId, "delivered", r.last_delivered_id, now]]));
+    return rows.map((r) => ({ conversationId: r.conversation_id, deliveredId: r.last_delivered_id }));
+  },
+
+  setDisappearing(conversationId, seconds) {
+    return db.run(SQL.setDisappearing, [seconds, conversationId]);
+  },
+
+  /** Fija o desfija un mensaje. Devuelve "pinned", "unpinned" o "full" (ya hay 3). */
+  async togglePin(conversationId, messageId, userId) {
+    const existing = await db.get("SELECT 1 AS ok FROM pinned_messages WHERE conversation_id = ? AND message_id = ?", [conversationId, messageId]);
+    if (existing) {
+      await db.run("DELETE FROM pinned_messages WHERE conversation_id = ? AND message_id = ?", [conversationId, messageId]);
+      return "unpinned";
+    }
+    const { n } = await db.get("SELECT COUNT(*) AS n FROM pinned_messages WHERE conversation_id = ?", [conversationId]);
+    if (n >= 3) return "full";
+    await db.run("INSERT INTO pinned_messages (conversation_id, message_id, pinned_by, pinned_at) VALUES (?, ?, ?, ?)", [conversationId, messageId, userId, Date.now()]);
+    return "pinned";
   },
 
   async members(conversationId, viewer) {

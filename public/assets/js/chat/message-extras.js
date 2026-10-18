@@ -11,14 +11,14 @@ const MAX_FORWARD = 5;
 // ==========================================================================
 // Destacar
 // ==========================================================================
-export async function toggleStar(msg) {
+export async function toggleStar(msg, { silent = false } = {}) {
   const wasStarred = state.starred.has(msg.id);
   // Se marca al instante y se deshace si falla
   setStarred(msg.id, !wasStarred);
   try {
     const { starred } = await api.star(msg.id);
     setStarred(msg.id, starred);
-    toast(starred ? "Mensaje destacado" : "Ya no está destacado", { icon: starred ? "star" : "star-off" });
+    if (!silent) toast(starred ? "Mensaje destacado" : "Ya no está destacado", { icon: starred ? "star" : "star-off" });
   } catch (err) {
     setStarred(msg.id, wasStarred);
     toastError(err.message);
@@ -110,11 +110,11 @@ function initStarred() {
 // ==========================================================================
 // Reenviar
 // ==========================================================================
-let forwarding = null; // mensaje que se reenvía
+let forwarding = []; // mensajes que se reenvían (uno o varios seleccionados)
 const selected = new Set();
 
-export function openForward(msg) {
-  forwarding = msg;
+export function openForward(msgs) {
+  forwarding = (Array.isArray(msgs) ? msgs : [msgs]).filter(Boolean);
   openModal("modal-forward");
 }
 
@@ -165,7 +165,10 @@ function initForward() {
   onModalOpen("modal-forward", () => {
     selected.clear();
     $("#forwardSearch").value = "";
-    $("#forwardPreview").innerHTML = forwarding ? forwardPreview(forwarding) : "";
+    $("#forwardPreview").innerHTML =
+      forwarding.length === 1
+        ? forwardPreview(forwarding[0])
+        : `<span>${icon("forward", "icon-sm")}${forwarding.length} mensajes seleccionados</span>`;
     renderForwardList();
   });
 
@@ -181,14 +184,20 @@ function initForward() {
   });
 
   $("#forwardSend").addEventListener("click", async () => {
-    if (!forwarding || !selected.size) return;
+    if (!forwarding.length || !selected.size) return;
     const btn = $("#forwardSend");
     btn.disabled = true;
     try {
-      const { messages } = await api.forward(forwarding.id, [...selected]);
+      // En orden cronológico, para que lleguen igual que en el chat original
+      let targets = new Set();
+      for (const msg of [...forwarding].sort((a, b) => a.id - b.id)) {
+        const { messages } = await api.forward(msg.id, [...selected]);
+        messages.forEach((m) => targets.add(m.conversationId));
+      }
       closeModal("modal-forward");
-      const n = messages.length;
-      toast(n === 1 ? `Reenviado a ${convTitle(getConv(messages[0].conversationId))}` : `Reenviado a ${n} chats`, { tone: "success", icon: "forward" });
+      targets = [...targets];
+      const what = forwarding.length === 1 ? "Reenviado" : `${forwarding.length} mensajes reenviados`;
+      toast(targets.length === 1 ? `${what} a ${convTitle(getConv(targets[0]))}` : `${what} a ${targets.length} chats`, { tone: "success", icon: "forward" });
     } catch (err) {
       toastError(err.message);
     } finally {

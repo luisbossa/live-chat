@@ -15,11 +15,20 @@
     <div class="msg-menu-reactions" id="msgMenuReactions"></div>
     <button role="menuitem" data-msg-action="reply"><%- icon('reply') %>Responder</button>
     <button role="menuitem" data-msg-action="forward"><%- icon('forward') %>Reenviar</button>
-    <button role="menuitem" data-msg-action="star"><%- icon('star') %><span>Destacar</span></button>
     <button role="menuitem" data-msg-action="copy"><%- icon('copy') %>Copiar</button>
+    <button role="menuitem" data-msg-action="star"><%- icon('star') %><span>Destacar</span></button>
+    <button role="menuitem" data-msg-action="pin"><%- icon('pin') %><span>Fijar</span></button>
     <button role="menuitem" data-msg-action="edit"><%- icon('edit') %>Editar</button>
-    <button role="menuitem" data-msg-action="delete" class="is-danger"><%- icon('trash') %>Eliminar para todos</button>
+    <button role="menuitem" data-msg-action="info"><%- icon('message-info') %>Info.</button>
+    <button role="menuitem" data-msg-action="select"><%- icon('check-circle') %>Seleccionar</button>
+    <hr>
+    <button role="menuitem" data-msg-action="delete" class="is-danger"><%- icon('trash') %>Eliminar</button>
 </div>
+
+<!-- Reacción rápida al pasar el ratón -->
+<div class="react-tray" id="reactTray" role="menu" hidden></div>
+<!-- Selector completo para reaccionar con cualquier emoji -->
+<div class="popover emoji-panel react-picker" id="reactPicker" hidden></div>
 
 <!-- Menú contextual de chats (lista) -->
 <div class="msg-menu conv-menu" id="convMenu" role="menu" hidden>

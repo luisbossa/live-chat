@@ -5,7 +5,8 @@
 
   function fields() {
     const pick = (name) => [...document.querySelectorAll(`input[name="${name}"]`)].find(visible);
-    return { email: pick("Email"), password: pick("Password") };
+    // El campo se llama "Email" en el diseño de Framer, pero ahora es el nombre de usuario
+    return { username: pick("Email"), password: pick("Password") };
   }
 
   // Mensaje de error bajo el formulario
@@ -39,8 +40,8 @@
     e.stopPropagation();
     if (sending) return;
 
-    const { email, password } = fields();
-    if (!email?.value.trim() || !password?.value) return showError("Escribe tu correo y tu contraseña.");
+    const { username, password } = fields();
+    if (!username?.value.trim() || !password?.value) return showError("Escribe tu usuario y tu contraseña.");
 
     sending = true;
     try {
@@ -48,7 +49,7 @@
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
-          email: email.value.trim(),
+          login: username.value.trim(),
           password: password.value,
           next: new URLSearchParams(location.search).get("next") || "/chat",
         }),

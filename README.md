@@ -5,9 +5,12 @@ App de **chat y videollamadas en tiempo real** hecha con Node.js, Express, EJS, 
 ## Funcionalidades
 
 **Cuenta**
-- Registro en dos pasos con validación, comprobación de nombre de usuario en vivo y foto de perfil
+- **Sin correo electrónico**: registro en un solo paso (nombre, usuario y contraseña de 6+ caracteres) con vista previa en vivo, comprobación del usuario mientras escribes, sugerencias si está ocupado, indicador de seguridad y foto opcional
+- Inicio de sesión con **@usuario** y contraseña (desde la landing o `/login`)
 - Inicio de sesión desde la landing o desde `/login`, con sesiones guardadas en SQLite
-- Perfil editable y código QR personal para que otros te agreguen (`/u/tu_usuario`)
+- **Mi perfil** con portada, vista previa y estadísticas: foto (o quitarla), nombre, usuario con comprobación en vivo, info con frases rápidas, teléfono, **cumpleaños** (tus contactos ven el aviso ese día) y **color de perfil** (portada y tu nombre en los grupos)
+- **Estado de disponibilidad**: Disponible, Ocupado, Ausente o **No molestar** (silencia los avisos); tus contactos lo ven en tu foto y en tu info
+- Código QR personal y enlace para que otros te agreguen (`/u/tu_usuario`)
 - Bienvenida para usuarios nuevos: chat de la cuenta oficial "Yabla", pantalla de inicio con primeros pasos y personas que quizá conozcas (botón "Saludar")
 
 **Mensajería en tiempo real**
@@ -18,6 +21,12 @@ App de **chat y videollamadas en tiempo real** hecha con Node.js, Express, EJS, 
 - "Escribiendo…", "en línea" y "últ. vez…"
 - Responder citando un mensaje, **reacciones**, editar (15 min) y eliminar para todos
 - **Reenviar** un mensaje a hasta 5 chats a la vez (con la etiqueta "Reenviado")
+- **Acciones rápidas** al pasar el ratón (reaccionar y responder), **reaccionar con cualquier emoji** y **deslizar para responder** en móvil
+- **Seleccionar varios mensajes** para copiar, destacar, reenviar o eliminar, y **eliminar para mí o para todos**
+- **Mensajes fijados** (hasta 3 por chat) en una barra que se recorre al tocarla, como en Telegram
+- **Info. del mensaje**: cuándo se entregó y se leyó, por persona en los grupos
+- **@menciones** en grupos con sugerencias al escribir; avisan aunque el chat esté silenciado
+- **Mensajes temporales** por chat (24 horas, 7 días o 90 días) y **mensajes programados** (clic derecho o pulsación larga en Enviar)
 - **Mensajes destacados** con estrella: lista propia para volver a ellos con un toque
 - Separador **"N mensajes sin leer"**: el chat se abre en el primer mensaje nuevo
 - **Vista previa de enlaces** (título, descripción e imagen de la página)
@@ -42,8 +51,10 @@ App de **chat y videollamadas en tiempo real** hecha con Node.js, Express, EJS, 
 - Cada pago aparece como mensaje en el chat y los saldos se actualizan en vivo; historial con la moneda de cada movimiento
 
 **Interfaz**
-- Modo claro y oscuro, diseño responsive (escritorio, tablet y móvil con botón "atrás")
-- **Apariencia** en Ajustes: color de la app (6 colores), fondo del chat (5 estilos) y tamaño del texto
+- Diseño responsive (escritorio, tablet y móvil con botón "atrás")
+- **Temas**: Sistema (automático), Claro, Sepia, Oscuro, Atenuado, Océano y Medianoche (negro puro para OLED), desde el botón "Tema" de la barra lateral o en Ajustes
+- **Apariencia** en Ajustes: color de la app (6 colores, combinables con cualquier tema), fondo del chat (5 estilos) y tamaño del texto
+- Botón **Salir** en la barra lateral para cerrar sesión
 - **Buscador rápido `Ctrl + K`** para saltar a cualquier chat o acción, y atajos de teclado (`Ctrl + /` los muestra todos)
 
 ## Requisitos
@@ -72,14 +83,14 @@ En producción usa `npm start`. La configuración se lee de un archivo `.env` (c
 
 Tras `npm run seed`, todas usan la contraseña **`demo1234`**:
 
-| Usuario | Correo |
+| Nombre | Usuario |
 |---|---|
-| Alex Rivera | `alex@yabla.app` |
-| Karla Castro | `karla@yabla.app` |
-| Bucky Barnes | `bucky@yabla.app` |
-| Susan Miller | `susan@yabla.app` |
+| Andrés Solano | `andres` |
+| Karla Jiménez | `karla` |
+| Mauricio Vargas | `mauricio` |
+| Daniela Mora | `daniela` |
 
-(También `alan`, `lucie`, `lucy`, `sarah`, `diego` y `fawad` `@yabla.app`.)
+(También `esteban`, `valeria`, `fernanda`, `mariana`, `diego`, `josepablo`, `sofia` y `kevin`.) Son personas ficticias con nombres comunes en Costa Rica.
 
 Para probar el tiempo real y las llamadas, abre dos navegadores (o una ventana normal y otra de incógnito) e inicia sesión con dos cuentas distintas.
 
@@ -129,6 +140,9 @@ Para probar el tiempo real y las llamadas, abre dos navegadores (o una ventana n
 | `link-preview.js` | Tarjetas de vista previa de enlaces |
 | `appearance.js` | Color, fondo del chat y tamaño del texto |
 | `shortcuts.js` | Buscador rápido (Ctrl + K) y atajos de teclado |
+| `chat-actions.js` | Reacciones, deslizar para responder, selección, eliminar, info del mensaje y fijados |
+| `mentions.js` | @menciones en grupos |
+| `timed.js` | Mensajes temporales y programados |
 
 ## API REST
 
@@ -147,6 +161,10 @@ Todas las rutas `/api/*` (salvo la de disponibilidad) requieren sesión y respon
 | `POST /api/messages/:id/star` · `GET /api/stars` | Destacar o quitar, y lista de destacados |
 | `POST /api/messages/:id/forward` | Reenviar a varios chats (`conversationIds`, máx. 5) |
 | `GET /api/link-preview?url=` | Vista previa de un enlace (sin direcciones internas, 4 s y 256 KB máx.) |
+| `POST /api/messages/:id/pin` · `GET /api/messages/:id/info` | Fijar/desfijar y entregas y lecturas por persona |
+| `POST /api/messages/hide` | Eliminar para mí (`ids`) |
+| `PATCH /api/conversations/:id/disappearing` | Mensajes temporales (`seconds`: 0, 86400, 604800 o 7776000) |
+| `GET/POST /api/conversations/:id/scheduled` · `DELETE /api/scheduled/:id` · `POST /api/scheduled/:id/send` | Mensajes programados |
 | `GET/POST /api/stories` · `POST …/:id/view` · `GET …/:id/viewers` | Estados |
 | `GET /api/wallet` · `POST /api/wallet/send` | Billetera |
 
@@ -157,7 +175,7 @@ Todas las rutas `/api/*` (salvo la de disponibilidad) requieren sesión y respon
 | `message:new`, `message:update` | `typing` |
 | `receipt` (entregado / leído), `typing`, `presence` | `message:delivered`, `conversation:read` |
 | `conversation:new`, `conversation:update`, `conversation:removed` | `call:invite`, `call:accept`, `call:reject` |
-| `story:new`, `story:viewed`, `story:deleted`, `wallet:update`, `user:update`, `star:update` | `call:signal` (SDP e ICE), `call:end` |
+| `story:new`, `story:viewed`, `story:deleted`, `wallet:update`, `user:update`, `star:update`, `message:expired`, `message:hidden` | `call:signal` (SDP e ICE), `call:end` |
 | `call:incoming`, `call:accepted`, `call:signal`, `call:ended` | |
 
 ## Despliegue gratis (Render + Turso)
@@ -185,7 +203,7 @@ No hace falta crear tablas: la app las crea sola al arrancar.
 1. Sube el repositorio a GitHub.
 2. En [Render](https://dashboard.render.com): **New → Blueprint** y elige el repositorio. Render lee [`render.yaml`](render.yaml).
 3. Te pedirá dos valores: pega la URL en `TURSO_DATABASE_URL` y el token en `TURSO_AUTH_TOKEN`.
-4. Pulsa **Apply**. En unos minutos tendrás la app en `https://yabla-chat.onrender.com` (o el nombre que elijas). Con `SEED_DEMO=true` ya podrás entrar con `alex@yabla.app` / `demo1234`.
+4. Pulsa **Apply**. En unos minutos tendrás la app en `https://yabla-chat.onrender.com` (o el nombre que elijas). Con `SEED_DEMO=true` ya podrás entrar con el usuario `andres` y la contraseña `demo1234`.
 
 `SESSION_SECRET` lo genera Render automáticamente; no tienes que crearlo.
 

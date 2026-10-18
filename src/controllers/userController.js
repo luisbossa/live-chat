@@ -38,12 +38,30 @@ exports.updateProfile = async (req, res) => {
     if (owner && owner.id !== req.user.id) throw httpError(409, "Ese nombre de usuario ya está en uso.");
   }
 
+  // Disponibilidad, color del perfil y cumpleaños (opcional, solo día y mes)
+  const status = req.body.status !== undefined ? validate.str(req.body.status, 20) : undefined;
+  if (status !== undefined && !User.STATUSES.includes(status)) throw httpError(422, "Estado no válido.");
+  const color = req.body.color !== undefined ? validate.str(req.body.color, 20) : undefined;
+  if (color !== undefined && !User.COLORS.includes(color)) throw httpError(422, "Color no válido.");
+  let birthday;
+  if (req.body.birthday !== undefined) {
+    birthday = validate.str(req.body.birthday, 5) || null;
+    if (birthday && !validate.birthday(birthday)) throw httpError(422, "Fecha de cumpleaños no válida.");
+  }
+
+  // Foto: una nueva sustituye a la anterior; removeAvatar vuelve a la predeterminada
+  let avatar = (await upload.save(req.file)) || undefined;
+  if (!avatar && validate.toBool(req.body.removeAvatar)) avatar = null;
+
   const user = await User.update(req.user.id, {
     name,
     username,
     bio: req.body.bio !== undefined ? validate.str(req.body.bio, 140) : undefined,
     phone: req.body.phone !== undefined ? validate.str(req.body.phone, 30) : undefined,
-    avatar: (await upload.save(req.file)) || undefined,
+    avatar,
+    presence_status: status,
+    profile_color: color,
+    birthday,
   });
 
   // Los contactos ven el cambio al instante

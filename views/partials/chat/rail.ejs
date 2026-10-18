@@ -15,11 +15,22 @@
     </div>
 
     <div class="rail-bottom">
-        <button class="rail-btn" data-action="theme" aria-label="Cambiar tema">
-            <svg class="icon" aria-hidden="true"><use href="/assets/images/icons.svg#i-moon" data-theme-icon></use></svg><span>Tema</span>
+        <div class="dropdown rail-theme">
+            <button class="rail-btn" data-dropdown aria-label="Elegir tema" aria-haspopup="true" aria-expanded="false" title="Tema">
+                <%- icon('palette') %><span>Tema</span>
+            </button>
+            <div class="menu theme-menu" role="menu" aria-label="Tema">
+                <p class="theme-menu-title">Tema</p>
+                <div class="theme-grid" id="themeMenu" role="radiogroup" aria-label="Tema"></div>
+                <hr>
+                <button role="menuitem" data-open="modal-settings"><%- icon('settings') %>Más opciones de apariencia</button>
+            </div>
+        </div>
+        <button class="rail-btn rail-logout" data-open="modal-logout" aria-label="Cerrar sesión" title="Cerrar sesión">
+            <%- icon('logout') %><span>Salir</span>
         </button>
         <button class="rail-btn rail-me" data-open="modal-profile" aria-label="Mi perfil">
-            <img src="<%= user.avatar %>" alt="" data-me="avatar"><span>Perfil</span>
+            <span class="rail-me-pic"><img src="<%= user.avatar %>" alt="" data-me="avatar"><i class="status-dot" data-me-status></i></span><span>Perfil</span>
         </button>
     </div>
 </nav>

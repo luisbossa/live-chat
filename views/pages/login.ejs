@@ -9,7 +9,7 @@
             <div class="auth-step is-active">
                 <span class="logo logo-lg"><%- icon('logo') %></span>
                 <h1 class="title">Bienvenido de nuevo</h1>
-                <p class="subtitle">Inicia sesión para seguir chateando.</p>
+                <p class="subtitle">Entra con tu usuario y contraseña. Sin correos ni códigos.</p>
 
                 <% if (locals.error) { %>
                 <p class="form-alert" role="alert"><%= error %></p>
@@ -18,9 +18,12 @@
                 <form method="post" action="/login">
                     <input type="hidden" name="next" value="<%= locals.next || '/chat' %>">
                     <div class="field">
-                        <label for="login" class="label">Correo o usuario</label>
-                        <input id="login" name="login" class="input" value="<%= locals.login || '' %>"
-                            placeholder="tu@correo.com" autocomplete="username" required autofocus>
+                        <label for="login" class="label">Usuario</label>
+                        <div class="input-prefix">
+                            <span>@</span>
+                            <input id="login" name="login" class="input" value="<%= locals.login || '' %>"
+                                placeholder="tu_usuario" autocomplete="username" autocapitalize="none" spellcheck="false" required autofocus>
+                        </div>
                     </div>
                     <div class="field">
                         <label for="password" class="label">Contraseña</label>

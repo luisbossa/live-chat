@@ -37,18 +37,26 @@ router.get("/conversations/:id/media", h(conversations.media));
 router.patch("/conversations/:id", upload.image.single("avatar"), h(conversations.updateGroup));
 router.patch("/conversations/:id/settings", h(conversations.updateSettings));
 router.post("/conversations/:id/clear", h(conversations.clear));
+router.patch("/conversations/:id/disappearing", h(conversations.updateDisappearing));
+router.get("/conversations/:id/scheduled", h(conversations.scheduled));
+router.post("/conversations/:id/scheduled", h(conversations.schedule));
 router.post("/conversations/:id/members", h(conversations.addMembers));
 router.delete("/conversations/:id/members/me", h(conversations.leave));
 
 // Mensajes
 router.get("/stars", h(messages.starred));
 router.get("/link-preview", h(messages.linkPreview));
+router.post("/messages/hide", h(messages.hide));
+router.delete("/scheduled/:id", h(messages.cancelScheduled));
+router.post("/scheduled/:id/send", h(messages.sendScheduledNow));
 router.use("/messages/:id", h(messages.load));
 router.patch("/messages/:id", h(messages.edit));
 router.delete("/messages/:id", h(messages.remove));
 router.post("/messages/:id/reactions", h(messages.react));
 router.post("/messages/:id/star", h(messages.star));
 router.post("/messages/:id/forward", h(messages.forward));
+router.post("/messages/:id/pin", h(messages.pin));
+router.get("/messages/:id/info", h(messages.info));
 
 // Estados
 router.get("/stories", h(stories.feed));

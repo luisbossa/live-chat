@@ -8,7 +8,7 @@ import {
 } from "./ui.js";
 import { initSidebar, renderLists, setTab } from "./sidebar.js";
 import {
-  initConversation, openChat, closeChat, onIncomingMessage, onMessageUpdate, onReceipt, onTyping, closeMessageMenu, markRead, rerenderActive,
+  initConversation, openChat, closeChat, onIncomingMessage, onMessageUpdate, onReceipt, onTyping, closeMessageMenu, markRead, rerenderActive, removeMessages,
 } from "./conversation.js";
 import { initInfo, toggleInfo } from "./info.js";
 import { initStories, openStories, step as storyStep, closeStories, storyViewerOpen, refreshStories, onStoryViewed } from "./stories.js";
@@ -19,6 +19,9 @@ import { initAttach } from "./attach.js";
 import { initMessageExtras, onStarUpdate } from "./message-extras.js";
 import { initAppearance } from "./appearance.js";
 import { initShortcuts } from "./shortcuts.js";
+import { initChatActions } from "./chat-actions.js";
+import { initMentions } from "./mentions.js";
+import { initTimed } from "./timed.js";
 
 const app = $("#app");
 
@@ -85,6 +88,9 @@ function bindSocket() {
   socket.on("story:viewed", onStoryViewed);
   socket.on("wallet:update", onWalletUpdate);
   socket.on("star:update", onStarUpdate);
+  // Temporales caducados y "eliminar para mí" desde otro dispositivo
+  socket.on("message:expired", ({ conversationId, ids }) => removeMessages(conversationId, ids));
+  socket.on("message:hidden", ({ conversationId, ids }) => removeMessages(conversationId, ids));
 
   // Tras perder la conexión se recarga todo para no perder mensajes
   document.addEventListener("socket:reconnected", async () => {
@@ -147,10 +153,6 @@ function bindKeys() {
   });
 }
 
-function syncThemeIcon() {
-  $("[data-theme-icon]").setAttribute("href", `/assets/images/icons.svg#i-${Yabla.getTheme() === "dark" ? "sun" : "moon"}`);
-}
-
 // ==========================================================================
 // Inicio
 // ==========================================================================
@@ -173,13 +175,14 @@ async function start() {
   initMessageExtras();
   initAppearance();
   initShortcuts();
+  initChatActions();
+  initMentions();
+  initTimed();
   bindSocket();
   bindClicks();
   bindKeys();
 
   registerAction("theme", () => Yabla.toggleTheme());
-  document.addEventListener("themechange", syncThemeIcon);
-  syncThemeIcon();
 
   // Botón "atrás" del navegador o del teléfono cierra el chat en móvil
   window.addEventListener("popstate", () => {

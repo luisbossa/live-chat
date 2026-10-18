@@ -14,6 +14,8 @@ router.post("/register", guestOnly, upload.image.single("avatar"), h(auth.regist
 router.get("/login", guestOnly, auth.showLogin);
 router.post("/login", h(auth.login));
 router.post("/logout", auth.logout);
+// Si se llega a /logout por GET (recargar, volver atrás, enlace) también se cierra la sesión y se va al inicio
+router.get("/logout", auth.logout);
 
 router.get("/chat", requireAuth, pages.chat);
 router.get("/u/:username", requireAuth, h(pages.profileLink));

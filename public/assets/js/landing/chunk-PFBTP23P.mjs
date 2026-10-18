@@ -1813,13 +1813,13 @@ var pr = { bounce: 0.2, delay: 0, duration: 0.4, type: "spring" },
                   layoutDependency: m,
                   layoutId: "zvE_39iEq",
                   children: [
-                    // Input de correo
+                    // Input de usuario (antes correo: el acceso es con nombre de usuario)
                     t(Oe, {
                       className: "framer-doz9jg",
                       inputName: "Email",
                       layoutDependency: m,
                       layoutId: "A7HDteBjm",
-                      placeholder: "Correo electrónico",
+                      placeholder: "Tu usuario",
                       required: !0,
                       style: {
                         "--framer-input-background": "rgb(239, 240, 240)",
@@ -1836,7 +1836,7 @@ var pr = { bounce: 0.2, delay: 0, duration: 0.4, type: "spring" },
                         "--framer-input-icon-color": "rgb(153, 153, 153)",
                         "--framer-input-placeholder-color": "rgb(80, 80, 80)",
                       },
-                      type: "email",
+                      type: "text",
                     }),
                     // Input de contraseña
                     t(Oe, {

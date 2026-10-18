@@ -3,12 +3,15 @@ const Message = require("../models/Message");
 const Star = require("../models/Star");
 const User = require("../models/User");
 const { linkPreview } = require("../services/linkPreview");
+const Scheduled = require("../models/Scheduled");
+const scheduler = require("../services/scheduler");
 const realtime = require("../services/realtime");
 const validate = require("../utils/validate");
 const { httpError } = require("../middleware/errorHandler");
 
 const EDIT_WINDOW = 15 * 60 * 1000; // 15 minutos, como WhatsApp
-const REACTIONS = ["👍", "❤️", "😂", "😮", "😢", "🙏", "🔥", "🎉"];
+// Cualquier emoji sirve como reacción (como en WhatsApp): solo pictogramas, banderas, tonos de piel y uniones
+const EMOJI = /^(?=.*[\p{Extended_Pictographic}\p{Regional_Indicator}])[\p{Extended_Pictographic}\p{Regional_Indicator}\p{Emoji_Modifier}\u200d\ufe0f\u20e3#*0-9]{1,16}$/u;
 
 /** Carga el mensaje y comprueba que el usuario pertenece a su conversación. */
 exports.load = async (req, res, next) => {
@@ -49,7 +52,7 @@ exports.remove = async (req, res) => {
 exports.react = async (req, res) => {
   if (req.message.deleted_at || req.message.type === "system") throw httpError(400, "No se puede reaccionar a este mensaje.");
   const emoji = validate.str(req.body.emoji, 16);
-  if (!REACTIONS.includes(emoji)) throw httpError(422, "Reacción no válida.");
+  if (!EMOJI.test(emoji)) throw httpError(422, "Reacción no válida.");
   const message = await Message.react(req.message.id, req.user.id, emoji);
   await realtime.messageUpdated(message);
   res.json({ message });
@@ -84,6 +87,8 @@ exports.forward = async (req, res) => {
 
   const meta = { ...(JSON.parse(original.meta || "null") || {}), forwarded: true };
   delete meta.story;
+  delete meta.mentions;
+  delete meta.scheduled;
 
   const sent = [];
   for (const conversationId of targets) {
@@ -118,4 +123,87 @@ exports.linkPreview = async (req, res) => {
   if (!/^https?:\/\//i.test(url)) throw httpError(422, "Enlace no válido.");
   res.set("Cache-Control", "private, max-age=3600");
   res.json({ preview: await linkPreview(url) });
+};
+
+// ==========================================================================
+// Fijar mensajes (máx. 3 por chat, visibles para todos)
+// ==========================================================================
+exports.pin = async (req, res) => {
+  const m = req.message;
+  if (m.deleted_at || m.type === "system") throw httpError(400, "No se puede fijar este mensaje.");
+  const result = await Conversation.togglePin(m.conversation_id, m.id, req.user.id);
+  if (result === "full") throw httpError(422, "Solo puedes fijar 3 mensajes. Desfija uno primero.");
+  if (result === "pinned") {
+    const notice = await Message.create({ conversationId: m.conversation_id, senderId: req.user.id, type: "system", meta: { action: "pinned", messageId: m.id } });
+    await realtime.message(notice);
+  }
+  await realtime.conversation(m.conversation_id, undefined, "conversation:update");
+  res.json({ pinned: result === "pinned" });
+};
+
+// ==========================================================================
+// Info del mensaje: cuándo lo recibió y lo leyó cada persona
+// ==========================================================================
+exports.info = async (req, res) => {
+  const m = req.message;
+  if (m.sender_id !== req.user.id) throw httpError(403, "Solo puedes ver la info de tus mensajes.");
+  const [members, times] = await Promise.all([Conversation.members(m.conversation_id, req.user), Message.receiptTimes(m.conversation_id, m.id)]);
+  // members ya respeta la privacidad: lastReadId = 0 si alguno desactivó las confirmaciones
+  const recipients = members
+    .filter((u) => u.id !== req.user.id)
+    .map((u) => {
+      const t = times.get(u.id) || {};
+      const read = u.lastReadId >= m.id;
+      const delivered = u.lastDeliveredId >= m.id;
+      return {
+        user: { id: u.id, name: u.name, avatar: u.avatar, username: u.username },
+        readAt: read ? t.readAt || null : null,
+        deliveredAt: delivered ? t.deliveredAt || t.readAt || null : null,
+        read,
+        delivered,
+      };
+    });
+  res.json({ message: (await Message.hydrate([m]))[0], recipients });
+};
+
+// ==========================================================================
+// Eliminar para mí (uno o varios)
+// ==========================================================================
+exports.hide = async (req, res) => {
+  const ids = validate.idList(req.body.ids).slice(0, 200);
+  if (!ids.length) throw httpError(422, "No hay mensajes que eliminar.");
+  const rows = await Promise.all(ids.map((id) => Message.findRaw(id)));
+  const allowed = [];
+  for (const row of rows) {
+    if (row && (await Conversation.getMember(row.conversation_id, req.user.id))) allowed.push(row);
+  }
+  await Message.hideFor(req.user.id, allowed.map((r) => r.id));
+  // Las otras pestañas o dispositivos del usuario también los quitan
+  const byConv = new Map();
+  allowed.forEach((r) => byConv.set(r.conversation_id, [...(byConv.get(r.conversation_id) || []), r.id]));
+  byConv.forEach((list, conversationId) => realtime.toUsers([req.user.id], "message:hidden", { conversationId, ids: list }));
+  res.json({ hidden: allowed.map((r) => r.id) });
+};
+
+// ==========================================================================
+// Mensajes programados: cancelar o enviar ya
+// ==========================================================================
+async function takeScheduled(req) {
+  const id = validate.toId(req.params.id);
+  const row = id && (await Scheduled.take(id, req.user.id));
+  if (!row) throw httpError(404, "Ese mensaje programado ya no existe.");
+  return row;
+}
+
+exports.cancelScheduled = async (req, res) => {
+  const row = await takeScheduled(req);
+  realtime.toUsers([req.user.id], "conversation:update", await Conversation.getForUser(row.conversation_id, req.user));
+  res.json({ ok: true });
+};
+
+exports.sendScheduledNow = async (req, res) => {
+  const row = await takeScheduled(req);
+  const message = await scheduler.deliver(row);
+  if (!message) throw httpError(403, "No se pudo enviar el mensaje.");
+  res.json({ message });
 };

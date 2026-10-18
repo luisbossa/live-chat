@@ -1,5 +1,5 @@
 // Conversación activa: mensajes, barra de escritura, notas de voz, respuestas, reacciones y lectura.
-import { $, $$, icon, escapeHTML, linkify, toast, timeLabel, dayLabel, lastSeenLabel, duration, fileSize, isMobile, isWide, prefs, firstName, toastError } from "./utils.js";
+import { $, $$, icon, escapeHTML, linkify, toast, timeLabel, dayLabel, lastSeenLabel, duration, fileSize, isMobile, isWide, prefs, firstName, toastError, STATUSES, profileColor, isBirthdayToday } from "./utils.js";
 import {
   state, emit, on, getConv, activeConv, isGroup, peerOf, convTitle, convAvatar, userName, messagesOf, receiptOf, isBlockedConv, upsertConversation,
   getDraft, setDraft,
@@ -12,6 +12,9 @@ import { openAttachPreview } from "./attach.js";
 import { initEmojiPicker } from "./emoji-picker.js";
 import { linkSlot, hydrateLinks } from "./link-preview.js";
 import { openForward, toggleStar } from "./message-extras.js";
+import { openReactTray, isSelecting, toggleSelected, isSelected, exitSelect, enterSelect, askDelete, openMessageInfo, togglePinMessage, renderPinnedBar } from "./chat-actions.js";
+import { renderMentions, mentionsMe } from "./mentions.js";
+import { renderScheduledChip, openSchedule } from "./timed.js";
 
 const app = $("#app");
 const messagesEl = $("#messages");
@@ -65,7 +68,8 @@ function reactionsHTML(msg) {
 }
 
 function bodyHTML(msg) {
-  const text = msg.body ? `<p class="bubble-text">${highlight(linkify(msg.body))}</p>` : "";
+  const conv = getConv(msg.conversationId);
+  const text = msg.body ? `<p class="bubble-text">${highlight(renderMentions(conv, linkify(msg.body)))}</p>` : "";
   switch (msg.type) {
     case "image":
       return { kind: "is-media", html: `<img src="${msg.mediaUrl}" alt="${escapeHTML(msg.body || "Imagen")}" data-lightbox loading="lazy">${text}` };
@@ -145,13 +149,22 @@ function messageHTML(conv, msg, prev) {
   const receipt = me && !msg.deletedAt && msg.type !== "call" ? receiptOf(conv, msg) : null;
   const starred = !msg.deletedAt && state.starred.has(msg.id);
   const forwarded = msg.meta?.forwarded && !msg.deletedAt ? `<span class="fwd-label">${icon("forward", "icon-sm")}Reenviado</span>` : "";
-  const classes = ["msg", me && "me", grouped && "same", !matches && "is-dim", msg.pending && "is-pending"].filter(Boolean).join(" ");
+  const classes = ["msg", me && "me", grouped && "same", !matches && "is-dim", msg.pending && "is-pending", isSelected(msg.id) && "is-selected", !me && mentionsMe(msg) && "is-mention"]
+    .filter(Boolean)
+    .join(" ");
+  // Acciones rápidas al pasar el ratón (reaccionar y responder), como WhatsApp Web
+  const quick = !msg.deletedAt && !msg.pending
+    ? `<div class="msg-actions">
+        <button data-quick-react aria-label="Reaccionar" title="Reaccionar">${icon("smile-plus", "icon-sm")}</button>
+        <button data-quick-reply aria-label="Responder" title="Responder">${icon("reply", "icon-sm")}</button>
+      </div>`
+    : "";
 
   return `${html}
     <div class="${classes}" data-id="${msg.id}">
       ${showAuthor ? `<span class="avatar"><img src="${author?.avatar || "/assets/images/ui/avatar-default.svg"}" alt=""></span>` : ""}
       <div class="bubble ${content.kind}">
-        ${showAuthor && !grouped && msg.type !== "sticker" ? `<span class="bubble-author" style="--hue:${(msg.senderId * 67) % 360}">${escapeHTML(author?.name || "")}</span>` : ""}
+        ${showAuthor && !grouped && msg.type !== "sticker" ? `<span class="bubble-author" style="--author:${profileColor(author?.color)[1]}">${escapeHTML(author?.name || "")}</span>` : ""}
         ${forwarded}
         ${msg.deletedAt ? "" : story + replyQuote(msg)}
         ${content.html}
@@ -161,6 +174,7 @@ function messageHTML(conv, msg, prev) {
           ${receipt ? `<span class="tick tick-${receipt}">${icon(RECEIPT_ICON[receipt])}</span>` : ""}
         </span>
         ${!msg.deletedAt && !msg.pending ? `<button class="msg-more" data-msg-menu aria-label="Opciones del mensaje">${icon("chevron-down", "icon-sm")}</button>` : ""}
+        ${quick}
       </div>
       ${msg.deletedAt ? "" : reactionsHTML(msg)}
     </div>`;
@@ -277,8 +291,10 @@ export function renderHeader(conv = activeConv()) {
   if (!conv) return;
   const peer = peerOf(conv);
   $("#peerAvatar").className = `avatar ${peer?.online ? "is-online" : ""}`;
+  $("#peerAvatar").dataset.status = peer?.status || "available";
   $("#peerAvatar img").src = convAvatar(conv);
   $("#peerName").innerHTML = escapeHTML(convTitle(conv)) + (peer?.official ? icon("verified", "badge-verified") : "");
+  $("#peerTimer").hidden = !conv.disappearAfter;
 
   const typing = typingText(conv);
   const status = $("#peerStatus");
@@ -295,8 +311,12 @@ export function renderHeader(conv = activeConv()) {
     status.textContent = "Bloqueado";
     status.className = "";
   } else {
-    status.textContent = lastSeenLabel(peer) || "toca para ver la info";
-    status.className = peer?.online ? "is-online" : "";
+    // "en línea · Ocupado", "No molestar" o la última conexión; y si es su cumpleaños, se avisa
+    const away = peer?.status && peer.status !== "available" ? STATUSES[peer.status]?.label : "";
+    let text = peer?.online ? (away ? `en línea · ${away}` : "en línea") : lastSeenLabel(peer) || (away ? away : "toca para ver la info");
+    if (isBirthdayToday(peer?.birthday)) text += " · 🎂 hoy cumple años";
+    status.textContent = text;
+    status.className = peer?.online ? (away ? `is-online is-${peer.status}` : "is-online") : "";
   }
 
   $$('.chat-head [data-call]').forEach((b) => (b.hidden = isGroup(conv) || Boolean(peer?.official)));
@@ -313,6 +333,7 @@ export function markRead(conv = activeConv()) {
   if (!last || (me && me.lastReadId >= last.id && !conv.unread)) return;
   if (me) me.lastReadId = Math.max(me.lastReadId, last.id);
   conv.unread = 0;
+  conv.mentions = 0;
   socket.emit("conversation:read", { conversationId: conv.id, messageId: last.id });
   emit("conversations");
 }
@@ -356,7 +377,10 @@ export async function openChat(id, { force = false } = {}) {
   cancelContext();
   closeChatSearch(false);
   closePopovers();
+  exitSelect(false);
   renderHeader(conv);
+  renderPinnedBar(conv);
+  renderScheduledChip(conv);
   emit("active", conv);
 
   messagesEl.innerHTML = `<div class="load-more"><span class="spinner"></span></div>`;
@@ -449,6 +473,7 @@ export async function onIncomingMessage(msg) {
     if (visible) markRead(conv);
     else {
       conv.unread = (conv.unread || 0) + 1;
+      if (mentionsMe(msg)) conv.mentions = (conv.mentions || 0) + 1;
       notify(conv, msg);
     }
   }
@@ -532,7 +557,9 @@ function beep() {
 }
 
 function notify(conv, msg) {
-  if (conv.muted) return;
+  // Silenciado, salvo que te mencionen (como en WhatsApp); "No molestar" silencia todo
+  if (conv.muted && !mentionsMe(msg)) return;
+  if (state.me.status === "dnd") return;
   beep();
   if (document.visibilityState === "visible") toast(previewOf(conv, msg), { avatar: convAvatar(conv), title: convTitle(conv), duration: 3500 });
   else if ("Notification" in window && Notification.permission === "granted") {
@@ -705,14 +732,21 @@ function openMessageMenu(msgEl, x, y) {
   const mine = msg.senderId === state.me.id;
   const myReaction = msg.reactions?.find((r) => r.userIds.includes(state.me.id))?.emoji;
 
-  $("#msgMenuReactions").innerHTML = REACTIONS.map((e) => `<button data-react-menu="${e}" class="${e === myReaction ? "is-mine" : ""}">${e}</button>`).join("");
+  $("#msgMenuReactions").innerHTML =
+    REACTIONS.map((e) => `<button data-react-menu="${e}" class="${e === myReaction ? "is-mine" : ""}">${e}</button>`).join("") +
+    (myReaction && !REACTIONS.includes(myReaction) ? `<button data-react-menu="${myReaction}" class="is-mine">${myReaction}</button>` : "") +
+    `<button class="react-more" data-react-more data-popover="reactPicker" aria-label="Más reacciones">${icon("plus", "icon-sm")}</button>`;
   $('[data-msg-action="copy"]', menu).hidden = !msg.body;
   $('[data-msg-action="forward"]', menu).hidden = !FORWARDABLE.includes(msg.type);
   const starred = state.starred.has(msg.id);
   $('[data-msg-action="star"] span', menu).textContent = starred ? "Quitar destacado" : "Destacar";
   $('[data-msg-action="star"] use', menu).setAttribute("href", `/assets/images/icons.svg#i-${starred ? "star-off" : "star"}`);
   $('[data-msg-action="edit"]', menu).hidden = !mine || msg.type !== "text" || Date.now() - msg.createdAt > EDIT_WINDOW;
-  $('[data-msg-action="delete"]', menu).hidden = !mine;
+  const conv = activeConv();
+  const pinned = conv?.pinnedMessages?.some((p) => p.id === msg.id);
+  $('[data-msg-action="pin"] span', menu).textContent = pinned ? "Desfijar" : "Fijar";
+  $('[data-msg-action="pin"] use', menu).setAttribute("href", `/assets/images/icons.svg#i-${pinned ? "pin-off" : "pin"}`);
+  $('[data-msg-action="info"]', menu).hidden = !mine || msg.type === "call";
 
   menu.hidden = false;
   const rect = menu.getBoundingClientRect();
@@ -725,7 +759,7 @@ export function closeMessageMenu() {
   menuMessage = null;
 }
 
-async function react(msg, emoji) {
+export async function react(msg, emoji) {
   try {
     await api.react(msg.id, emoji);
   } catch (err) {
@@ -738,8 +772,11 @@ menu.addEventListener("click", async (e) => {
   if (!msg) return;
   const emoji = e.target.closest("[data-react-menu]")?.dataset.reactMenu;
   const action = e.target.closest("[data-msg-action]")?.dataset.msgAction;
+  // "+": el selector completo se coloca junto al botón antes de cerrar el menú
+  const more = e.target.closest("[data-react-more]");
+  if (more) openReactTray(msg, more, { picker: true });
   closeMessageMenu();
-
+  if (more) return;
   if (emoji) return react(msg, emoji);
   if (action === "reply") setContext("reply", msg);
   if (action === "forward") openForward(msg);
@@ -749,9 +786,10 @@ menu.addEventListener("click", async (e) => {
     await navigator.clipboard?.writeText(msg.body || "");
     toast("Mensaje copiado", { tone: "success", icon: "copy" });
   }
-  if (action === "delete" && (await confirmDialog({ title: "¿Eliminar para todos?", text: "El mensaje se eliminará para todos los participantes.", okText: "Eliminar" }))) {
-    api.deleteMessage(msg.id).catch((err) => toastError(err.message));
-  }
+  if (action === "pin") togglePinMessage(msg);
+  if (action === "info") openMessageInfo(msg);
+  if (action === "select") enterSelect(msg);
+  if (action === "delete") askDelete([msg]);
 });
 
 // Clic derecho y pulsación larga
@@ -783,6 +821,25 @@ messagesEl.addEventListener("dblclick", (e) => {
 
 messagesEl.addEventListener("click", (e) => {
   const t = e.target;
+  // En modo selección, tocar un mensaje lo marca o desmarca
+  if (isSelecting()) {
+    const msgEl = t.closest(".msg[data-id]");
+    if (msgEl && !msgEl.classList.contains("typing-msg")) {
+      e.preventDefault();
+      toggleSelected(msgEl.dataset.id);
+    }
+    return;
+  }
+  const quickReact = t.closest("[data-quick-react]");
+  if (quickReact) {
+    const msg = findMessage(quickReact.closest(".msg").dataset.id);
+    return msg && openReactTray(msg, quickReact);
+  }
+  const quickReply = t.closest("[data-quick-reply]");
+  if (quickReply) {
+    const msg = findMessage(quickReply.closest(".msg").dataset.id);
+    return msg && setContext("reply", msg);
+  }
   const more = t.closest("[data-msg-menu]");
   if (more) {
     const r = more.getBoundingClientRect();
@@ -1021,6 +1078,7 @@ export function initConversation() {
     const type = e.target.closest("[data-attach]")?.dataset.attach;
     if (!type) return;
     closePopovers();
+    if (type === "schedule") return openSchedule();
     if (type === "payment") {
       const peer = peerOf(activeConv());
       return openModal("modal-wallet", peer?.id);
@@ -1093,7 +1151,27 @@ export async function jumpToMessage(id) {
   return true;
 }
 
-export { openChatSearch };
+/**
+ * Quita mensajes del chat (eliminados para mí, temporales caducados) y
+ * actualiza la vista previa de la lista si era el último.
+ */
+export function removeMessages(conversationId, ids) {
+  const conv = getConv(conversationId);
+  if (!conv) return;
+  const gone = new Set(ids.map(Number));
+  const store = messagesOf(conv.id);
+  const before = store.items.length;
+  store.items = store.items.filter((m) => !gone.has(m.id));
+  if (conv.lastMessage && gone.has(conv.lastMessage.id)) conv.lastMessage = store.items.filter((m) => !m.pending).at(-1) || null;
+  if (conv.pinnedMessages?.some((p) => gone.has(p.id))) conv.pinnedMessages = conv.pinnedMessages.filter((p) => !gone.has(p.id));
+  if (conv.id === state.activeId && store.items.length !== before) {
+    renderMessages(conv, { keepScroll: true });
+    renderPinnedBar(conv);
+  }
+  emit("conversations");
+}
+
+export { openChatSearch, setContext, findMessage, messagesEl, renderMessages, input as messageInput, autosize };
 
 export function rerenderActive() {
   const conv = activeConv();

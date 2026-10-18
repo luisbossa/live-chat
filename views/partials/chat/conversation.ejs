@@ -3,27 +3,59 @@
     <!-- Inicio: se muestra cuando no hay ningún chat abierto -->
     <div class="chat-empty home" id="chatEmpty">
         <div class="home-inner">
-            <header class="home-hero">
-                <img class="home-avatar" src="<%= user.avatar %>" alt="" data-me="avatar">
-                <div>
-                    <p class="home-date" id="homeDate"></p>
+            <!-- Portada con saludo, resumen y accesos -->
+            <header class="home-hero" id="homeHero">
+                <div class="home-hero-bg" aria-hidden="true"><i></i><i></i><i></i></div>
+                <button class="home-avatar-btn" data-open="modal-profile" aria-label="Mi perfil">
+                    <img class="home-avatar" src="<%= user.avatar %>" alt="" data-me="avatar">
+                    <i class="status-dot" data-me-status></i>
+                    <span class="home-avatar-hint" id="homeAvatarHint" hidden><%- icon('camera', 'icon-sm') %></span>
+                </button>
+                <div class="home-hero-text">
+                    <p class="home-date"><span id="homeDayIcon"></span><span id="homeDate"></span></p>
                     <h2><span id="homeGreeting">Hola</span>, <span data-me="firstName"><%= user.name.split(' ')[0] %></span> <%- icon('hand', 'greet-icon') %></h2>
-                    <p class="muted" id="homeSummary">Elige una conversación o empieza una nueva.</p>
+                    <p class="home-summary" id="homeSummary">Elige una conversación o empieza una nueva.</p>
+                    <div class="home-pills" id="homePills"></div>
+                </div>
+                <!-- Ilustración: mini conversación flotante -->
+                <div class="home-art" aria-hidden="true">
+                    <span class="art-bubble art-in">¡Hola! 👋</span>
+                    <span class="art-bubble art-out">¿Mejenga hoy? ⚽</span>
+                    <span class="art-bubble art-in art-typing"><i></i><i></i><i></i></span>
                 </div>
             </header>
 
             <div class="home-actions">
-                <button data-open="modal-new-chat"><span class="tone-blue"><%- icon('chat-plus') %></span><strong>Nuevo chat</strong><small>Escribe a cualquier persona</small></button>
+                <button data-open="modal-new-chat"><span class="tone-blue"><%- icon('chat-plus') %></span><strong>Nuevo chat</strong><small>Escribe a cualquier persona</small><kbd>Ctrl Alt N</kbd></button>
                 <button data-open="modal-group"><span class="tone-violet"><%- icon('users') %></span><strong>Nuevo grupo</strong><small>Reúne a tus amigos</small></button>
                 <button data-action="my-status"><span class="tone-pink"><%- icon('camera') %></span><strong>Publicar estado</strong><small>Desaparece en 24 h</small></button>
-                <button data-open="modal-qr"><span class="tone-green"><%- icon('qr') %></span><strong>Mi código QR</strong><small>Para que te agreguen</small></button>
+                <button data-open="modal-quick"><span class="tone-green"><%- icon('search') %></span><strong>Buscar</strong><small>Chats, acciones y más</small><kbd>Ctrl K</kbd></button>
             </div>
 
             <section class="home-card" id="homeChecklist" hidden></section>
 
+            <div class="home-grid">
+                <!-- Chats recientes -->
+                <section class="home-card" id="homeRecentCard" hidden>
+                    <div class="home-card-head">
+                        <h3><%- icon('chat', 'icon-sm') %> Continúa la conversación</h3>
+                    </div>
+                    <ul class="home-recent" id="homeRecent"></ul>
+                </section>
+
+                <!-- Consejo del día -->
+                <section class="home-card home-tip" id="homeTip">
+                    <div class="home-card-head">
+                        <h3><%- icon('sparkles', 'icon-sm') %> ¿Sabías que…?</h3>
+                        <button class="link-btn" data-action="next-tip">Otro consejo</button>
+                    </div>
+                    <div class="tip-body" id="tipBody"></div>
+                </section>
+            </div>
+
             <section class="home-card" id="homePeopleCard" hidden>
                 <div class="home-card-head">
-                    <h3><%- icon('sparkles', 'icon-sm') %> Personas que quizá conozcas</h3>
+                    <h3><%- icon('user-plus', 'icon-sm') %> Personas que quizá conozcas</h3>
                     <button class="link-btn" data-open="modal-new-chat">Ver todas</button>
                 </div>
                 <div class="people-grid" id="homePeople"></div>
@@ -38,7 +70,7 @@
         <button class="chat-peer" data-action="toggle-info">
             <span class="avatar" id="peerAvatar"><img src="" alt=""></span>
             <span>
-                <strong id="peerName"></strong>
+                <strong><span id="peerName"></span><span class="peer-timer" id="peerTimer" hidden title="Mensajes temporales activados"><%- icon('timer', 'icon-sm') %></span></strong>
                 <small id="peerStatus"></small>
             </span>
         </button>
@@ -49,6 +81,28 @@
             <button class="icon-btn" data-action="toggle-info" aria-label="Información" title="Información"><%- icon('info') %></button>
         </div>
     </header>
+
+    <!-- Selección de varios mensajes -->
+    <div class="select-bar" id="selectBar" hidden>
+        <button class="icon-btn" data-action="cancel-select" aria-label="Cancelar selección"><%- icon('x') %></button>
+        <strong id="selectCount">0 seleccionados</strong>
+        <div class="head-actions">
+            <button class="icon-btn" data-select-action="copy" aria-label="Copiar" title="Copiar"><%- icon('copy') %></button>
+            <button class="icon-btn" data-select-action="star" aria-label="Destacar" title="Destacar"><%- icon('star') %></button>
+            <button class="icon-btn" data-select-action="forward" aria-label="Reenviar" title="Reenviar"><%- icon('forward') %></button>
+            <button class="icon-btn is-danger" data-select-action="delete" aria-label="Eliminar" title="Eliminar"><%- icon('trash') %></button>
+        </div>
+    </div>
+
+    <!-- Mensajes fijados (se recorren al tocar, como en Telegram) -->
+    <div class="pinned-bar" id="pinnedBar" hidden>
+        <span class="pinned-marks" id="pinnedMarks"></span>
+        <button class="pinned-main" id="pinnedMain">
+            <span class="pinned-thumb" id="pinnedThumb"></span>
+            <span class="pinned-text"><strong id="pinnedTitle">Mensaje fijado</strong><span id="pinnedPreview"></span></span>
+        </button>
+        <button class="icon-btn" id="pinnedUnpin" aria-label="Desfijar" title="Desfijar"><%- icon('pin-off', 'icon-sm') %></button>
+    </div>
 
     <div class="chat-search" id="chatSearch" hidden>
         <%- icon('search', 'icon-sm') %>
@@ -75,6 +129,12 @@
             <button class="icon-btn" data-action="cancel-context" aria-label="Cancelar"><%- icon('x', 'icon-sm') %></button>
         </div>
 
+        <!-- Programados pendientes en este chat -->
+        <button class="scheduled-chip" id="scheduledChip" data-open="modal-scheduled" hidden><%- icon('calendar-clock', 'icon-sm') %><span id="scheduledChipText"></span></button>
+
+        <!-- Sugerencias de @menciones (grupos) -->
+        <div class="mention-box" id="mentionBox" role="listbox" hidden></div>
+
         <!-- Paneles emergentes -->
         <div class="popover emoji-panel" id="emojiPanel" hidden></div>
         <div class="popover sticker-panel" id="stickerPanel" hidden></div>
@@ -83,6 +143,7 @@
             <button data-attach="camera"><span class="tone-pink"><%- icon('camera') %></span>Cámara</button>
             <button data-attach="file"><span class="tone-violet"><%- icon('file') %></span>Documento</button>
             <button data-attach="payment"><span class="tone-green"><%- icon('wallet') %></span>Enviar dinero</button>
+            <button data-attach="schedule"><span class="tone-orange"><%- icon('calendar-clock') %></span>Programar mensaje</button>
         </div>
 
         <!-- Grabando nota de voz -->

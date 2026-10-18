@@ -5,6 +5,10 @@ const presence = require("../services/presence");
 
 const DEFAULT_AVATAR = "/assets/images/ui/avatar-default.svg";
 const OFFICIAL_USERNAME = "yabla"; // cuenta oficial que da la bienvenida (services/welcome.js)
+// Las cuentas nuevas no usan correo. La columna email es obligatoria en bases ya desplegadas,
+// así que se guarda un identificador interno único que nunca se muestra.
+const NO_EMAIL_DOMAIN = "@sin-correo.yabla";
+const crypto = require("crypto");
 
 const SQL = {
   insert: `
@@ -34,19 +38,24 @@ const SQL = {
   unblock: "DELETE FROM blocks WHERE blocker_id = ? AND blocked_id = ?",
 };
 
-const EDITABLE = ["name", "username", "bio", "phone", "avatar"];
+const EDITABLE = ["name", "username", "bio", "phone", "avatar", "presence_status", "profile_color", "birthday"];
+// Estados de disponibilidad (como Slack o Teams) y colores de perfil
+const STATUSES = ["available", "busy", "away", "dnd"];
+const COLORS = ["blue", "violet", "green", "pink", "orange", "teal", "red", "slate"];
 const SETTINGS = { readReceipts: "read_receipts", showLastSeen: "show_last_seen" };
 const placeholders = (n) => Array(n).fill("?").join(",");
 
 const User = {
   DEFAULT_AVATAR,
   OFFICIAL_USERNAME,
+  STATUSES,
+  COLORS,
 
-  async create({ name, username, email, password, avatar = null, phone = null, bio = null }, executor = db) {
+  async create({ name, username, email = null, password, avatar = null, phone = null, bio = null }, executor = db) {
     const { lastInsertRowid } = await executor.run(SQL.insert, {
       name,
       username,
-      email,
+      email: email || `${crypto.randomUUID()}${NO_EMAIL_DOMAIN}`,
       passwordHash: bcrypt.hashSync(password, 10),
       avatar,
       phone,
@@ -62,6 +71,14 @@ const User = {
   findByEmail: (email) => db.get(SQL.byEmail, [email]),
   findByUsername: (username) => db.get(SQL.byUsername, [username]),
   findByLogin: (login) => db.get(SQL.byLogin, [login, login]),
+
+  /** De una lista de nombres de usuario, los que siguen libres. */
+  async availableUsernames(candidates) {
+    const unique = [...new Set(candidates)];
+    if (!unique.length) return [];
+    const taken = new Set((await db.all(`SELECT username FROM users WHERE username IN (${placeholders(unique.length)})`, unique)).map((r) => r.username.toLowerCase()));
+    return unique.filter((u) => !taken.has(u.toLowerCase()));
+  },
 
   /** Varios usuarios en una sola consulta → Map(id → fila). */
   async findMany(ids) {
@@ -133,6 +150,9 @@ const User = {
       online: presence.isOnline(user.id),
       lastSeen: user.show_last_seen ? user.last_seen : null,
       official: user.username === OFFICIAL_USERNAME,
+      status: user.presence_status || "available",
+      color: user.profile_color || "blue",
+      birthday: user.birthday || null,
     };
   },
 
@@ -145,8 +165,9 @@ const User = {
   toSelf(user) {
     return {
       ...User.toPublic(user),
-      email: user.email,
+      email: user.email?.endsWith(NO_EMAIL_DOMAIN) ? null : user.email,
       balances: User.balancesOf(user),
+      createdAt: user.created_at,
       settings: { readReceipts: Boolean(user.read_receipts), showLastSeen: Boolean(user.show_last_seen) },
     };
   },

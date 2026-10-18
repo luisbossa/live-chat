@@ -13,6 +13,9 @@ CREATE TABLE IF NOT EXISTS users (
   balance_crc_cents INTEGER NOT NULL DEFAULT 0,    -- saldo en colones (céntimos)
   read_receipts   INTEGER NOT NULL DEFAULT 1,
   show_last_seen  INTEGER NOT NULL DEFAULT 1,
+  presence_status TEXT    NOT NULL DEFAULT 'available', -- available | busy | away | dnd
+  profile_color   TEXT    NOT NULL DEFAULT 'blue',      -- color del perfil (portada y nombre en grupos)
+  birthday        TEXT,                                 -- "MM-DD" (opcional, sin año)
   last_seen       INTEGER,
   created_at      INTEGER NOT NULL
 );
@@ -25,6 +28,7 @@ CREATE TABLE IF NOT EXISTS conversations (
   description     TEXT,
   created_by      INTEGER REFERENCES users(id) ON DELETE SET NULL,
   last_message_id INTEGER,
+  disappear_after INTEGER NOT NULL DEFAULT 0, -- mensajes temporales: segundos (0 = desactivados)
   created_at      INTEGER NOT NULL
 );
 
@@ -57,6 +61,7 @@ CREATE TABLE IF NOT EXISTS messages (
   reply_to_id     INTEGER REFERENCES messages(id) ON DELETE SET NULL,
   edited_at       INTEGER,
   deleted_at      INTEGER,
+  expires_at      INTEGER, -- mensajes temporales: momento en que desaparece
   created_at      INTEGER NOT NULL
 );
 
@@ -69,6 +74,47 @@ CREATE TABLE IF NOT EXISTS reactions (
   created_at  INTEGER NOT NULL,
   PRIMARY KEY (message_id, user_id)
 );
+
+-- "Eliminar para mí": mensajes que un usuario ya no quiere ver
+CREATE TABLE IF NOT EXISTS message_hidden (
+  user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  message_id  INTEGER NOT NULL REFERENCES messages(id) ON DELETE CASCADE,
+  PRIMARY KEY (user_id, message_id)
+);
+
+-- Mensajes fijados arriba del chat (máx. 3 por conversación, como WhatsApp)
+CREATE TABLE IF NOT EXISTS pinned_messages (
+  conversation_id INTEGER NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
+  message_id      INTEGER NOT NULL REFERENCES messages(id) ON DELETE CASCADE,
+  pinned_by       INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  pinned_at       INTEGER NOT NULL,
+  PRIMARY KEY (conversation_id, message_id)
+);
+
+-- Historial de entregas y lecturas: permite saber cuándo leyó cada persona un mensaje
+-- ("Info del mensaje"). up_to_id = hasta qué mensaje llegó en ese momento.
+CREATE TABLE IF NOT EXISTS receipt_events (
+  conversation_id INTEGER NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
+  user_id         INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  kind            TEXT    NOT NULL CHECK (kind IN ('delivered', 'read')),
+  up_to_id        INTEGER NOT NULL,
+  at              INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_receipt_events ON receipt_events(conversation_id, user_id, kind, up_to_id);
+
+-- Mensajes programados: se envían solos a la hora elegida
+CREATE TABLE IF NOT EXISTS scheduled_messages (
+  id              INTEGER PRIMARY KEY AUTOINCREMENT,
+  conversation_id INTEGER NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
+  sender_id       INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  body            TEXT    NOT NULL,
+  reply_to_id     INTEGER REFERENCES messages(id) ON DELETE SET NULL,
+  send_at         INTEGER NOT NULL,
+  created_at      INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_scheduled_send_at ON scheduled_messages(send_at);
 
 -- Mensajes destacados (con estrella) por cada usuario
 CREATE TABLE IF NOT EXISTS stars (

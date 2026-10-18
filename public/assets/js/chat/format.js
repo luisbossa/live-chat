@@ -17,9 +17,31 @@ export function systemText(msg) {
       return `${actor} ${verb("saliste", "salió")} del grupo`;
     case "renamed":
       return `${actor} ${verb("cambiaste", "cambió")} el nombre del grupo a «${meta.name}»`;
+    case "pinned":
+      return `${actor} ${verb("fijaste", "fijó")} un mensaje`;
+    case "disappearing":
+      return meta.seconds
+        ? `${actor} ${verb("activaste", "activó")} los mensajes temporales. Los mensajes nuevos desaparecerán después de ${disappearLabel(meta.seconds).toLowerCase()}.`
+        : `${actor} ${verb("desactivaste", "desactivó")} los mensajes temporales`;
     default:
       return msg.body || "";
   }
+}
+
+/** Duración de los mensajes temporales: 24 horas, 7 días, 90 días. */
+export function disappearLabel(seconds) {
+  if (!seconds) return "Desactivados";
+  const days = seconds / 86400;
+  return days < 1 ? `${Math.round(seconds / 3600)} horas` : days === 1 ? "24 horas" : `${days} días`;
+}
+
+/** "@karla" → "@Karla" (nombre del participante) en vistas previas. */
+export function mentionsToNames(conv, text = "") {
+  if (!text.includes("@") || !conv?.members) return text;
+  return text.replace(/(^|[^\w@/])@([a-z0-9_.]{3,20})/gi, (m, pre, name) => {
+    const member = conv.members.find((u) => u.username?.toLowerCase() === name.toLowerCase());
+    return member ? `${pre}@${member.name.split(" ")[0]}` : m;
+  });
 }
 
 export function callText(msg) {
@@ -60,13 +82,13 @@ export function previewOf(conv, msg = conv.lastMessage) {
     file: msg.meta?.name || "Documento",
     sticker: "Sticker",
   };
-  const text = labels[msg.type] || msg.body || "";
+  const text = labels[msg.type] || mentionsToNames(conv, msg.body || "");
   if (msg.senderId === state.me.id) return `Tú: ${text}`;
   if (isGroup(conv)) return `${userName(msg.senderId, { short: true })}: ${text}`;
   return text;
 }
 
-/** "escribiendo…" o "Bucky está escribiendo…". */
+/** "escribiendo…" o "Mauricio está escribiendo…". */
 export function typingText(conv) {
   const ids = [...(state.typing.get(conv.id)?.keys() || [])];
   if (!ids.length) return "";

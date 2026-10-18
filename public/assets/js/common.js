@@ -19,19 +19,42 @@ const Yabla = (() => {
   }
 
   // --- Tema ---
-  function getTheme() {
-    return read(THEME_KEY) || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  // Cada tema es claro u oscuro (data-theme) y tiene su paleta (data-palette).
+  // "auto" sigue la preferencia del sistema operativo.
+  const THEMES = { light: "light", sepia: "light", dark: "dark", dim: "dark", ocean: "dark", midnight: "dark" };
+  const systemDark = matchMedia("(prefers-color-scheme: dark)");
+
+  /** Tema elegido: light, sepia, dark, dim, ocean, midnight o auto. */
+  function getThemeChoice() {
+    const saved = read(THEME_KEY);
+    return saved === "auto" || THEMES[saved] ? saved : "auto";
   }
 
-  function setTheme(theme) {
-    document.documentElement.dataset.theme = theme;
-    write(THEME_KEY, theme);
-    document.dispatchEvent(new CustomEvent("themechange", { detail: theme }));
+  const resolvePalette = (choice) => (choice === "auto" ? (systemDark.matches ? "dark" : "light") : choice);
+
+  /** "light" o "dark" según el tema actual (para iconos y el resto de páginas). */
+  const getTheme = () => THEMES[resolvePalette(getThemeChoice())];
+
+  function applyTheme() {
+    const palette = resolvePalette(getThemeChoice());
+    document.documentElement.dataset.theme = THEMES[palette];
+    document.documentElement.dataset.palette = palette;
+  }
+
+  function setTheme(choice) {
+    write(THEME_KEY, choice === "auto" || THEMES[choice] ? choice : "light");
+    applyTheme();
+    document.dispatchEvent(new CustomEvent("themechange", { detail: getTheme() }));
   }
 
   const toggleTheme = () => setTheme(getTheme() === "dark" ? "light" : "dark");
 
-  document.documentElement.dataset.theme = getTheme();
+  applyTheme();
+  systemDark.addEventListener?.("change", () => {
+    if (getThemeChoice() !== "auto") return;
+    applyTheme();
+    document.dispatchEvent(new CustomEvent("themechange", { detail: getTheme() }));
+  });
 
   // --- Apariencia (color, fondo del chat y tamaño del texto) ---
   // Se aplica aquí, antes de pintar, para que no parpadee al cargar.
@@ -114,5 +137,5 @@ const Yabla = (() => {
     return `<svg class="icon ${extra}" aria-hidden="true"><use href="/assets/images/icons.svg#i-${name}"></use></svg>`;
   }
 
-  return { getTheme, setTheme, toggleTheme, getAppearance, setAppearance, request, toast, icon };
+  return { getTheme, getThemeChoice, setTheme, toggleTheme, getAppearance, setAppearance, request, toast, icon };
 })();

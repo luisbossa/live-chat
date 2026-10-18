@@ -5,42 +5,76 @@
         <button class="icon-btn" data-action="toggle-info" aria-label="Cerrar"><%- icon('x') %></button>
     </header>
     <div class="info-body">
-        <div class="info-profile">
-            <span class="avatar avatar-lg" id="infoAvatar"><img src="" alt=""></span>
+        <!-- Portada, foto, nombre y acciones -->
+        <div class="info-hero">
+            <div class="info-cover" aria-hidden="true"></div>
+            <button class="info-avatar" id="infoAvatar" aria-label="Ver foto">
+                <span class="avatar avatar-lg"><img src="" alt=""></span>
+            </button>
             <h3 id="infoName"></h3>
-            <p class="muted" id="infoMeta"></p>
+            <p class="muted info-meta" id="infoMeta"></p>
+            <p class="info-presence" id="infoPresence"></p>
             <div class="info-actions">
                 <button data-call="audio"><%- icon('phone') %>Llamar</button>
                 <button data-call="video"><%- icon('video') %>Video</button>
-                <button data-action="mute"><svg class="icon" aria-hidden="true"><use href="/assets/images/icons.svg#i-bell" id="muteIcon"></use></svg><span id="muteLabel">Silenciar</span></button>
                 <button data-action="search-chat"><%- icon('search') %>Buscar</button>
+                <button data-action="mute"><svg class="icon" aria-hidden="true"><use href="/assets/images/icons.svg#i-bell" id="muteIcon"></use></svg><span id="muteLabel">Silenciar</span></button>
             </div>
         </div>
 
-        <section class="info-section">
+        <!-- Info / descripción -->
+        <section class="info-card">
             <h4 id="infoBioTitle">Info</h4>
-            <p id="infoBio"></p>
+            <p class="info-bio" id="infoBio"></p>
+            <ul class="info-fields" id="infoFields"></ul>
         </section>
 
-        <section class="info-section" id="infoMembersSection" hidden>
+        <!-- Participantes del grupo -->
+        <section class="info-card" id="infoMembersSection" hidden>
             <h4><span id="infoMembersCount"></span> participantes</h4>
+            <label class="search search-mini" id="memberSearchWrap" hidden>
+                <%- icon('search', 'icon-sm') %>
+                <input type="search" id="memberSearch" placeholder="Buscar participantes" autocomplete="off">
+            </label>
             <button class="new-item" data-open="modal-add-members" id="addMembersBtn"><span><%- icon('user-plus') %></span>Añadir participantes</button>
             <ul class="member-list" id="infoMembers"></ul>
         </section>
 
-        <section class="info-section">
-            <h4>Archivos compartidos <span class="muted" id="mediaCount"></span></h4>
-            <div class="media-grid" id="mediaGrid"></div>
+        <!-- Archivos, enlaces y documentos -->
+        <section class="info-card">
+            <h4>Archivos, enlaces y documentos</h4>
+            <div class="media-tabs" id="mediaTabs" role="tablist">
+                <button role="tab" data-media-tab="media" class="is-active">Fotos <b></b></button>
+                <button role="tab" data-media-tab="docs">Docs <b></b></button>
+                <button role="tab" data-media-tab="links">Enlaces <b></b></button>
+                <button role="tab" data-media-tab="audio">Audios <b></b></button>
+            </div>
+            <div class="media-panel" id="mediaPanel"></div>
         </section>
 
-        <section class="info-section info-options">
+        <!-- Ajustes del chat -->
+        <section class="info-card info-rows">
+            <button data-open="modal-starred"><span class="row-icon tone-amber"><%- icon('star') %></span><span class="row-text">Mensajes destacados<small id="infoStarCount"></small></span><%- icon('chevron-right', 'icon-sm') %></button>
+            <button data-action="info-pinned" id="infoPinnedRow"><span class="row-icon tone-blue"><%- icon('pin') %></span><span class="row-text">Mensajes fijados<small id="infoPinCount"></small></span><%- icon('chevron-right', 'icon-sm') %></button>
+            <button data-action="disappearing"><span class="row-icon tone-violet"><%- icon('timer') %></span><span class="row-text">Mensajes temporales<small id="infoDisappear"></small></span><%- icon('chevron-right', 'icon-sm') %></button>
+            <button data-open="modal-scheduled"><span class="row-icon tone-orange"><%- icon('calendar-clock') %></span><span class="row-text">Mensajes programados<small id="infoScheduled"></small></span><%- icon('chevron-right', 'icon-sm') %></button>
+        </section>
+
+        <!-- Grupos en común (chats 1 a 1) -->
+        <section class="info-card" id="infoCommonCard" hidden>
+            <h4>Grupos en común <span class="muted" id="infoCommonCount"></span></h4>
+            <ul class="common-list" id="infoCommon"></ul>
+        </section>
+
+        <section class="info-card info-options">
             <button data-action="pin" id="pinBtn"><%- icon('pin') %><span id="pinLabel">Fijar chat</span></button>
             <button data-action="archive"><svg class="icon" aria-hidden="true"><use href="/assets/images/icons.svg#i-archive" id="archiveIcon"></use></svg><span id="archiveLabel">Archivar chat</span></button>
-            <button data-open="modal-starred"><%- icon('star') %>Mensajes destacados</button>
-            <button data-action="clear-chat"><%- icon('trash') %>Vaciar chat</button>
+            <button data-action="clear-chat"><%- icon('x') %>Vaciar chat</button>
             <button data-action="block" class="is-danger" id="blockBtn"><%- icon('ban') %><span id="blockLabel">Bloquear</span></button>
             <button data-action="delete-chat" class="is-danger" id="deleteChatBtn"><%- icon('trash') %>Eliminar chat</button>
             <button data-action="leave-group" class="is-danger" id="leaveBtn" hidden><%- icon('logout') %>Salir y eliminar grupo</button>
         </section>
+
+        <p class="info-foot muted"><%- icon('lock', 'icon-sm') %> Los mensajes y las llamadas son privados entre los participantes.</p>
     </div>
 </aside>

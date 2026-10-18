@@ -1,5 +1,6 @@
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PASSWORD = /^(?=.*[A-Za-z])(?=.*\d).{6,72}$/;
+// Acceso sencillo: basta con 6 caracteres (el indicador de seguridad sugiere mejorarla)
+const PASSWORD = /^.{6,72}$/s;
 const USERNAME = /^[a-z0-9_.]{3,20}$/i;
 
 const str = (value, max = 500) => (typeof value === "string" ? value.trim().slice(0, max) : "");
@@ -17,14 +18,22 @@ const toId = (value) => {
 
 const toBool = (value) => value === true || value === "true" || value === 1 || value === "1" || value === "on";
 
-/** Errores de registro por campo. */
-function registration({ name, email, password, username }) {
+/** "MM-DD" que existe en el calendario (29 de febrero incluido). */
+function birthday(value) {
+  const m = /^(\d{2})-(\d{2})$/.exec(value || "");
+  if (!m) return false;
+  const month = Number(m[1]);
+  const day = Number(m[2]);
+  return month >= 1 && month <= 12 && day >= 1 && day <= new Date(2024, month, 0).getDate();
+}
+
+/** Errores de registro por campo (sin correo: solo nombre, usuario y contraseña). */
+function registration({ name, password, username }) {
   const errors = {};
-  if (name.length < 2) errors.name = "Ingresa tu nombre.";
-  if (!EMAIL.test(email)) errors.email = "Ingresa un correo electrónico válido.";
-  if (!PASSWORD.test(password)) errors.password = "Mínimo 6 caracteres, con al menos una letra y un número.";
+  if (name.length < 2) errors.name = "Escribe tu nombre.";
+  if (!PASSWORD.test(password)) errors.password = "La contraseña necesita al menos 6 caracteres.";
   if (!USERNAME.test(username)) errors.username = "De 3 a 20 caracteres: letras, números, punto o guion bajo.";
   return errors;
 }
 
-module.exports = { EMAIL, PASSWORD, USERNAME, str, idList, toId, toBool, registration };
+module.exports = { EMAIL, PASSWORD, USERNAME, str, idList, toId, toBool, registration, birthday };

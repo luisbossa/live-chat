@@ -7,6 +7,8 @@ const realtime = require("../services/realtime");
 const validate = require("../utils/validate");
 const { httpError } = require("../middleware/errorHandler");
 const welcome = require("../services/welcome");
+const messaging = require("../services/messaging");
+const Scheduled = require("../models/Scheduled");
 
 const MAX_TEXT = 4000;
 const STICKER_PATH = /^\/assets\/images\/stickers\/sticker\d{1,3}\.gif$/;
@@ -78,12 +80,12 @@ exports.show = async (req, res) => {
 exports.messages = async (req, res) => {
   const before = validate.toId(req.query.before) || undefined;
   const limit = Math.min(validate.toId(req.query.limit) || 50, 100);
-  const messages = await Message.list(req.conversation.id, { before, limit, after: req.member.cleared_id });
+  const messages = await Message.list(req.conversation.id, { before, limit, after: req.member.cleared_id, viewerId: req.user.id });
   res.json({ messages, hasMore: messages.length === limit });
 };
 
 exports.media = async (req, res) => {
-  res.json({ messages: await Message.media(req.conversation.id, req.member.cleared_id) });
+  res.json({ messages: await Message.media(req.conversation.id, req.member.cleared_id, req.user.id) });
 };
 
 exports.send = async (req, res) => {
@@ -118,6 +120,9 @@ exports.send = async (req, res) => {
     if (original?.conversation_id === conversationId) data.replyToId = replyToId;
   }
 
+  const mentions = await messaging.mentionsIn(req.conversation, text, req.user.id);
+  if (mentions.length) data.meta = { ...(data.meta || {}), mentions };
+
   // Respuesta a un estado: se adjunta una miniatura del estado
   const storyId = validate.toId(req.body.storyId);
   if (storyId) {
@@ -127,14 +132,8 @@ exports.send = async (req, res) => {
     }
   }
 
-  const message = await Message.create(data);
-  // Identificador temporal del cliente: permite reemplazar el mensaje provisional sin duplicarlo
-  if (req.body.clientId) message.clientId = validate.str(req.body.clientId, 40);
-  // El remitente ya lo leyó
-  const member = await Conversation.updateReceipts(conversationId, req.user.id, { read: message.id });
-  await realtime.message(message);
-  await realtime.receipt(conversationId, req.user, member);
-  if (peer?.username === welcome.OFFICIAL_USERNAME) welcome.autoReply(conversationId, peer.id);
+  // clientId: identificador temporal del cliente para reemplazar el mensaje provisional sin duplicarlo
+  const message = await messaging.publish(data, req.user, { clientId: validate.str(req.body.clientId, 40) || undefined, peer });
   res.status(201).json({ message });
 };
 
@@ -227,3 +226,50 @@ async function leaveGroup(req) {
   realtime.toUsers([req.user.id], "conversation:removed", { conversationId });
   await realtime.conversation(conversationId, undefined, "conversation:update");
 }
+
+// ==========================================================================
+// Mensajes temporales (como WhatsApp: el ajuste es del chat, para todos)
+// ==========================================================================
+const DISAPPEAR_OPTIONS = [0, 24 * 3600, 7 * 24 * 3600, 90 * 24 * 3600];
+
+exports.updateDisappearing = async (req, res) => {
+  const seconds = Number(req.body.seconds);
+  if (!DISAPPEAR_OPTIONS.includes(seconds)) throw httpError(422, "Duración no válida.");
+  if (seconds !== req.conversation.disappear_after) {
+    await Conversation.setDisappearing(req.conversation.id, seconds);
+    await systemMessage(req.conversation.id, req.user.id, "disappearing", { seconds });
+    await realtime.conversation(req.conversation.id, undefined, "conversation:update");
+  }
+  res.json({ conversation: await Conversation.getForUser(req.conversation.id, req.user) });
+};
+
+// ==========================================================================
+// Mensajes programados (solo los ve quien los programa)
+// ==========================================================================
+const MAX_SCHEDULE_AHEAD = 365 * 24 * 3600 * 1000;
+
+exports.scheduled = async (req, res) => {
+  res.json({ scheduled: await Scheduled.listFor(req.conversation.id, req.user.id) });
+};
+
+exports.schedule = async (req, res) => {
+  await assertCanSend(req);
+  const text = validate.str(req.body.text, MAX_TEXT);
+  const sendAt = Number(req.body.sendAt);
+  if (!text) throw httpError(422, "Escribe el mensaje que quieres programar.");
+  if (!Number.isFinite(sendAt) || sendAt < Date.now() + 30 * 1000) throw httpError(422, "Elige una hora futura (al menos dentro de un minuto).");
+  if (sendAt > Date.now() + MAX_SCHEDULE_AHEAD) throw httpError(422, "Solo puedes programar con hasta un año de antelación.");
+  if ((await Scheduled.countFor(req.conversation.id, req.user.id)) >= 20) throw httpError(422, "Ya tienes 20 mensajes programados en este chat.");
+
+  const replyToId = validate.toId(req.body.replyToId);
+  const original = replyToId && (await Message.findRaw(replyToId));
+  const item = await Scheduled.create({
+    conversationId: req.conversation.id,
+    senderId: req.user.id,
+    body: text,
+    replyToId: original?.conversation_id === req.conversation.id ? replyToId : null,
+    sendAt,
+  });
+  realtime.toUsers([req.user.id], "conversation:update", await Conversation.getForUser(req.conversation.id, req.user));
+  res.status(201).json({ scheduled: item });
+};

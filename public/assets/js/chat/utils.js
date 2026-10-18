@@ -117,3 +117,40 @@ export const prefs = {
     }
   },
 };
+
+/** Estados de disponibilidad (como Slack o Teams). */
+export const STATUSES = {
+  available: { label: "Disponible", hint: "Recibes avisos con normalidad" },
+  busy: { label: "Ocupado", hint: "Tus contactos verán que estás ocupado" },
+  away: { label: "Ausente", hint: "Para cuando no estás cerca" },
+  dnd: { label: "No molestar", hint: "Silencia sonidos y avisos de mensajes" },
+};
+
+/** Colores de perfil: [claro, oscuro] para la portada y el nombre en grupos. */
+export const PROFILE_COLORS = {
+  blue: ["#5b8def", "#3a6fd8"],
+  violet: ["#a78bfa", "#6d4ed8"],
+  green: ["#4ade80", "#129a5c"],
+  pink: ["#f59ac0", "#d63f80"],
+  orange: ["#ffb057", "#e06a14"],
+  teal: ["#5eead4", "#0f8f95"],
+  red: ["#fca5a5", "#dc2626"],
+  slate: ["#94a3b8", "#475569"],
+};
+
+export const profileColor = (color) => PROFILE_COLORS[color] || PROFILE_COLORS.blue;
+
+const MONTHS = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+export const MONTH_NAMES = MONTHS;
+
+/** "03-14" → "14 de marzo". */
+export function birthdayLabel(mmdd) {
+  const [m, d] = (mmdd || "").split("-").map(Number);
+  return m && d ? `${d} de ${MONTHS[m - 1]}` : "";
+}
+
+export function isBirthdayToday(mmdd) {
+  if (!mmdd) return false;
+  const now = new Date();
+  return mmdd === `${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+}

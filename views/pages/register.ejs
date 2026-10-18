@@ -1,103 +1,113 @@
-<main class="auth">
+<main class="auth auth-register">
     <section class="auth-card">
         <div class="auth-form">
             <header class="auth-top">
                 <a href="/" class="icon-btn" aria-label="Volver al inicio"><%- icon('arrow-left') %></a>
-                <ol class="steps" aria-label="Progreso">
-                    <li class="is-active" id="step1Dot">Cuenta</li>
-                    <li id="step2Dot">Perfil</li>
-                </ol>
+                <a href="/login" class="auth-switch">¿Ya tienes cuenta? <strong>Entrar</strong></a>
                 <button class="icon-btn" type="button" data-theme-toggle aria-label="Cambiar tema"><%- icon('moon') %></button>
             </header>
 
-            <form id="registerForm" novalidate>
-                <!-- Paso 1: cuenta -->
-                <div class="auth-step is-active" id="step1">
+            <form id="registerForm" class="register" novalidate>
+                <div class="register-head">
                     <span class="logo logo-lg"><%- icon('logo') %></span>
                     <h1 class="title">Crea tu cuenta</h1>
-                    <p class="subtitle">Únete a Yabla y empieza a chatear con tus amigos.</p>
-
-                    <div class="field">
-                        <label for="name" class="label">Nombre completo</label>
-                        <input type="text" id="name" name="name" class="input" placeholder="Tu nombre" autocomplete="name" required>
-                        <span class="field-error" data-error-for="name"></span>
-                    </div>
-
-                    <div class="field">
-                        <label for="email" class="label">Correo electrónico</label>
-                        <input type="email" id="email" name="email" class="input" placeholder="tu@correo.com" autocomplete="email" required>
-                        <span class="field-error" data-error-for="email"></span>
-                    </div>
-
-                    <div class="field">
-                        <label for="password" class="label">Contraseña</label>
-                        <div class="input-group">
-                            <input type="password" id="password" name="password" class="input" placeholder="Mínimo 6 caracteres"
-                                autocomplete="new-password" required>
-                            <button type="button" class="icon-btn toggle-password" data-target="password" aria-label="Mostrar contraseña"><%- icon('eye') %></button>
-                        </div>
-                        <div class="strength" id="strength" aria-hidden="true"><span></span></div>
-                        <span class="field-error" data-error-for="password"></span>
-                    </div>
-
-                    <button type="button" class="btn btn-primary btn-block" id="toStep2">Continuar</button>
-                    <p class="auth-foot">¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
+                    <p class="subtitle">Solo un nombre, un usuario y una contraseña. Sin correo ni códigos.</p>
                 </div>
 
-                <!-- Paso 2: perfil -->
-                <div class="auth-step" id="step2">
-                    <h1 class="title">Completa tu perfil</h1>
-                    <p class="subtitle">Así te verán tus amigos en Yabla.</p>
-
+                <!-- Foto (opcional) -->
+                <div class="register-photo">
                     <div class="avatar-upload">
                         <div class="avatar-edit">
                             <input type="file" id="avatarInput" name="avatar" accept="image/png, image/jpeg, image/webp, image/gif">
-                            <label for="avatarInput" aria-label="Subir foto"><%- icon('camera', 'icon-sm') %></label>
+                            <label for="avatarInput" aria-label="Elegir foto"><%- icon('camera', 'icon-sm') %></label>
                         </div>
                         <div class="avatar-preview">
                             <div style="background-image: url(/assets/images/ui/avatar-default.svg);"></div>
                         </div>
                     </div>
-
-                    <div class="field">
-                        <label for="username" class="label">Nombre de usuario</label>
-                        <div class="input-prefix">
-                            <span>@</span>
-                            <input type="text" id="username" name="username" class="input" placeholder="tunombre" autocomplete="username">
-                        </div>
-                        <span class="field-error" data-error-for="username"></span>
+                    <div>
+                        <strong>Foto de perfil</strong>
+                        <small>Opcional. Toca la cámara para elegir una.</small>
                     </div>
-
-                    <p class="form-alert" id="formAlert" role="alert" hidden></p>
-                    <button type="submit" class="btn btn-brand btn-block" id="submitBtn">Entrar al chat</button>
-                    <button type="button" class="btn btn-ghost btn-block" id="backToStep1">Volver</button>
                 </div>
+
+                <div class="field">
+                    <label for="name" class="label">¿Cómo te llamas?</label>
+                    <div class="input-icon">
+                        <%- icon('user', 'icon-sm') %>
+                        <input type="text" id="name" name="name" class="input" placeholder="Nombre y apellido" autocomplete="name" maxlength="60" required>
+                    </div>
+                    <span class="field-error" data-error-for="name"></span>
+                </div>
+
+                <div class="field">
+                    <label for="username" class="label">Nombre de usuario</label>
+                    <div class="input-prefix username-field">
+                        <span>@</span>
+                        <input type="text" id="username" name="username" class="input" placeholder="tu_usuario"
+                            autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="20" required>
+                        <span class="username-status" id="usernameStatus" aria-live="polite"></span>
+                    </div>
+                    <span class="field-hint" id="usernameHint">Con él entrarás y te encontrarán tus amigos.</span>
+                    <div class="username-ideas" id="usernameIdeas" hidden></div>
+                    <span class="field-error" data-error-for="username"></span>
+                </div>
+
+                <div class="field">
+                    <label for="password" class="label">Contraseña</label>
+                    <div class="input-group">
+                        <input type="password" id="password" name="password" class="input" placeholder="Mínimo 6 caracteres"
+                            autocomplete="new-password" minlength="6" required>
+                        <button type="button" class="icon-btn toggle-password" data-target="password" aria-label="Mostrar contraseña"><%- icon('eye') %></button>
+                    </div>
+                    <div class="strength" id="strength" data-level="0" aria-hidden="true"><i></i><i></i><i></i></div>
+                    <span class="field-hint" id="strengthLabel">Usa al menos 6 caracteres.</span>
+                    <span class="field-error" data-error-for="password"></span>
+                </div>
+
+                <p class="form-alert" id="formAlert" role="alert" hidden></p>
+                <button type="submit" class="btn btn-brand btn-block register-submit" id="submitBtn">
+                    <span class="spinner" aria-hidden="true"></span><span class="label-text">Crear cuenta</span><%- icon('arrow-up-right', 'icon-sm') %>
+                </button>
+
+                <ul class="register-perks">
+                    <li><%- icon('zap', 'icon-sm') %>En 30 segundos</li>
+                    <li><%- icon('lock', 'icon-sm') %>Sin correo</li>
+                    <li><%- icon('gift', 'icon-sm') %>Gratis</li>
+                </ul>
             </form>
         </div>
 
-        <!-- Vista previa decorativa -->
-        <aside class="auth-showcase" aria-hidden="true">
-            <div class="showcase-chat">
-                <div class="sc-head">
-                    <img src="/assets/images/avatars/friend-avatar2.jpg" alt="">
-                    <div><strong>Susan Miller</strong><small>escribiendo…</small></div>
-                </div>
-                <div class="sc-bubble in">¡Hola! ¿Ya te uniste a Yabla? 👋</div>
-                <div class="sc-bubble out">¡Justo ahora! Me encanta 😍</div>
-                <div class="sc-bubble in">¿Hacemos videollamada? 📹</div>
-                <img class="sc-sticker" src="/assets/images/stickers/sticker5.gif" alt="">
-                <div class="sc-typing"><span></span><span></span><span></span></div>
-            </div>
+        <!-- Vista previa: así te verán tus amigos (se actualiza al escribir) -->
+        <aside class="auth-showcase register-showcase" aria-hidden="true">
             <div class="showcase-copy">
-                <h2>Habla con quien quieras, cuando quieras.</h2>
-                <p>Mensajes, llamadas, videollamadas y estados en tiempo real.</p>
-                <div class="showcase-people">
-                    <img src="/assets/images/landing/person_1.jpg" alt="">
-                    <img src="/assets/images/landing/person_2.jpg" alt="">
-                    <img src="/assets/images/landing/person_3.webp" alt="">
-                    <span>+5,000 personas ya chatean</span>
+                <span class="showcase-tag"><%- icon('sparkles', 'icon-sm') %> Vista previa</span>
+                <h2>Así te verán tus amigos</h2>
+            </div>
+
+            <div class="preview-phone">
+                <div class="preview-profile">
+                    <img id="previewAvatar" src="/assets/images/ui/avatar-default.svg" alt="">
+                    <div>
+                        <strong id="previewName">Tu nombre</strong>
+                        <small id="previewUser">@tu_usuario</small>
+                    </div>
+                    <span class="preview-online">en línea</span>
+                </div>
+                <div class="preview-chat">
+                    <div class="sc-bubble in"><b>Karla</b>¡Hola, <span id="previewFirst">amigo</span>! Bienvenido a Yabla 👋</div>
+                    <div class="sc-bubble out">¡Gracias! Ya estoy aquí 😄</div>
+                    <div class="sc-bubble in"><b>Mauricio</b>¿Mejenga el viernes? ⚽</div>
+                    <img class="sc-sticker" src="/assets/images/stickers/sticker5.gif" alt="">
+                    <div class="sc-typing"><span></span><span></span><span></span></div>
                 </div>
             </div>
+
+            <ul class="showcase-features">
+                <li><span><%- icon('chat') %></span>Chats y grupos en tiempo real</li>
+                <li><span><%- icon('video') %></span>Llamadas y videollamadas</li>
+                <li><span><%- icon('status') %></span>Estados que duran 24 h</li>
+            </ul>
         </aside>
     </section>
 </main>

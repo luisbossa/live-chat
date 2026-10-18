@@ -35,44 +35,6 @@
   margin-bottom: 24px;
 }
 
-.steps {
-  display: flex;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.steps li {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: var(--pill);
-  background: var(--surface-2);
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--muted);
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.steps li::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: currentColor;
-}
-
-.steps li.is-active {
-  background: var(--brand-soft);
-  color: var(--brand-2);
-}
-
-.steps li.is-done {
-  color: var(--online);
-}
-
 .auth-step {
   display: none;
   flex: 1;
@@ -110,11 +72,6 @@
   gap: 6px;
 }
 
-#registerForm {
-  display: flex;
-  flex: 1;
-}
-
 .auth-step .btn {
   margin-top: 8px;
 }
@@ -128,10 +85,6 @@
 
 .auth-foot a {
   font-weight: 600;
-}
-
-#step2 .avatar-upload {
-  margin-bottom: 20px;
 }
 
 /* Tarjeta de una columna (login, errores) */
@@ -167,28 +120,6 @@
   letter-spacing: -0.04em;
   color: var(--brand-2);
 }
-
-/* Indicador de seguridad de la contraseña */
-.strength {
-  height: 4px;
-  margin: 4px 12px 0;
-  border-radius: var(--pill);
-  background: var(--surface-2);
-  overflow: hidden;
-}
-
-.strength span {
-  display: block;
-  width: 0;
-  height: 100%;
-  border-radius: inherit;
-  background: var(--danger);
-  transition: width 0.3s var(--ease), background-color 0.3s;
-}
-
-.strength[data-level="2"] span { width: 66%; background: var(--warning); }
-.strength[data-level="1"] span { width: 33%; }
-.strength[data-level="3"] span { width: 100%; background: var(--online); }
 
 /* --- Columna decorativa --------------------------------------------------- */
 .auth-showcase {
@@ -381,3 +312,432 @@
     padding: 16px 20px 32px;
   }
 }
+
+/* ==========================================================================
+   Registro en un paso (sin correo)
+   ========================================================================== */
+.auth-register .auth-card { min-height: 700px; }
+
+.auth-switch {
+  padding: 8px 14px;
+  border-radius: var(--pill);
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 13px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.auth-switch strong { color: var(--brand-2); }
+.auth-switch:hover { background: var(--brand-soft); }
+
+.register {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
+  animation: fade-up 0.45s var(--ease);
+}
+
+.register-head .logo { margin-bottom: 16px; }
+.register-head .subtitle { margin: 6px 0 18px; }
+
+.register-photo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+}
+
+.register-photo .avatar-upload { width: 72px; height: 72px; margin: 0; flex: none; }
+.register-photo .avatar-preview > div { width: 72px; height: 72px; border-width: 3px; }
+.register-photo .avatar-edit label { width: 28px; height: 28px; bottom: 0; right: -2px; background: var(--brand-2); color: #fff; }
+.register-photo strong { display: block; color: var(--ink); font-size: 14px; }
+.register-photo small { display: block; color: var(--muted); font-size: 13px; }
+
+/* Campo con icono a la izquierda */
+.input-icon { position: relative; }
+
+.input-icon > .icon {
+  position: absolute;
+  top: 50%;
+  left: 18px;
+  color: var(--muted);
+  translate: 0 -50%;
+  pointer-events: none;
+  transition: color 0.2s;
+}
+
+.input-icon .input { padding-left: 44px; }
+.input-icon:focus-within > .icon { color: var(--brand-2); }
+
+.field-hint {
+  margin-top: 2px;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.field-hint[data-state="ok"] { color: var(--online); font-weight: 600; }
+.field-hint[data-state="taken"],
+.field-hint[data-state="invalid"] { color: var(--danger); }
+
+/* Disponibilidad del usuario */
+.username-field .input { padding-right: 46px; }
+
+.username-status {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  left: auto !important;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  translate: 0 -50%;
+}
+
+.input-prefix .username-status { transform: none; }
+.username-status[data-state="ok"] { background: var(--online); color: #fff; }
+.username-status[data-state="taken"],
+.username-status[data-state="invalid"] { background: var(--danger); color: #fff; }
+.username-status .icon { width: 14px; height: 14px; stroke-width: 3; }
+
+.username-ideas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 0 2px 12px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: var(--pill);
+  background: var(--brand-soft);
+  color: var(--brand-2);
+  font-size: 13px;
+  font-weight: 600;
+  animation: fade-up 0.25s var(--ease);
+  transition: transform 0.15s var(--ease);
+}
+
+.chip:hover { transform: translateY(-1px); }
+
+/* Seguridad de la contraseña: tres segmentos */
+.strength {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  margin: 8px 14px 0;
+}
+
+.strength i {
+  height: 4px;
+  border-radius: var(--pill);
+  background: var(--surface-3);
+  transition: background-color 0.3s;
+}
+
+.strength.is-short i:first-child { background: var(--danger); }
+.strength[data-level="1"] i:nth-child(-n + 1) { background: var(--warning); }
+.strength[data-level="2"] i:nth-child(-n + 2) { background: var(--brand); }
+.strength[data-level="3"] i { background: var(--online); }
+
+/* Botón con carga */
+.register-submit {
+  gap: 8px;
+  margin-top: 10px;
+  height: 52px;
+  font-size: 15px;
+}
+
+.register-submit .spinner { display: none; }
+.register-submit.is-loading .spinner { display: inline-block; }
+.register-submit.is-loading > .icon { display: none; }
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.username-status .spinner { width: 16px; height: 16px; border-color: var(--border); border-top-color: var(--brand-2); }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.register-perks {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.register-perks li { display: inline-flex; align-items: center; gap: 6px; }
+.register-perks .icon { color: var(--brand-2); }
+
+/* --- Vista previa en vivo -------------------------------------------------- */
+.register-showcase { justify-content: center; gap: 28px; }
+
+.showcase-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  padding: 5px 12px;
+  border-radius: var(--pill);
+  background: rgba(255, 255, 255, 0.2);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.register-showcase .showcase-copy h2 { max-width: none; font-size: 30px; }
+
+.preview-phone {
+  position: relative;
+  width: min(100%, 360px);
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 24px 60px rgba(20, 40, 90, 0.28);
+}
+
+.preview-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #262424;
+}
+
+.preview-profile img {
+  width: 46px;
+  height: 46px;
+  flex: none;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--brand);
+}
+
+.preview-profile div { flex: 1; min-width: 0; }
+
+.preview-profile strong,
+.preview-profile small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview-profile small { color: #8b8d90; font-size: 13px; }
+
+.preview-online {
+  flex: none;
+  padding: 3px 8px;
+  border-radius: var(--pill);
+  background: #e3f9eb;
+  color: #0a9a3a;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.preview-chat {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px;
+}
+
+.preview-chat .sc-bubble b {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--brand-2);
+  font-size: 12px;
+}
+
+.preview-chat .sc-bubble:nth-child(1) { animation-delay: 0.2s; }
+.preview-chat .sc-bubble:nth-child(2) { animation-delay: 0.8s; }
+.preview-chat .sc-bubble:nth-child(3) { animation-delay: 1.4s; }
+
+.showcase-features {
+  display: grid;
+  gap: 10px;
+  width: min(100%, 360px);
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.showcase-features li { display: flex; align-items: center; gap: 12px; }
+
+.showcase-features span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.showcase-features .icon { width: 18px; height: 18px; }
+
+@media (max-width: 520px) {
+  .auth-switch { font-size: 12px; padding: 7px 12px; }
+  .register-perks { gap: 12px; }
+}
+
+/* El estilo del "@" (.input-prefix span) no debe afectar al spinner del indicador */
+.username-status .spinner { position: static; transform: none; }
+
+
+/* ==========================================================================
+   Registro: todo cabe en la pantalla, sin scroll
+   Los tamaños se ajustan a la altura disponible (vh) y, en pantallas bajas,
+   se ocultan los elementos secundarios.
+   ========================================================================== */
+.auth-register {
+  height: 100dvh;
+  min-height: 0;
+  padding: clamp(8px, 2.6vh, 28px) 16px;
+  overflow: hidden;
+}
+
+.auth-register .auth-card {
+  height: 100%;
+  max-height: 860px;
+  min-height: 0;
+}
+
+.auth-register .auth-form {
+  min-height: 0;
+  padding: clamp(10px, 2.4vh, 26px) clamp(20px, 4vw, 48px) clamp(10px, 2.4vh, 28px);
+}
+
+.auth-register .auth-top { margin-bottom: clamp(2px, 1.2vh, 14px); }
+
+/* Logo al lado del título: ahorra una fila entera */
+.register-head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 14px;
+}
+
+.register-head .logo {
+  grid-row: span 2;
+  width: clamp(44px, 6.4vh, 56px);
+  height: clamp(44px, 6.4vh, 56px);
+  margin: 0;
+  border-radius: 16px;
+}
+
+.register-head .title { font-size: clamp(22px, 3.4vh, 30px); line-height: 1.15; }
+
+.register-head .subtitle {
+  margin: 2px 0 0;
+  font-size: clamp(13px, 1.7vh, 15px);
+  line-height: 1.35;
+}
+
+.register { gap: 0; }
+.register-head { margin-bottom: clamp(8px, 2.2vh, 20px); }
+
+.register-photo {
+  gap: 14px;
+  margin-bottom: clamp(6px, 1.6vh, 14px);
+  padding: clamp(6px, 1vh, 10px) 12px;
+}
+
+.register-photo .avatar-upload,
+.register-photo .avatar-preview > div {
+  width: clamp(48px, 7vh, 64px);
+  height: clamp(48px, 7vh, 64px);
+}
+
+.register .field {
+  gap: 4px;
+  margin-bottom: clamp(6px, 1.4vh, 12px);
+}
+
+.register .input { height: clamp(40px, 5.6vh, 48px); }
+.register .input-group .icon-btn { top: 50%; translate: 0 -50%; }
+
+/* Errores y pistas no reservan espacio vacío */
+.register .field-error { min-height: 0; padding-left: 18px; }
+.register .field-error:empty { display: none; }
+.register .field-hint { margin-top: 0; font-size: 12px; }
+.register .strength { margin-top: 6px; }
+
+.register .username-ideas { margin: 4px 0 0 12px; }
+.register .username-ideas .chip { height: 26px; font-size: 12.5px; }
+
+.register .form-alert { margin: 0 0 6px; padding: 8px 14px; }
+
+.register-submit {
+  height: clamp(42px, 6vh, 52px);
+  margin-top: clamp(4px, 1.2vh, 10px);
+}
+
+.register-perks { margin-top: clamp(8px, 1.8vh, 16px); }
+
+/* Vista previa (columna derecha) */
+.register-showcase {
+  gap: clamp(12px, 2.6vh, 28px);
+  padding: clamp(18px, 4vh, 44px) clamp(24px, 3.5vw, 48px);
+}
+
+.register-showcase .showcase-copy h2 { font-size: clamp(22px, 3.4vh, 30px); }
+.register-showcase .showcase-tag { margin-bottom: 6px; }
+.preview-profile { padding: clamp(10px, 1.6vh, 16px) 18px; }
+.preview-chat { gap: clamp(6px, 1.1vh, 10px); padding: clamp(12px, 1.8vh, 18px); }
+.preview-chat .sc-sticker { width: clamp(64px, 9vh, 96px); }
+
+/* Pantallas bajas: fuera lo secundario */
+@media (max-height: 860px) {
+  .showcase-features { display: none; }
+}
+
+@media (max-height: 760px) {
+  .register-perks { display: none; }
+  .preview-chat .sc-bubble:nth-child(3),
+  .preview-chat .sc-typing { display: none; }
+  .register-photo small { display: none; }
+}
+
+@media (max-height: 680px) {
+  .register-head .subtitle { display: none; }
+  .preview-chat .sc-sticker { display: none; }
+  .register .field-hint:not([data-state="taken"]):not([data-state="invalid"]):not([data-state="ok"]) { display: none; }
+}
+
+/* Móvil: el formulario ocupa toda la pantalla */
+@media (max-width: 520px) {
+  .auth-register { padding: 0; }
+  .auth-register .auth-card { max-height: none; }
+  .auth-register .auth-form { padding: 10px 18px 14px; }
+  .register { margin: 0 auto; }
+  .register-head .logo { width: 44px; height: 44px; border-radius: 13px; }
+}
+
+/* Si el campo muestra un error, su pista no lo repite */
+.register .field:has(.field-error:not(:empty)) .field-hint { display: none; }

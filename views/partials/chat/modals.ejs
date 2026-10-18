@@ -26,33 +26,86 @@
 
 <!-- Perfil -->
 <div class="modal" id="modal-profile">
-    <div class="modal-dialog">
-        <%- head('Mi perfil') %>
-        <form class="stack" id="profileForm">
-            <div class="avatar-upload">
-                <div class="avatar-edit">
-                    <input type="file" id="profileAvatar" name="avatar" accept="image/*">
-                    <label for="profileAvatar" aria-label="Cambiar foto"><%- icon('camera', 'icon-sm') %></label>
+    <div class="modal-dialog profile-dialog">
+        <!-- Portada con el color de perfil -->
+        <div class="profile-cover" id="profileCover">
+            <button class="icon-btn profile-close" data-close aria-label="Cerrar"><%- icon('x') %></button>
+        </div>
+
+        <form id="profileForm">
+            <div class="profile-top">
+                <div class="profile-photo">
+                    <img id="profilePhoto" src="" alt="Tu foto de perfil">
+                    <i class="status-dot" id="profileStatusDot"></i>
+                    <input type="file" id="profileAvatar" name="avatar" accept="image/*" hidden>
+                    <label for="profileAvatar" class="profile-photo-btn" aria-label="Cambiar foto" title="Cambiar foto"><%- icon('camera', 'icon-sm') %></label>
                 </div>
-                <div class="avatar-preview"><div></div></div>
+                <div class="profile-id">
+                    <strong id="profilePreviewName"></strong>
+                    <small id="profilePreviewUser"></small>
+                    <span class="status-chip" id="profilePreviewStatus"></span>
+                </div>
+                <button type="button" class="link-btn profile-remove" id="removePhotoBtn"><%- icon('trash', 'icon-sm') %>Quitar foto</button>
             </div>
-            <div class="field">
-                <label class="label" for="pfName">Nombre</label>
-                <input class="input" id="pfName" name="name" maxlength="60" required>
-            </div>
-            <div class="field">
-                <label class="label" for="pfUsername">Usuario</label>
-                <div class="input-prefix"><span>@</span><input class="input" id="pfUsername" name="username" maxlength="20"></div>
-            </div>
-            <div class="field">
-                <label class="label" for="pfBio">Info</label>
-                <input class="input" id="pfBio" name="bio" maxlength="140">
-            </div>
-            <div class="field">
-                <label class="label" for="pfPhone">Teléfono</label>
-                <input class="input" id="pfPhone" name="phone" type="tel" maxlength="30">
-            </div>
-            <button class="btn btn-primary btn-block" type="submit">Guardar cambios</button>
+
+            <ul class="profile-stats" id="profileStats"></ul>
+
+            <!-- Disponibilidad: se guarda al instante -->
+            <section class="profile-section">
+                <h4>Tu estado</h4>
+                <div class="status-picker" id="statusPicker" role="radiogroup" aria-label="Tu estado"></div>
+            </section>
+
+            <section class="profile-section">
+                <h4>Datos del perfil</h4>
+                <div class="field">
+                    <label class="label" for="pfName">Nombre</label>
+                    <input class="input" id="pfName" name="name" maxlength="60" required>
+                </div>
+                <div class="field">
+                    <label class="label" for="pfUsername">Usuario</label>
+                    <div class="input-prefix">
+                        <span>@</span>
+                        <input class="input" id="pfUsername" name="username" maxlength="20" autocapitalize="none" spellcheck="false">
+                    </div>
+                    <small class="field-note" id="pfUsernameNote">Con él entras y te encuentran.</small>
+                </div>
+                <div class="field">
+                    <label class="label" for="pfBio">Info <span class="muted" id="pfBioCount">0/140</span></label>
+                    <input class="input" id="pfBio" name="bio" maxlength="140" placeholder="Cuéntales algo de ti">
+                    <div class="bio-presets" id="bioPresets"></div>
+                </div>
+                <div class="field-row">
+                    <div class="field">
+                        <label class="label" for="pfPhone">Teléfono</label>
+                        <input class="input" id="pfPhone" name="phone" type="tel" maxlength="30" placeholder="+506 8888 8888">
+                    </div>
+                    <div class="field">
+                        <span class="label">Cumpleaños <span class="muted">(opcional)</span></span>
+                        <div class="birthday-picker">
+                            <select class="input" id="pfBirthDay" aria-label="Día"></select>
+                            <select class="input" id="pfBirthMonth" aria-label="Mes"></select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="profile-section">
+                <h4>Color del perfil <span class="muted">· portada y tu nombre en los grupos</span></h4>
+                <div class="swatches" id="profileColors" role="radiogroup" aria-label="Color del perfil"></div>
+            </section>
+
+            <section class="profile-section profile-links">
+                <button type="button" class="profile-link" data-action="share-profile"><span class="row-icon tone-blue"><%- icon('link') %></span><span class="row-text">Compartir mi perfil<small>Copia tu enlace para que te agreguen</small></span></button>
+                <button type="button" class="profile-link" data-open="modal-qr"><span class="row-icon tone-violet"><%- icon('qr') %></span><span class="row-text">Mi código QR<small>Para escanear desde otro teléfono</small></span></button>
+                <button type="button" class="profile-link" data-open="modal-settings"><span class="row-icon tone-green"><%- icon('palette') %></span><span class="row-text">Apariencia y privacidad<small>Tema, colores y confirmaciones</small></span></button>
+            </section>
+
+            <footer class="profile-foot">
+                <span class="muted small" id="profileDirty"></span>
+                <button type="button" class="btn btn-ghost" data-close>Cancelar</button>
+                <button type="submit" class="btn btn-primary" id="profileSave" disabled>Guardar cambios</button>
+            </footer>
         </form>
     </div>
 </div>
@@ -64,10 +117,6 @@
         <div class="settings">
             <h4>General</h4>
             <label class="setting-row">
-                <span><strong>Modo oscuro</strong><small>Tema oscuro para toda la app</small></span>
-                <span class="switch"><input type="checkbox" id="darkSwitch"><span></span></span>
-            </label>
-            <label class="setting-row">
                 <span><strong>Enviar con Enter</strong><small>Shift + Enter para salto de línea</small></span>
                 <span class="switch"><input type="checkbox" id="enterSwitch"><span></span></span>
             </label>
@@ -76,6 +125,10 @@
                 <span class="switch"><input type="checkbox" id="soundSwitch"><span></span></span>
             </label>
             <h4>Apariencia</h4>
+            <div class="setting-block">
+                <span><strong>Tema</strong><small>Combínalo con cualquier color de la app</small></span>
+                <div class="theme-grid is-wide" id="themeOptions" role="radiogroup" aria-label="Tema"></div>
+            </div>
             <div class="setting-block">
                 <span><strong>Color de la app</strong><small>Botones, burbujas y detalles</small></span>
                 <div class="swatches" id="accentSwatches" role="radiogroup" aria-label="Color de la app"></div>
@@ -294,6 +347,73 @@
     <div class="modal-dialog">
         <%- head('Atajos de teclado') %>
         <dl class="shortcuts" id="shortcutsList"></dl>
+    </div>
+</div>
+
+<!-- Eliminar mensajes: para mí o para todos -->
+<div class="modal" id="modal-delete-msgs">
+    <div class="modal-dialog confirm">
+        <span class="confirm-icon"><%- icon('trash') %></span>
+        <h2 id="deleteMsgsTitle">¿Eliminar mensaje?</h2>
+        <p class="muted" id="deleteMsgsText"></p>
+        <div class="choice-actions">
+            <button class="btn btn-danger btn-block" data-delete-choice="all" id="deleteForAll">Eliminar para todos</button>
+            <button class="btn btn-ghost btn-block" data-delete-choice="me">Eliminar para mí</button>
+            <button class="btn btn-ghost btn-block" data-close>Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Info del mensaje -->
+<div class="modal" id="modal-msg-info">
+    <div class="modal-dialog">
+        <%- head('Info. del mensaje') %>
+        <div class="msg-info-preview" id="msgInfoPreview"></div>
+        <div class="msg-info-body" id="msgInfoBody"></div>
+    </div>
+</div>
+
+<!-- Mensajes temporales -->
+<div class="modal" id="modal-disappearing">
+    <div class="modal-dialog">
+        <%- head('Mensajes temporales') %>
+        <div class="disappear-hero">
+            <span><%- icon('timer') %></span>
+            <p class="muted">Los mensajes nuevos desaparecerán del chat para todos después del tiempo elegido. Los anteriores no cambian.</p>
+        </div>
+        <div class="radio-list" id="disappearOptions" role="radiogroup" aria-label="Duración"></div>
+    </div>
+</div>
+
+<!-- Programar un mensaje -->
+<div class="modal" id="modal-schedule">
+    <div class="modal-dialog">
+        <%- head('Programar mensaje') %>
+        <form class="stack" id="scheduleForm">
+            <div class="field">
+                <label class="label" for="scheduleText">Mensaje</label>
+                <textarea class="input" id="scheduleText" rows="3" maxlength="4000" placeholder="Escribe el mensaje…" required></textarea>
+            </div>
+            <div class="field">
+                <span class="label">¿Cuándo?</span>
+                <div class="quick-times" id="scheduleQuick"></div>
+            </div>
+            <div class="field">
+                <label class="label" for="scheduleAt">Fecha y hora</label>
+                <input class="input" id="scheduleAt" type="datetime-local" required>
+            </div>
+            <p class="muted small" id="scheduleHint"></p>
+            <button class="btn btn-primary btn-block" type="submit"><%- icon('calendar-clock') %><span>Programar</span></button>
+        </form>
+    </div>
+</div>
+
+<!-- Mensajes programados del chat -->
+<div class="modal" id="modal-scheduled">
+    <div class="modal-dialog">
+        <%- head('Mensajes programados') %>
+        <ul class="scheduled-list" id="scheduledList"></ul>
+        <button class="btn btn-ghost btn-block" data-action="new-schedule"><%- icon('plus') %>Programar otro</button>
     </div>
 </div>
 

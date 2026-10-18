@@ -33,6 +33,9 @@ async function start() {
   purgeStories();
   setInterval(purgeStories, 10 * 60 * 1000).unref();
 
+  // Mensajes programados y temporales
+  require("./src/services/scheduler").start();
+
   server.listen(config.port, () => {
     const where = db.isLocal ? "SQLite local" : "Turso";
     console.log(`Yabla escuchando en ${config.isProduction ? config.baseUrl : `http://localhost:${config.port}`} · base de datos: ${where}`);

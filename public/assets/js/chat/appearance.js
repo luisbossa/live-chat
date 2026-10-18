@@ -2,6 +2,17 @@
 import { $, escapeHTML, icon } from "./utils.js";
 import { onModalOpen } from "./ui.js";
 
+// Temas: colores de fondo, superficie y burbuja recibida para la miniatura
+const THEMES = [
+  { id: "auto", label: "Sistema", auto: true },
+  { id: "light", label: "Claro", bg: "#f7f7f7", surface: "#ffffff", bubble: "#ffffff", line: "#dedfdf" },
+  { id: "sepia", label: "Sepia", bg: "#f3ebdd", surface: "#fbf6ec", bubble: "#fffaf1", line: "#e1d1b8" },
+  { id: "dark", label: "Oscuro", bg: "#0f1012", surface: "#18191c", bubble: "#222327", line: "#2e3035" },
+  { id: "dim", label: "Atenuado", bg: "#15202b", surface: "#1b2733", bubble: "#22303d", line: "#2f3e4c" },
+  { id: "ocean", label: "Océano", bg: "#0a1420", surface: "#0f1d2c", bubble: "#152739", line: "#1f3550" },
+  { id: "midnight", label: "Medianoche", bg: "#000000", surface: "#0a0a0b", bubble: "#151517", line: "#232327" },
+];
+
 const ACCENTS = [
   { id: "blue", label: "Azul" },
   { id: "violet", label: "Violeta" },
@@ -34,7 +45,34 @@ function radio(group, item, current, inner) {
     </button>`;
 }
 
+/** Miniatura del tema: barra superior y dos burbujas (la propia usa el color de la app). */
+function themeCard(t, current) {
+  const checked = t.id === current;
+  const style = t.auto ? "" : `style="--p-bg:${t.bg};--p-surface:${t.surface};--p-bubble:${t.bubble};--p-line:${t.line}"`;
+  return `
+    <button type="button" role="radio" aria-checked="${checked}" class="theme-card ${checked ? "is-selected" : ""}" data-theme-choice="${t.id}" title="${t.label}">
+      <i class="theme-preview ${t.auto ? "is-auto" : ""}" ${style}><u></u><b></b><b></b></i>
+      <span>${t.auto ? icon("monitor", "icon-sm") : ""}${t.label}</span>
+    </button>`;
+}
+
+function renderThemes() {
+  const current = Yabla.getThemeChoice();
+  ["#themeMenu", "#themeOptions"].forEach((sel) => ($(sel).innerHTML = THEMES.map((t) => themeCard(t, current)).join("")));
+}
+
+/** Marca el tema elegido sin volver a pintar (el menú sigue abierto para comparar). */
+function markTheme() {
+  const current = Yabla.getThemeChoice();
+  document.querySelectorAll("[data-theme-choice]").forEach((card) => {
+    const on = card.dataset.themeChoice === current;
+    card.classList.toggle("is-selected", on);
+    card.setAttribute("aria-checked", on);
+  });
+}
+
 function render() {
+  renderThemes();
   const accent = Yabla.getAppearance("accent");
   const wallpaper = Yabla.getAppearance("wallpaper");
   const size = Yabla.getAppearance("textSize");
@@ -48,6 +86,13 @@ function render() {
 
 export function initAppearance() {
   onModalOpen("modal-settings", render);
+  renderThemes();
+  document.addEventListener("themechange", markTheme);
+  // Elegir tema (en el menú de la barra o en Ajustes)
+  document.addEventListener("click", (e) => {
+    const card = e.target.closest("[data-theme-choice]");
+    if (card) Yabla.setTheme(card.dataset.themeChoice);
+  });
   $("#modal-settings").addEventListener("click", (e) => {
     const btn = e.target.closest("[data-appearance]");
     if (!btn) return;
