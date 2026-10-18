@@ -511,9 +511,9 @@ var Te = "framer-WoFHi",
                                         sizes: `calc(min(${
                                           t?.width || "100vw"
                                         } - 32px, 1280px) * 0.6564)`,
-                                        src: "/images/hand.png",
+                                        src: "/assets/images/landing/hand.png",
                                         srcSet:
-                                          "/images/hand.png?scale-down-to=1024 890w,/images/hand.png?scale-down-to=2048 1781w,/images/hand.png 2509w",
+                                          "/assets/images/landing/hand.png?scale-down-to=1024 890w,/assets/images/landing/hand.png?scale-down-to=2048 1781w,/assets/images/landing/hand.png 2509w",
                                       },
                                     },
                                     YEydZTQhG: {
@@ -541,9 +541,9 @@ var Te = "framer-WoFHi",
                                         sizes: `calc(min(${
                                           t?.width || "100vw"
                                         } - 64px, 1280px) * 0.5164)`,
-                                        src: "/images/hand.png",
+                                        src: "/assets/images/landing/hand.png",
                                         srcSet:
-                                          "/images/hand.png?scale-down-to=1024 890w,/images/hand.png?scale-down-to=2048 1781w,/images/hand.png 2509w",
+                                          "/assets/images/landing/hand.png?scale-down-to=1024 890w,/assets/images/landing/hand.png?scale-down-to=2048 1781w,/assets/images/landing/hand.png 2509w",
                                       },
                                     },
                                   },
@@ -572,9 +572,9 @@ var Te = "framer-WoFHi",
                                       sizes: `calc(min(${
                                         t?.width || "100vw"
                                       } - 64px, 1280px) * 0.5164)`,
-                                      src: "/images/hand.png",
+                                      src: "/assets/images/landing/hand.png",
                                       srcSet:
-                                        "/images/hand.png?scale-down-to=1024 890w,/images/hand.png?scale-down-to=2048 1781w,/images/hand.png 2509w",
+                                        "/assets/images/landing/hand.png?scale-down-to=1024 890w,/assets/images/landing/hand.png?scale-down-to=2048 1781w,/assets/images/landing/hand.png 2509w",
                                     },
                                     className: "framer-1i7xl8t",
                                     "data-framer-name": "Clay",
@@ -609,9 +609,9 @@ var Te = "framer-WoFHi",
                                     sizes: `calc(min(${
                                       t?.width || "100vw"
                                     } - 32px, 1280px) * 1.3257)`,
-                                    src: "/images/w_mist.avif?scale-down-to=1024",
+                                    src: "/assets/images/landing/w_mist.avif?scale-down-to=1024",
                                     srcSet:
-                                      "/images/w_mist.avif?scale-down-to=512 512w,/images/w_mist.avif?scale-down-to=1024 1024w,/images/w_mist.avif 1496w",
+                                      "/assets/images/landing/w_mist.avif?scale-down-to=512 512w,/assets/images/landing/w_mist.avif?scale-down-to=1024 1024w,/assets/images/landing/w_mist.avif 1496w",
                                   },
                                 },
                                 YEydZTQhG: {
@@ -638,9 +638,9 @@ var Te = "framer-WoFHi",
                                     sizes: `calc(min(${
                                       t?.width || "100vw"
                                     } - 64px, 1280px) * 1.3257)`,
-                                    src: "/images/w_mist.avif?scale-down-to=1024",
+                                    src: "/assets/images/landing/w_mist.avif?scale-down-to=1024",
                                     srcSet:
-                                      "/images/w_mist.avif?scale-down-to=512 512w,/images/w_mist.avif?scale-down-to=1024 1024w,/images/w_mist.avif 1496w",
+                                      "/assets/images/landing/w_mist.avif?scale-down-to=512 512w,/assets/images/landing/w_mist.avif?scale-down-to=1024 1024w,/assets/images/landing/w_mist.avif 1496w",
                                   },
                                 },
                               },
@@ -668,9 +668,9 @@ var Te = "framer-WoFHi",
                                   sizes: `calc(min(${
                                     t?.width || "100vw"
                                   } - 64px, 1280px) * 1.3257)`,
-                                  src: "/images/w_mist.avif?scale-down-to=1024",
+                                  src: "/assets/images/landing/w_mist.avif?scale-down-to=1024",
                                   srcSet:
-                                    "/images/w_mist.avif?scale-down-to=512 512w,/images/w_mist.avif?scale-down-to=1024 1024w,/images/w_mist.avif 1496w",
+                                    "/assets/images/landing/w_mist.avif?scale-down-to=512 512w,/assets/images/landing/w_mist.avif?scale-down-to=1024 1024w,/assets/images/landing/w_mist.avif 1496w",
                                 },
                                 className: "framer-p8t2ds",
                                 "data-framer-name": "Gradient white",
@@ -704,9 +704,9 @@ var Te = "framer-WoFHi",
                                     sizes: `calc(min(${
                                       t?.width || "100vw"
                                     } - 32px, 1280px) * 1.1209)`,
-                                    src: "/images/w_mist.avif?scale-down-to=1024",
+                                    src: "/assets/images/landing/w_mist.avif?scale-down-to=1024",
                                     srcSet:
-                                      "/images/w_mist.avif?scale-down-to=512 512w,/images/w_mist.avif?scale-down-to=1024 1024w,/images/w_mist.avif?scale-down-to=2048 2048w,/images/w_mist.avif 2243w",
+                                      "/assets/images/landing/w_mist.avif?scale-down-to=512 512w,/assets/images/landing/w_mist.avif?scale-down-to=1024 1024w,/assets/images/landing/w_mist.avif?scale-down-to=2048 2048w,/assets/images/landing/w_mist.avif 2243w",
                                   },
                                 },
                                 YEydZTQhG: {
@@ -733,9 +733,9 @@ var Te = "framer-WoFHi",
                                     sizes: `calc(min(${
                                       t?.width || "100vw"
                                     } - 64px, 1280px) * 1.1209)`,
-                                    src: "/images/w_mist.avif?scale-down-to=1024",
+                                    src: "/assets/images/landing/w_mist.avif?scale-down-to=1024",
                                     srcSet:
-                                      "/images/w_mist.avif?scale-down-to=512 512w,/images/w_mist.avif?scale-down-to=1024 1024w,/images/w_mist.avif?scale-down-to=2048 2048w,/images/w_mist.avif 2243w",
+                                      "/assets/images/landing/w_mist.avif?scale-down-to=512 512w,/assets/images/landing/w_mist.avif?scale-down-to=1024 1024w,/assets/images/landing/w_mist.avif?scale-down-to=2048 2048w,/assets/images/landing/w_mist.avif 2243w",
                                   },
                                 },
                               },
@@ -763,9 +763,9 @@ var Te = "framer-WoFHi",
                                   sizes: `calc(min(${
                                     t?.width || "100vw"
                                   } - 64px, 1280px) * 1.1209)`,
-                                  src: "/images/w_mist.avif?scale-down-to=1024",
+                                  src: "/assets/images/landing/w_mist.avif?scale-down-to=1024",
                                   srcSet:
-                                    "/images/w_mist.avif?scale-down-to=512 512w,/images/w_mist.avif?scale-down-to=1024 1024w,/images/w_mist.avif?scale-down-to=2048 2048w,/images/w_mist.avif 2243w",
+                                    "/assets/images/landing/w_mist.avif?scale-down-to=512 512w,/assets/images/landing/w_mist.avif?scale-down-to=1024 1024w,/assets/images/landing/w_mist.avif?scale-down-to=2048 2048w,/assets/images/landing/w_mist.avif 2243w",
                                 },
                                 className: "framer-18tahzm",
                                 "data-framer-name": "Gradient2",
@@ -798,9 +798,9 @@ var Te = "framer-WoFHi",
                                     sizes: `calc(min(${
                                       t?.width || "100vw"
                                     } - 32px, 1280px) * 1.4112)`,
-                                    src: "/images/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=1024",
+                                    src: "/assets/images/landing/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=1024",
                                     srcSet:
-                                      "/images/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=512 512w,/images/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=1024 1024w,/images/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=2048 2048w,/images/ad8OvET58gUVazcz0TOTKQDYK0.png 2243w",
+                                      "/assets/images/landing/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=512 512w,/assets/images/landing/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=1024 1024w,/assets/images/landing/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=2048 2048w,/assets/images/landing/ad8OvET58gUVazcz0TOTKQDYK0.png 2243w",
                                   },
                                 },
                                 YEydZTQhG: {
@@ -826,9 +826,9 @@ var Te = "framer-WoFHi",
                                     sizes: `calc(min(${
                                       t?.width || "100vw"
                                     } - 64px, 1280px) * 1.4112)`,
-                                    src: "/images/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=1024",
+                                    src: "/assets/images/landing/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=1024",
                                     srcSet:
-                                      "/images/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=512 512w,/images/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=1024 1024w,/images/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=2048 2048w,/images/ad8OvET58gUVazcz0TOTKQDYK0.png 2243w",
+                                      "/assets/images/landing/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=512 512w,/assets/images/landing/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=1024 1024w,/assets/images/landing/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=2048 2048w,/assets/images/landing/ad8OvET58gUVazcz0TOTKQDYK0.png 2243w",
                                   },
                                 },
                               },
@@ -855,9 +855,9 @@ var Te = "framer-WoFHi",
                                   sizes: `calc(min(${
                                     t?.width || "100vw"
                                   } - 64px, 1280px) * 1.4112)`,
-                                  src: "/images/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=1024",
+                                  src: "/assets/images/landing/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=1024",
                                   srcSet:
-                                    "/images/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=512 512w,/images/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=1024 1024w,/images/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=2048 2048w,/images/ad8OvET58gUVazcz0TOTKQDYK0.png 2243w",
+                                    "/assets/images/landing/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=512 512w,/assets/images/landing/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=1024 1024w,/assets/images/landing/ad8OvET58gUVazcz0TOTKQDYK0.png?scale-down-to=2048 2048w,/assets/images/landing/ad8OvET58gUVazcz0TOTKQDYK0.png 2243w",
                                 },
                                 className: "framer-gb877p",
                                 "data-framer-name": "Gradient blue",

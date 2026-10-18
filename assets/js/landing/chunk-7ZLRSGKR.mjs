@@ -100,7 +100,7 @@ var Q = { damping: 60, delay: 0, mass: 1, stiffness: 500, type: "spring" },
             },
             ...X({ JfsBUuEvR: { "data-framer-name": "Mobile" } }, B, N),
             children: o("img", {
-              src: "/images/logo.png",
+              src: "/assets/images/ui/logo.png",
               alt: "Logo",
               className: "framer-kek428",
               style: {
