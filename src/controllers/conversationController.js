@@ -142,6 +142,11 @@ exports.updateSettings = async (req, res) => {
   const fields = {};
   if ("muted" in req.body) fields.muted = validate.toBool(req.body.muted) ? 1 : 0;
   if ("pinned" in req.body) fields.pinned = validate.toBool(req.body.pinned) ? 1 : 0;
+  if ("archived" in req.body) {
+    fields.archived = validate.toBool(req.body.archived) ? 1 : 0;
+    if (fields.archived) fields.pinned = 0; // un chat archivado no puede estar fijado
+  }
+  if (fields.pinned) fields.archived = 0;
   await Conversation.updateMember(req.conversation.id, req.user.id, fields);
   const conversation = await Conversation.getForUser(req.conversation.id, req.user);
   realtime.toUsers([req.user.id], "conversation:update", conversation);

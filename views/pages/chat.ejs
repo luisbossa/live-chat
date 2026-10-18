@@ -14,6 +14,8 @@
 <div class="msg-menu" id="msgMenu" role="menu" hidden>
     <div class="msg-menu-reactions" id="msgMenuReactions"></div>
     <button role="menuitem" data-msg-action="reply"><%- icon('reply') %>Responder</button>
+    <button role="menuitem" data-msg-action="forward"><%- icon('forward') %>Reenviar</button>
+    <button role="menuitem" data-msg-action="star"><%- icon('star') %><span>Destacar</span></button>
     <button role="menuitem" data-msg-action="copy"><%- icon('copy') %>Copiar</button>
     <button role="menuitem" data-msg-action="edit"><%- icon('edit') %>Editar</button>
     <button role="menuitem" data-msg-action="delete" class="is-danger"><%- icon('trash') %>Eliminar para todos</button>
@@ -23,6 +25,7 @@
 <div class="msg-menu conv-menu" id="convMenu" role="menu" hidden>
     <button role="menuitem" data-conv-action="pin"><%- icon('pin') %><span>Fijar chat</span></button>
     <button role="menuitem" data-conv-action="mute"><svg class="icon" aria-hidden="true"><use href="/assets/images/icons.svg#i-bell-off"></use></svg><span>Silenciar</span></button>
+    <button role="menuitem" data-conv-action="archive"><%- icon('archive') %><span>Archivar chat</span></button>
     <button role="menuitem" data-conv-action="read"><%- icon('check-check') %><span>Marcar como leído</span></button>
     <button role="menuitem" data-conv-action="clear"><%- icon('x') %><span>Vaciar chat</span></button>
     <hr>

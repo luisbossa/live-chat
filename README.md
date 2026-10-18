@@ -17,7 +17,13 @@ App de **chat y videollamadas en tiempo real** hecha con Node.js, Express, EJS, 
 - Confirmaciones de lectura con tres estados: enviando, enviado ✓, entregado ✓✓ y leído (✓✓ en color)
 - "Escribiendo…", "en línea" y "últ. vez…"
 - Responder citando un mensaje, **reacciones**, editar (15 min) y eliminar para todos
+- **Reenviar** un mensaje a hasta 5 chats a la vez (con la etiqueta "Reenviado")
+- **Mensajes destacados** con estrella: lista propia para volver a ellos con un toque
+- Separador **"N mensajes sin leer"**: el chat se abre en el primer mensaje nuevo
+- **Vista previa de enlaces** (título, descripción e imagen de la página)
 - Contadores de no leídos, chats fijados y silenciados, vaciar chat y bloquear contactos
+- **Archivar chats** (sección "Archivados") y filtros Todos / No leídos / Grupos / Fijados
+- **Borradores** por chat: lo que dejas escrito se conserva al cambiar de chat o recargar
 - Búsqueda en la lista y dentro de la conversación, scroll infinito del historial
 - Pegar o arrastrar imágenes, sonido y notificaciones del navegador
 
@@ -37,6 +43,8 @@ App de **chat y videollamadas en tiempo real** hecha con Node.js, Express, EJS, 
 
 **Interfaz**
 - Modo claro y oscuro, diseño responsive (escritorio, tablet y móvil con botón "atrás")
+- **Apariencia** en Ajustes: color de la app (6 colores), fondo del chat (5 estilos) y tamaño del texto
+- **Buscador rápido `Ctrl + K`** para saltar a cualquier chat o acción, y atajos de teclado (`Ctrl + /` los muestra todos)
 
 ## Requisitos
 
@@ -117,6 +125,10 @@ Para probar el tiempo real y las llamadas, abre dos navegadores (o una ventana n
 | `stories.js` | Estados de 24 h |
 | `calls.js` | Llamadas WebRTC |
 | `account.js` | Perfil, ajustes, nuevo chat, grupos, QR y billetera |
+| `message-extras.js` | Reenviar mensajes y mensajes destacados |
+| `link-preview.js` | Tarjetas de vista previa de enlaces |
+| `appearance.js` | Color, fondo del chat y tamaño del texto |
+| `shortcuts.js` | Buscador rápido (Ctrl + K) y atajos de teclado |
 
 ## API REST
 
@@ -124,14 +136,17 @@ Todas las rutas `/api/*` (salvo la de disponibilidad) requieren sesión y respon
 
 | Método y ruta | Descripción |
 |---|---|
-| `GET /api/bootstrap` | Usuario, conversaciones, estados y bloqueados |
+| `GET /api/bootstrap` | Usuario, conversaciones, estados, bloqueados y mensajes destacados |
 | `PATCH /api/me` · `PATCH /api/me/settings` · `GET /api/me/qr` | Perfil, privacidad y QR |
 | `GET /api/users?q=` · `POST /api/users/:id/block` | Buscar y bloquear usuarios |
 | `POST /api/conversations` | Abrir chat 1 a 1 (`userId`) o crear grupo (`type=group`) |
 | `GET/POST /api/conversations/:id/messages` | Historial paginado y envío (texto, archivo, sticker) |
-| `PATCH /api/conversations/:id/settings` · `POST …/clear` | Silenciar, fijar y vaciar |
+| `PATCH /api/conversations/:id/settings` · `POST …/clear` | Silenciar, fijar, archivar y vaciar |
 | `POST/DELETE /api/conversations/:id/members` | Añadir participantes y salir del grupo |
 | `PATCH/DELETE /api/messages/:id` · `POST …/reactions` | Editar, eliminar y reaccionar |
+| `POST /api/messages/:id/star` · `GET /api/stars` | Destacar o quitar, y lista de destacados |
+| `POST /api/messages/:id/forward` | Reenviar a varios chats (`conversationIds`, máx. 5) |
+| `GET /api/link-preview?url=` | Vista previa de un enlace (sin direcciones internas, 4 s y 256 KB máx.) |
 | `GET/POST /api/stories` · `POST …/:id/view` · `GET …/:id/viewers` | Estados |
 | `GET /api/wallet` · `POST /api/wallet/send` | Billetera |
 
@@ -142,7 +157,7 @@ Todas las rutas `/api/*` (salvo la de disponibilidad) requieren sesión y respon
 | `message:new`, `message:update` | `typing` |
 | `receipt` (entregado / leído), `typing`, `presence` | `message:delivered`, `conversation:read` |
 | `conversation:new`, `conversation:update`, `conversation:removed` | `call:invite`, `call:accept`, `call:reject` |
-| `story:new`, `story:viewed`, `story:deleted`, `wallet:update`, `user:update` | `call:signal` (SDP e ICE), `call:end` |
+| `story:new`, `story:viewed`, `story:deleted`, `wallet:update`, `user:update`, `star:update` | `call:signal` (SDP e ICE), `call:end` |
 | `call:incoming`, `call:accepted`, `call:signal`, `call:ended` | |
 
 ## Despliegue gratis (Render + Turso)

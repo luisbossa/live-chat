@@ -33,6 +33,21 @@ const Yabla = (() => {
 
   document.documentElement.dataset.theme = getTheme();
 
+  // --- Apariencia (color, fondo del chat y tamaño del texto) ---
+  // Se aplica aquí, antes de pintar, para que no parpadee al cargar.
+  const APPEARANCE = { accent: "blue", wallpaper: "dots", textSize: "md" };
+
+  function getAppearance(key) {
+    return read(`yabla:${key}`) || APPEARANCE[key];
+  }
+
+  function setAppearance(key, value) {
+    document.documentElement.dataset[key] = value;
+    write(`yabla:${key}`, value);
+  }
+
+  Object.keys(APPEARANCE).forEach((key) => (document.documentElement.dataset[key] = getAppearance(key)));
+
   // --- Peticiones al backend ---
   /** fetch con JSON o FormData. Lanza un Error con .status y .data si la respuesta no es 2xx. */
   async function request(url, { method = "GET", body } = {}) {
@@ -99,5 +114,5 @@ const Yabla = (() => {
     return `<svg class="icon ${extra}" aria-hidden="true"><use href="/assets/images/icons.svg#i-${name}"></use></svg>`;
   }
 
-  return { getTheme, setTheme, toggleTheme, request, toast, icon };
+  return { getTheme, setTheme, toggleTheme, getAppearance, setAppearance, request, toast, icon };
 })();

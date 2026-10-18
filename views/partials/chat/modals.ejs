@@ -75,6 +75,19 @@
                 <span><strong>Sonidos</strong><small>Sonido al recibir mensajes</small></span>
                 <span class="switch"><input type="checkbox" id="soundSwitch"><span></span></span>
             </label>
+            <h4>Apariencia</h4>
+            <div class="setting-block">
+                <span><strong>Color de la app</strong><small>Botones, burbujas y detalles</small></span>
+                <div class="swatches" id="accentSwatches" role="radiogroup" aria-label="Color de la app"></div>
+            </div>
+            <div class="setting-block">
+                <span><strong>Fondo del chat</strong><small>Se aplica a todas las conversaciones</small></span>
+                <div class="wallpapers" id="wallpaperOptions" role="radiogroup" aria-label="Fondo del chat"></div>
+            </div>
+            <div class="setting-block">
+                <span><strong>Tamaño del texto</strong><small>Mensajes y lista de chats</small></span>
+                <div class="segmented" id="textSizeOptions" role="radiogroup" aria-label="Tamaño del texto"></div>
+            </div>
             <h4>Privacidad</h4>
             <label class="setting-row">
                 <span><strong>Confirmaciones de lectura</strong><small>Si las desactivas, tampoco verás las de los demás</small></span>
@@ -84,6 +97,11 @@
                 <span><strong>Última conexión</strong><small>Mostrar cuándo estuviste en línea</small></span>
                 <span class="switch"><input type="checkbox" id="lastSeenSwitch" data-setting="showLastSeen"><span></span></span>
             </label>
+            <h4>Ayuda</h4>
+            <button class="setting-row setting-link" data-open="modal-shortcuts">
+                <span><strong>Atajos de teclado</strong><small>Ctrl + K para ir a cualquier chat</small></span>
+                <%- icon('chevron-right', 'icon-sm') %>
+            </button>
         </div>
     </div>
 </div>
@@ -230,6 +248,52 @@
     <div class="modal-dialog">
         <%- head('Visto por') %>
         <ul class="user-list" id="viewersList"></ul>
+    </div>
+</div>
+
+<!-- Reenviar mensaje -->
+<div class="modal" id="modal-forward">
+    <div class="modal-dialog forward-dialog">
+        <%- head('Reenviar mensaje') %>
+        <div class="forward-preview" id="forwardPreview"></div>
+        <label class="search search-modal">
+            <%- icon('search', 'icon-sm') %>
+            <input type="search" id="forwardSearch" placeholder="Buscar chats" autocomplete="off">
+        </label>
+        <ul class="pick-list" id="forwardList"></ul>
+        <div class="forward-foot">
+            <div class="pick-chips" id="forwardChosen"></div>
+            <button class="btn btn-primary btn-block" id="forwardSend" disabled><%- icon('forward') %><span id="forwardLabel">Elige hasta 5 chats</span></button>
+        </div>
+    </div>
+</div>
+
+<!-- Mensajes destacados -->
+<div class="modal" id="modal-starred">
+    <div class="modal-dialog is-wide">
+        <%- head('Mensajes destacados <span class="muted" id="starredCount"></span>') %>
+        <ul class="starred-list" id="starredList"></ul>
+    </div>
+</div>
+
+<!-- Buscador rápido (Ctrl + K) -->
+<div class="modal quick-modal" id="modal-quick">
+    <div class="modal-dialog quick-dialog" role="dialog" aria-label="Buscador rápido">
+        <label class="quick-search">
+            <%- icon('search') %>
+            <input type="search" id="quickInput" placeholder="Ir a un chat o acción…" autocomplete="off" role="combobox" aria-controls="quickList" aria-expanded="true">
+            <kbd>Esc</kbd>
+        </label>
+        <ul class="quick-list" id="quickList" role="listbox"></ul>
+        <p class="quick-foot muted"><kbd>↑</kbd><kbd>↓</kbd> moverse <kbd>Enter</kbd> abrir <kbd>Ctrl</kbd><kbd>/</kbd> ver atajos</p>
+    </div>
+</div>
+
+<!-- Atajos de teclado -->
+<div class="modal" id="modal-shortcuts">
+    <div class="modal-dialog">
+        <%- head('Atajos de teclado') %>
+        <dl class="shortcuts" id="shortcutsList"></dl>
     </div>
 </div>
 

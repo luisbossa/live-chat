@@ -11,9 +11,12 @@
                 <button class="icon-btn" data-dropdown aria-label="Más opciones" aria-expanded="false"><%- icon('more') %></button>
                 <div class="menu" role="menu">
                     <button role="menuitem" data-open="modal-group"><%- icon('users') %>Nuevo grupo</button>
+                    <button role="menuitem" data-open="modal-starred"><%- icon('star') %>Mensajes destacados</button>
+                    <button role="menuitem" data-action="open-archived"><%- icon('archive') %>Chats archivados</button>
                     <button role="menuitem" data-open="modal-qr"><%- icon('qr') %>Mi código QR</button>
                     <button role="menuitem" data-open="modal-wallet"><%- icon('wallet') %>Billetera</button>
                     <button role="menuitem" data-open="modal-settings"><%- icon('settings') %>Ajustes</button>
+                    <button role="menuitem" data-open="modal-shortcuts"><%- icon('keyboard') %>Atajos de teclado</button>
                     <hr>
                     <button role="menuitem" class="is-danger" data-open="modal-logout"><%- icon('logout') %>Cerrar sesión</button>
                 </div>
@@ -24,6 +27,7 @@
     <label class="search">
         <%- icon('search', 'icon-sm') %>
         <input type="search" id="listSearch" placeholder="Buscar chats…" autocomplete="off">
+        <kbd class="search-kbd" data-open="modal-quick" title="Buscador rápido">Ctrl K</kbd>
     </label>
 
     <div class="panel is-active" data-panel="chats">
@@ -32,6 +36,7 @@
         <div class="chips" id="chatFilters" role="tablist" aria-label="Filtrar chats">
             <button class="chip is-active" role="tab" data-filter="all">Todos</button>
             <button class="chip" role="tab" data-filter="unread">No leídos<b data-filter-count="unread" hidden></b></button>
+            <button class="chip" role="tab" data-filter="groups">Grupos</button>
             <button class="chip" role="tab" data-filter="pinned">Fijados</button>
         </div>
         <!-- Primeros pasos (solo en móvil; en escritorio está en la pantalla de inicio) -->

@@ -8,14 +8,14 @@ const modalSetups = new Map();
 export const registerAction = (name, fn) => actions.set(name, fn);
 export const runAction = (name, el, event) => actions.get(name)?.(el, event);
 
-/** Se ejecuta justo antes de abrir un modal (para cargar datos). */
-export const onModalOpen = (id, fn) => modalSetups.set(id, fn);
+/** Se ejecuta justo antes de abrir un modal (para cargar datos). Admite varias funciones por modal. */
+export const onModalOpen = (id, fn) => modalSetups.set(id, [...(modalSetups.get(id) || []), fn]);
 
 export function openModal(id, arg) {
   const modal = document.getElementById(id);
   if (!modal) return;
   closeDropdowns();
-  modalSetups.get(id)?.(arg);
+  modalSetups.get(id)?.forEach((fn) => fn(arg));
   modal.classList.add("is-open");
   requestAnimationFrame(() => $("input:not([type=file]):not([type=checkbox]):not([type=hidden]), select", modal)?.focus({ preventScroll: true }));
 }

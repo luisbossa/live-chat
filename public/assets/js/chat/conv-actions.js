@@ -24,6 +24,9 @@ export const togglePin = (conv) => updateSettings(conv, { pinned: !conv.pinned }
 export const toggleMute = (conv) =>
   updateSettings(conv, { muted: !conv.muted }, (c) => (c.muted ? ["Notificaciones silenciadas", "bell-off"] : ["Notificaciones activadas", "bell"]));
 
+export const toggleArchive = (conv) =>
+  updateSettings(conv, { archived: !conv.archived }, (c) => (c.archived ? ["Chat archivado", "archive"] : ["Chat desarchivado", "unarchive"]));
+
 export function markAsRead(conv) {
   if (!conv.lastMessage) return;
   const me = conv.members.find((m) => m.id === state.me.id);

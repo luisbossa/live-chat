@@ -2,6 +2,7 @@
 import { $, $$, icon, escapeHTML, linkify, toast, timeLabel, dayLabel, lastSeenLabel, duration, fileSize, isMobile, isWide, prefs, firstName, toastError } from "./utils.js";
 import {
   state, emit, on, getConv, activeConv, isGroup, peerOf, convTitle, convAvatar, userName, messagesOf, receiptOf, isBlockedConv, upsertConversation,
+  getDraft, setDraft,
 } from "./state.js";
 import { api } from "./api.js";
 import { socket } from "./socket.js";
@@ -9,6 +10,8 @@ import { systemText, callText, paymentText, typingText, previewOf } from "./form
 import { registerAction, closePopovers, openLightbox, confirmDialog, openModal } from "./ui.js";
 import { openAttachPreview } from "./attach.js";
 import { initEmojiPicker } from "./emoji-picker.js";
+import { linkSlot, hydrateLinks } from "./link-preview.js";
+import { openForward, toggleStar } from "./message-extras.js";
 
 const app = $("#app");
 const messagesEl = $("#messages");
@@ -24,6 +27,10 @@ const composeState = { mode: null, message: null }; // mode: reply | edit
 let searchQuery = "";
 let loadingOlder = false;
 let newWhileScrolled = 0;
+let atBottom = true; // ¿estaba abajo del todo? (para mantenerlo al crecer una vista previa)
+// Separador "N mensajes sin leer": se calcula al abrir el chat
+let unreadMarker = null; // { conversationId, messageId, count }
+const FORWARDABLE = ["text", "image", "file", "audio", "sticker"];
 
 // ==========================================================================
 // Render de mensajes
@@ -112,6 +119,10 @@ function bodyHTML(msg) {
 function messageHTML(conv, msg, prev) {
   let html = "";
   if (!prev || !sameDay(prev.createdAt, msg.createdAt)) html += `<div class="date-chip">${dayLabel(msg.createdAt)}</div>`;
+  if (unreadMarker?.conversationId === conv.id && unreadMarker.messageId === msg.id) {
+    const n = unreadMarker.count;
+    html += `<div class="unread-divider" id="unreadDivider"><span>${n} mensaje${n === 1 ? "" : "s"} sin leer</span></div>`;
+  }
 
   if (msg.type === "system") return `${html}<div class="system-msg" data-id="${msg.id}">${escapeHTML(systemText(msg))}</div>`;
 
@@ -132,6 +143,8 @@ function messageHTML(conv, msg, prev) {
     ? `<div class="story-quote"><img src="${msg.meta.story.mediaUrl}" alt=""><span>${msg.meta.story.userId === state.me.id ? "Respondió a tu estado" : "Respuesta a un estado"}</span></div>`
     : "";
   const receipt = me && !msg.deletedAt && msg.type !== "call" ? receiptOf(conv, msg) : null;
+  const starred = !msg.deletedAt && state.starred.has(msg.id);
+  const forwarded = msg.meta?.forwarded && !msg.deletedAt ? `<span class="fwd-label">${icon("forward", "icon-sm")}Reenviado</span>` : "";
   const classes = ["msg", me && "me", grouped && "same", !matches && "is-dim", msg.pending && "is-pending"].filter(Boolean).join(" ");
 
   return `${html}
@@ -139,10 +152,12 @@ function messageHTML(conv, msg, prev) {
       ${showAuthor ? `<span class="avatar"><img src="${author?.avatar || "/assets/images/ui/avatar-default.svg"}" alt=""></span>` : ""}
       <div class="bubble ${content.kind}">
         ${showAuthor && !grouped && msg.type !== "sticker" ? `<span class="bubble-author" style="--hue:${(msg.senderId * 67) % 360}">${escapeHTML(author?.name || "")}</span>` : ""}
+        ${forwarded}
         ${msg.deletedAt ? "" : story + replyQuote(msg)}
         ${content.html}
+        ${linkSlot(msg)}
         <span class="bubble-meta">
-          ${msg.editedAt && !msg.deletedAt ? "<em>editado</em>" : ""}${timeLabel(msg.createdAt)}
+          ${starred ? icon("star-fill", "icon-star") : ""}${msg.editedAt && !msg.deletedAt ? "<em>editado</em>" : ""}${timeLabel(msg.createdAt)}
           ${receipt ? `<span class="tick tick-${receipt}">${icon(RECEIPT_ICON[receipt])}</span>` : ""}
         </span>
         ${!msg.deletedAt && !msg.pending ? `<button class="msg-more" data-msg-menu aria-label="Opciones del mensaje">${icon("chevron-down", "icon-sm")}</button>` : ""}
@@ -160,9 +175,25 @@ function renderMessages(conv, { keepScroll = false } = {}) {
   const top = hasMore ? `<div class="load-more" id="loadMore"><span class="spinner"></span></div>` : `<div class="chat-intro">${icon("lock", "icon-sm")} Los mensajes de este chat son privados entre los participantes.</div>`;
   messagesEl.innerHTML = top + (items.length ? items.map((m, i) => messageHTML(conv, m, items[i - 1])).join("") : `<div class="date-chip chat-placeholder">${icon("hand", "icon-sm")} Aún no hay mensajes. ¡Saluda!</div>`);
   renderTyping(conv);
+  hydrateLinks(messagesEl, keepBottom);
 
+  const divider = !keepScroll && $("#unreadDivider", messagesEl);
   if (keepScroll) messagesEl.scrollTop = messagesEl.scrollHeight - prevHeight + prevTop;
-  else scrollToBottom(false);
+  else if (divider) {
+    // Abre en el primer mensaje sin leer (como WhatsApp), no al final
+    messagesEl.style.scrollBehavior = "auto";
+    messagesEl.scrollTop += divider.getBoundingClientRect().top - messagesEl.getBoundingClientRect().top - 16;
+    atBottom = nearBottom();
+    updateScrollButton();
+  } else scrollToBottom(false);
+}
+
+/** Si una vista previa hace crecer el chat estando abajo, se sigue abajo. */
+function keepBottom() {
+  if (atBottom) {
+    messagesEl.style.scrollBehavior = "auto";
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
 }
 
 const nearBottom = () => messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight < 160;
@@ -171,6 +202,7 @@ function scrollToBottom(smooth = true) {
   messagesEl.style.scrollBehavior = smooth ? "smooth" : "auto";
   messagesEl.scrollTop = messagesEl.scrollHeight;
   newWhileScrolled = 0;
+  atBottom = true;
   updateScrollButton();
 }
 
@@ -189,6 +221,7 @@ function appendMessage(conv, msg) {
   $$(".typing-msg, .chat-placeholder", messagesEl).forEach((el) => el.remove());
   messagesEl.insertAdjacentHTML("beforeend", messageHTML(conv, msg, prev));
   messagesEl.lastElementChild.classList.add("is-new");
+  hydrateLinks(messagesEl, keepBottom);
   renderTyping(conv);
   if (stick) scrollToBottom();
   else {
@@ -205,7 +238,16 @@ function rerenderMessage(conv, msg, oldId = msg.id) {
   const index = items.findIndex((m) => m.id === msg.id);
   const tmp = document.createElement("div");
   tmp.innerHTML = messageHTML(conv, msg, items[index - 1]);
-  el.replaceWith(tmp.querySelector(`[data-id="${msg.id}"]`));
+  const fresh = tmp.querySelector(`[data-id="${msg.id}"]`);
+  el.replaceWith(fresh);
+  hydrateLinks(fresh, keepBottom);
+}
+
+/** Vuelve a pintar un mensaje por id si está en el chat abierto (p. ej. al destacarlo). */
+export function refreshMessage(id) {
+  const conv = activeConv();
+  const msg = conv && messagesOf(conv.id).items.find((m) => m.id === id);
+  if (msg) rerenderMessage(conv, msg);
 }
 
 function updateTicks(conv) {
@@ -300,11 +342,16 @@ async function loadOlder() {
   }
 }
 
-export async function openChat(id) {
+export async function openChat(id, { force = false } = {}) {
   const conv = getConv(id);
   if (!conv) return;
+  if (!force && state.activeId === conv.id && app.classList.contains("chat-open")) return;
 
+  saveDraft();
   state.activeId = conv.id;
+  unreadMarker = null;
+  const meMember = conv.members.find((m) => m.id === state.me.id);
+  const unreadFromId = conv.unread > 0 && meMember ? meMember.lastReadId : null;
   app.classList.add("chat-open");
   cancelContext();
   closeChatSearch(false);
@@ -319,6 +366,11 @@ export async function openChat(id) {
     toastError(err.message);
   }
   if (state.activeId !== conv.id) return; // cambió de chat mientras cargaba
+  if (unreadFromId !== null) {
+    const unread = messagesOf(conv.id).items.filter((m) => m.id > unreadFromId && m.senderId !== state.me.id && m.type !== "system");
+    if (unread.length) unreadMarker = { conversationId: conv.id, messageId: unread[0].id, count: unread.length };
+  }
+  restoreDraft(conv);
   renderMessages(conv);
   markRead(conv);
 
@@ -333,11 +385,27 @@ export async function openChat(id) {
 }
 
 export function closeChat() {
+  saveDraft();
+  input.value = "";
+  autosize();
+  unreadMarker = null;
   app.classList.remove("chat-open", "has-info");
   closePopovers();
   stopAudio();
   state.activeId = null;
   emit("active", null);
+}
+
+// --- Borradores: lo escrito en cada chat se conserva al cambiar de chat o recargar ---
+function saveDraft() {
+  if (!state.activeId || composeState.mode === "edit") return;
+  if (setDraft(state.activeId, input.value)) emit("drafts");
+}
+
+function restoreDraft(conv) {
+  cancelContext();
+  input.value = getDraft(conv.id);
+  autosize();
 }
 
 // ==========================================================================
@@ -540,6 +608,12 @@ function submitText() {
   autosize();
   stopTyping();
   closePopovers();
+  if (setDraft(activeConv().id, "")) emit("drafts");
+  // Al responder ya no hace falta el separador de no leídos
+  if (unreadMarker) {
+    unreadMarker = null;
+    $("#unreadDivider", messagesEl)?.remove();
+  }
   input.focus();
 }
 
@@ -633,6 +707,10 @@ function openMessageMenu(msgEl, x, y) {
 
   $("#msgMenuReactions").innerHTML = REACTIONS.map((e) => `<button data-react-menu="${e}" class="${e === myReaction ? "is-mine" : ""}">${e}</button>`).join("");
   $('[data-msg-action="copy"]', menu).hidden = !msg.body;
+  $('[data-msg-action="forward"]', menu).hidden = !FORWARDABLE.includes(msg.type);
+  const starred = state.starred.has(msg.id);
+  $('[data-msg-action="star"] span', menu).textContent = starred ? "Quitar destacado" : "Destacar";
+  $('[data-msg-action="star"] use', menu).setAttribute("href", `/assets/images/icons.svg#i-${starred ? "star-off" : "star"}`);
   $('[data-msg-action="edit"]', menu).hidden = !mine || msg.type !== "text" || Date.now() - msg.createdAt > EDIT_WINDOW;
   $('[data-msg-action="delete"]', menu).hidden = !mine;
 
@@ -664,6 +742,8 @@ menu.addEventListener("click", async (e) => {
 
   if (emoji) return react(msg, emoji);
   if (action === "reply") setContext("reply", msg);
+  if (action === "forward") openForward(msg);
+  if (action === "star") toggleStar(msg);
   if (action === "edit") setContext("edit", msg);
   if (action === "copy") {
     await navigator.clipboard?.writeText(msg.body || "");
@@ -714,14 +794,7 @@ messagesEl.addEventListener("click", (e) => {
     return msg && react(msg, chip.dataset.react);
   }
   const jump = t.closest("[data-jump]");
-  if (jump) {
-    const target = messagesEl.querySelector(`[data-id="${jump.dataset.jump}"]`);
-    if (!target) return toast("El mensaje original está más arriba en el historial.", { icon: "reply" });
-    target.scrollIntoView({ behavior: "smooth", block: "center" });
-    target.classList.add("is-flash");
-    setTimeout(() => target.classList.remove("is-flash"), 1400);
-    return;
-  }
+  if (jump) return jumpToMessage(Number(jump.dataset.jump));
   if (t.matches("img[data-lightbox]")) return openLightbox(t.src);
   if (t.closest(".audio-play")) return toggleAudio(t.closest(".audio"));
   const wave = t.closest(".audio-wave");
@@ -729,6 +802,7 @@ messagesEl.addEventListener("click", (e) => {
 });
 
 messagesEl.addEventListener("scroll", () => {
+  atBottom = nearBottom();
   if (messagesEl.scrollTop < 80) loadOlder();
   if (nearBottom()) newWhileScrolled = 0;
   updateScrollButton();
@@ -869,7 +943,10 @@ export function initConversation() {
   input.addEventListener("input", () => {
     autosize();
     if (input.value.trim()) startTyping();
+    if (composeState.mode !== "edit" && state.activeId && setDraft(state.activeId, input.value)) emit("drafts");
   });
+  // Guarda el borrador si se cierra o recarga la pestaña
+  window.addEventListener("pagehide", saveDraft);
 
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && !e.shiftKey && prefs.get("enterToSend", true) && !e.isComposing) {
@@ -983,6 +1060,40 @@ export function initConversation() {
 
   autosize();
 }
+
+/**
+ * Lleva a un mensaje del chat abierto y lo resalta. Si aún no está cargado,
+ * carga páginas anteriores hasta encontrarlo (citas, mensajes destacados).
+ */
+export async function jumpToMessage(id) {
+  const conv = activeConv();
+  if (!conv) return false;
+  const store = messagesOf(conv.id);
+  let loadedMore = false;
+  for (let page = 0; page < 20 && !store.items.some((m) => m.id === id) && store.hasMore && store.items.length; page++) {
+    const { messages, hasMore } = await api.messages(conv.id, store.items[0].id);
+    store.items = [...messages, ...store.items];
+    store.hasMore = hasMore;
+    loadedMore = true;
+    if (!messages.length) break;
+  }
+  if (conv.id !== state.activeId) return false;
+  if (loadedMore) renderMessages(conv, { keepScroll: true });
+  const target = messagesEl.querySelector(`[data-id="${id}"]`);
+  if (!target) {
+    toast("Ese mensaje ya no está en el chat.", { icon: "reply" });
+    return false;
+  }
+  messagesEl.style.scrollBehavior = "auto";
+  target.scrollIntoView({ behavior: "smooth", block: "center" });
+  target.classList.remove("is-flash");
+  void target.offsetWidth; // reinicia la animación
+  target.classList.add("is-flash");
+  setTimeout(() => target.classList.remove("is-flash"), 1600);
+  return true;
+}
+
+export { openChatSearch };
 
 export function rerenderActive() {
   const conv = activeConv();

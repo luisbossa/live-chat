@@ -3,6 +3,7 @@ const config = require("../config");
 const User = require("../models/User");
 const Conversation = require("../models/Conversation");
 const Story = require("../models/Story");
+const Star = require("../models/Star");
 const upload = require("../middleware/upload");
 const realtime = require("../services/realtime");
 const validate = require("../utils/validate");
@@ -10,12 +11,13 @@ const { httpError } = require("../middleware/errorHandler");
 
 /** Todo lo que necesita el cliente al abrir la app. */
 exports.bootstrap = async (req, res) => {
-  const [conversations, stories, blockedIds] = await Promise.all([
+  const [conversations, stories, blockedIds, starredIds] = await Promise.all([
     Conversation.listForUser(req.user),
     Story.feedFor(req.user.id),
     User.blockedIds(req.user.id),
+    Star.ids(req.user.id),
   ]);
-  res.json({ me: User.toSelf(req.user), conversations, stories, blockedIds });
+  res.json({ me: User.toSelf(req.user), conversations, stories, blockedIds, starredIds });
 };
 
 exports.search = async (req, res) => {

@@ -4,7 +4,7 @@ const Message = require("./Message");
 
 // Conversaciones de un usuario con su estado de membresía y número de no leídos
 const LIST_SQL = `
-  SELECT c.*, m.role, m.last_read_id, m.cleared_id, m.muted, m.pinned,
+  SELECT c.*, m.role, m.last_read_id, m.cleared_id, m.muted, m.pinned, m.archived,
     (SELECT COUNT(*) FROM messages x
       WHERE x.conversation_id = c.id
         AND x.id > m.last_read_id AND x.id > m.cleared_id
@@ -46,12 +46,12 @@ const SQL = {
   // "Eliminar chat": oculta la conversación y su historial solo para ese usuario
   hide: `
     UPDATE conversation_members
-    SET hidden = 1, pinned = 0, cleared_id = @lastId, last_read_id = MAX(last_read_id, @lastId), last_delivered_id = MAX(last_delivered_id, @lastId)
+    SET hidden = 1, pinned = 0, archived = 0, cleared_id = @lastId, last_read_id = MAX(last_read_id, @lastId), last_delivered_id = MAX(last_delivered_id, @lastId)
     WHERE conversation_id = @conversationId AND user_id = @userId`,
   update: "UPDATE conversations SET name = COALESCE(@name, name), avatar = COALESCE(@avatar, avatar), description = COALESCE(@description, description) WHERE id = @id",
 };
 
-const MEMBER_FIELDS = ["muted", "pinned", "cleared_id", "role", "hidden"];
+const MEMBER_FIELDS = ["muted", "pinned", "archived", "cleared_id", "role", "hidden"];
 const placeholders = (n) => Array(n).fill("?").join(",");
 
 /** Miembro tal como lo ve `viewer`: oculta las lecturas si alguno desactivó las confirmaciones. */
@@ -99,6 +99,7 @@ async function serializeAll(rows, viewer) {
     role: row.role,
     muted: Boolean(row.muted),
     pinned: Boolean(row.pinned),
+    archived: Boolean(row.archived),
     unread: row.unread || 0,
     clearedId: row.cleared_id || 0,
     lastMessage: lastMessages.get(row.last_message_id) || null,

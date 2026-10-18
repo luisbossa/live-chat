@@ -16,6 +16,9 @@ import { initCalls, startCall } from "./calls.js";
 import { initAccount, renderMe, onWalletUpdate } from "./account.js";
 import { initHome } from "./home.js";
 import { initAttach } from "./attach.js";
+import { initMessageExtras, onStarUpdate } from "./message-extras.js";
+import { initAppearance } from "./appearance.js";
+import { initShortcuts } from "./shortcuts.js";
 
 const app = $("#app");
 
@@ -24,6 +27,7 @@ async function loadState() {
   state.me = data.me;
   rememberUser(data.me);
   state.blockedIds = new Set(data.blockedIds);
+  state.starred = new Set(data.starredIds || []);
   state.conversations.clear();
   data.conversations.forEach(upsertConversation);
   state.stories = data.stories;
@@ -80,6 +84,7 @@ function bindSocket() {
   socket.on("story:deleted", refreshStories);
   socket.on("story:viewed", onStoryViewed);
   socket.on("wallet:update", onWalletUpdate);
+  socket.on("star:update", onStarUpdate);
 
   // Tras perder la conexión se recarga todo para no perder mensajes
   document.addEventListener("socket:reconnected", async () => {
@@ -87,7 +92,7 @@ function bindSocket() {
     state.messages.clear();
     await loadState();
     renderLists();
-    if (active && getConv(active)) openChat(active);
+    if (active && getConv(active)) openChat(active, { force: true });
   });
 }
 
@@ -165,6 +170,9 @@ async function start() {
   initAccount();
   initHome();
   initAttach();
+  initMessageExtras();
+  initAppearance();
+  initShortcuts();
   bindSocket();
   bindClicks();
   bindKeys();

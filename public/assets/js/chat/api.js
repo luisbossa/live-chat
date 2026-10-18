@@ -32,6 +32,10 @@ export const api = {
   editMessage: (id, text) => req(`/api/messages/${id}`, { method: "PATCH", body: { text } }),
   deleteMessage: (id) => req(`/api/messages/${id}`, { method: "DELETE" }),
   react: (id, emoji) => req(`/api/messages/${id}/reactions`, { method: "POST", body: { emoji } }),
+  star: (id) => req(`/api/messages/${id}/star`, { method: "POST" }),
+  starred: () => req("/api/stars"),
+  forward: (id, conversationIds) => req(`/api/messages/${id}/forward`, { method: "POST", body: { conversationIds } }),
+  linkPreview: (url) => req(`/api/link-preview?url=${encodeURIComponent(url)}`),
 
   stories: () => req("/api/stories"),
   createStory: (formData) => req("/api/stories", { method: "POST", body: formData }),

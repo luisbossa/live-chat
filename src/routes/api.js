@@ -41,10 +41,14 @@ router.post("/conversations/:id/members", h(conversations.addMembers));
 router.delete("/conversations/:id/members/me", h(conversations.leave));
 
 // Mensajes
+router.get("/stars", h(messages.starred));
+router.get("/link-preview", h(messages.linkPreview));
 router.use("/messages/:id", h(messages.load));
 router.patch("/messages/:id", h(messages.edit));
 router.delete("/messages/:id", h(messages.remove));
 router.post("/messages/:id/reactions", h(messages.react));
+router.post("/messages/:id/star", h(messages.star));
+router.post("/messages/:id/forward", h(messages.forward));
 
 // Estados
 router.get("/stories", h(stories.feed));

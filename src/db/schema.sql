@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS conversation_members (
   muted             INTEGER NOT NULL DEFAULT 0,
   pinned            INTEGER NOT NULL DEFAULT 0,
   hidden            INTEGER NOT NULL DEFAULT 0, -- "eliminar chat": oculto hasta que llegue un mensaje nuevo
+  archived          INTEGER NOT NULL DEFAULT 0, -- chat archivado (sale de la lista principal)
   joined_at         INTEGER NOT NULL,
   PRIMARY KEY (conversation_id, user_id)
 );
@@ -67,6 +68,14 @@ CREATE TABLE IF NOT EXISTS reactions (
   emoji       TEXT    NOT NULL,
   created_at  INTEGER NOT NULL,
   PRIMARY KEY (message_id, user_id)
+);
+
+-- Mensajes destacados (con estrella) por cada usuario
+CREATE TABLE IF NOT EXISTS stars (
+  user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  message_id  INTEGER NOT NULL REFERENCES messages(id) ON DELETE CASCADE,
+  created_at  INTEGER NOT NULL,
+  PRIMARY KEY (user_id, message_id)
 );
 
 CREATE TABLE IF NOT EXISTS stories (

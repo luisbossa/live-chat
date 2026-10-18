@@ -47,6 +47,7 @@ const COLUMN_MIGRATIONS = [
   // Billetera en colones: los usuarios existentes reciben ₡250.000 de prueba
   ["users", "balance_crc_cents", "INTEGER NOT NULL DEFAULT 25000000"],
   ["transactions", "currency", "TEXT NOT NULL DEFAULT 'USD'"],
+  ["conversation_members", "archived", "INTEGER NOT NULL DEFAULT 0"],
 ];
 
 async function migrate() {

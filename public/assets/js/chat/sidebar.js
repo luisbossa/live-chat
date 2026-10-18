@@ -1,9 +1,10 @@
 // Lista de conversaciones: pestañas, filtros, secciones, menú de cada chat e insignias.
 import { $, $$, escapeHTML, icon, listTime } from "./utils.js";
-import { state, sortedConversations, convTitle, convAvatar, peerOf, isGroup, receiptOf, on, getConv } from "./state.js";
+import { state, sortedConversations, convTitle, convAvatar, peerOf, isGroup, receiptOf, on, getConv, getDraft } from "./state.js";
 import { previewOf, previewIcon, typingText } from "./format.js";
 import { renderStoryLists } from "./stories.js";
-import { togglePin, toggleMute, markAsRead, clearChat, deleteChat } from "./conv-actions.js";
+import { togglePin, toggleMute, toggleArchive, markAsRead, clearChat, deleteChat } from "./conv-actions.js";
+import { registerAction } from "./ui.js";
 
 const TABS = {
   chats: { title: "Chats", placeholder: "Buscar chats…" },
@@ -14,17 +15,20 @@ const TABS = {
 const FILTERS = {
   all: () => true,
   unread: (c) => c.unread > 0,
+  groups: (c) => isGroup(c),
   pinned: (c) => c.pinned,
 };
 
 const EMPTY_TEXT = {
   all: "Aún no tienes chats. ¡Empieza uno nuevo!",
   unread: "No tienes mensajes sin leer",
-  pinned: "Fija tus chats favoritos desde su menú ⋯",
+  groups: "Aún no estás en ningún grupo",
+  pinned: "Fija tus chats favoritos desde su menú",
 };
 
 const RECEIPT_ICON = { sending: "clock", sent: "check", delivered: "check-check", read: "check-check" };
 let filter = "all";
+let showArchived = false; // vista "Archivados" dentro de la pestaña Chats
 
 /** Un chat recién abierto sin mensajes no aparece en la lista (como WhatsApp), salvo si está abierto. */
 const isListed = (c) => c.lastMessage || c.clearedId > 0 || c.id === state.activeId || isGroup(c);
@@ -33,8 +37,10 @@ function convItem(conv) {
   const peer = peerOf(conv);
   const msg = conv.lastMessage;
   const typing = typingText(conv);
+  // Borrador: lo que dejaste escrito en otro chat (no en el que tienes abierto)
+  const draft = !typing && conv.id !== state.activeId ? getDraft(conv.id).trim() : "";
   const mine = msg && msg.senderId === state.me.id && !["system", "call"].includes(msg.type) && !msg.deletedAt;
-  const receipt = mine ? receiptOf(conv, msg) : null;
+  const receipt = mine && !draft ? receiptOf(conv, msg) : null;
   const classes = ["conv", conv.id === state.activeId && "is-active", conv.unread && "has-unread", conv.muted && "is-muted"].filter(Boolean).join(" ");
 
   return `
@@ -48,10 +54,13 @@ function convItem(conv) {
           </span>
           <span class="conv-row">
             ${receipt ? `<span class="tick tick-${receipt}">${icon(RECEIPT_ICON[receipt], "icon-sm")}</span>` : ""}
-            <span class="conv-preview ${typing ? "is-typing" : ""}">${!typing && previewIcon(msg) ? icon(previewIcon(msg), `preview-icon${msg.type === "call" && msg.meta?.status !== "completed" ? " is-missed" : ""}`) : ""}${escapeHTML(typing || previewOf(conv))}</span>
+            ${draft
+              ? `<span class="conv-preview has-draft"><b>${icon("pencil-line", "preview-icon")}Borrador:</b> ${escapeHTML(draft.replace(/\s+/g, " "))}</span>`
+              : `<span class="conv-preview ${typing ? "is-typing" : ""}">${!typing && previewIcon(msg) ? icon(previewIcon(msg), `preview-icon${msg.type === "call" && msg.meta?.status !== "completed" ? " is-missed" : ""}`) : ""}${escapeHTML(typing || previewOf(conv))}</span>`}
             <span class="conv-meta">
               ${conv.muted ? icon("bell-off", "icon-muted") : ""}
               ${conv.pinned ? icon("pin", "icon-muted") : ""}
+              ${conv.archived && !showArchived ? icon("archive", "icon-muted") : ""}
               ${conv.unread ? `<b class="badge ${conv.muted ? "is-muted" : ""}">${conv.unread > 99 ? "99+" : conv.unread}</b>` : ""}
               <span class="conv-more" role="button" tabindex="0" data-conv-menu="${conv.id}" aria-label="Opciones del chat">${icon("chevron-down", "icon-sm")}</span>
             </span>
@@ -65,10 +74,40 @@ const listHTML = (items) => items.map(convItem).join("");
 
 function renderChats(q, all) {
   const match = (c) => !q || convTitle(c).toLowerCase().includes(q) || (peerOf(c)?.username || "").includes(q);
-  const items = all.filter((c) => isListed(c) && match(c) && FILTERS[filter](c));
+  const archived = all.filter((c) => c.archived && isListed(c));
+  if (showArchived && !archived.length) showArchived = false;
+  $("#chatFilters").hidden = showArchived;
   const list = $("#chatList");
 
+  // Vista de archivados
+  if (showArchived) {
+    const items = archived.filter(match);
+    list.innerHTML = `
+      <li class="archived-head">
+        <button class="icon-btn" data-action="close-archived" aria-label="Volver a los chats">${icon("arrow-left")}</button>
+        <span><strong>Archivados</strong><small>Siguen recibiendo mensajes, pero no aparecen en tu lista.</small></span>
+      </li>
+      ${items.length ? listHTML(items) : `<li class="empty-list">Sin resultados</li>`}`;
+    return;
+  }
+
+  // Al buscar también aparecen los archivados (como en WhatsApp)
+  const items = all.filter((c) => isListed(c) && (q || !c.archived) && match(c) && FILTERS[filter](c));
+  const archivedUnread = archived.filter((c) => c.unread).length;
+  const archivedRow =
+    archived.length && !q && filter === "all"
+      ? `<li><button class="archived-row" data-action="open-archived">
+          <span class="archived-icon">${icon("archive")}</span>
+          <span>Archivados</span>
+          ${archivedUnread ? `<b class="badge is-muted">${archivedUnread}</b>` : `<small>${archived.length}</small>`}
+        </button></li>`
+      : "";
+
   if (!items.length) {
+    if (archivedRow) {
+      list.innerHTML = archivedRow;
+      return;
+    }
     list.innerHTML = `
       <li class="empty-list">
         <span class="empty-icon">${icon(filter === "unread" ? "check-check" : "chat")}</span>
@@ -80,9 +119,18 @@ function renderChats(q, all) {
   // Sección de fijados arriba cuando se ven todos los chats
   const pinned = filter === "all" && !q ? items.filter((c) => c.pinned) : [];
   const rest = items.filter((c) => !pinned.includes(c));
-  list.innerHTML = pinned.length
-    ? `<li class="list-title">${icon("pin", "icon-sm")} Fijados</li>${listHTML(pinned)}<li class="list-title">Todos los chats</li>${listHTML(rest)}`
-    : listHTML(rest);
+  list.innerHTML =
+    archivedRow +
+    (pinned.length
+      ? `<li class="list-title">${icon("pin", "icon-sm")} Fijados</li>${listHTML(pinned)}<li class="list-title">Todos los chats</li>${listHTML(rest)}`
+      : listHTML(rest));
+}
+
+function setArchivedView(open) {
+  showArchived = open;
+  $("#listSearch").value = "";
+  renderLists();
+  $("#chatList").closest(".panel").scrollTop = 0;
 }
 
 export function renderLists() {
@@ -90,14 +138,15 @@ export function renderLists() {
   const all = sortedConversations();
 
   renderChats(q, all);
-  const groups = all.filter((c) => isGroup(c) && (!q || c.name.toLowerCase().includes(q)));
+  const groups = all.filter((c) => isGroup(c) && !c.archived && (!q || c.name.toLowerCase().includes(q)));
   $("#groupList").innerHTML = groups.length ? listHTML(groups) : `<li class="empty-list">${q ? "Sin resultados" : "Aún no estás en ningún grupo."}</li>`;
   renderStoryLists(q);
   renderBadges(all);
 }
 
 function renderBadges(all) {
-  const unreadChats = all.filter((c) => c.unread && !c.muted);
+  // Los archivados y silenciados no cuentan en las insignias (como en WhatsApp)
+  const unreadChats = all.filter((c) => c.unread && !c.muted && !c.archived);
   [["chats", unreadChats], ["groups", unreadChats.filter(isGroup)]].forEach(([tab, list]) => {
     const badge = $(`[data-badge="${tab}"]`);
     badge.hidden = !list.length;
@@ -105,17 +154,18 @@ function renderBadges(all) {
   });
   $('[data-badge="status"]').hidden = !state.stories.some((g) => g.user.id !== state.me.id && !g.allViewed);
 
-  const unreadCount = all.filter((c) => c.unread).length;
+  const unreadCount = all.filter((c) => c.unread && !c.archived).length;
   const chipCount = $('[data-filter-count="unread"]');
   chipCount.hidden = !unreadCount;
   chipCount.textContent = unreadCount;
 
-  const total = all.reduce((n, c) => n + (c.muted ? 0 : c.unread || 0), 0);
+  const total = all.reduce((n, c) => n + (c.muted || c.archived ? 0 : c.unread || 0), 0);
   document.title = total ? `(${total}) Chats - Yabla` : "Chats - Yabla";
 }
 
 export function setTab(tab) {
   state.tab = tab;
+  showArchived = false;
   $$("[data-tab]").forEach((btn) => {
     const active = btn.dataset.tab === tab;
     btn.classList.toggle("is-active", active);
@@ -157,6 +207,9 @@ function openConvMenu(id, x, y) {
   $('[data-conv-action="pin"] span', menu).textContent = conv.pinned ? "Desfijar chat" : "Fijar chat";
   $('[data-conv-action="mute"] span', menu).textContent = conv.muted ? "Activar notificaciones" : "Silenciar";
   $('[data-conv-action="mute"] use', menu).setAttribute("href", `/assets/images/icons.svg#i-${conv.muted ? "bell" : "bell-off"}`);
+  $('[data-conv-action="archive"] span', menu).textContent = conv.archived ? "Desarchivar" : "Archivar chat";
+  $('[data-conv-action="archive"] use', menu).setAttribute("href", `/assets/images/icons.svg#i-${conv.archived ? "unarchive" : "archive"}`);
+  $('[data-conv-action="pin"]', menu).hidden = conv.archived;
   $('[data-conv-action="read"]', menu).hidden = !conv.unread;
   $('[data-conv-action="clear"]', menu).hidden = !conv.lastMessage;
   $('[data-conv-action="delete"] span', menu).textContent = group ? "Salir y eliminar" : "Eliminar chat";
@@ -167,7 +220,7 @@ function openConvMenu(id, x, y) {
   menu.style.top = `${Math.max(8, Math.min(y, innerHeight - rect.height - 8))}px`;
 }
 
-const ACTIONS = { pin: togglePin, mute: toggleMute, read: markAsRead, clear: clearChat, delete: deleteChat };
+const ACTIONS = { pin: togglePin, mute: toggleMute, archive: toggleArchive, read: markAsRead, clear: clearChat, delete: deleteChat };
 
 function initConvMenu() {
   menu.addEventListener("click", (e) => {
@@ -245,5 +298,7 @@ export function initSidebar() {
     if (chip) setFilter(chip.dataset.filter);
   });
   initConvMenu();
-  ["conversations", "presence", "typing", "stories", "receipts", "active"].forEach((evt) => on(evt, renderLists));
+  registerAction("open-archived", () => setArchivedView(true));
+  registerAction("close-archived", () => setArchivedView(false));
+  ["conversations", "presence", "typing", "stories", "receipts", "active", "drafts"].forEach((evt) => on(evt, renderLists));
 }

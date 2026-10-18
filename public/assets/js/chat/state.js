@@ -9,6 +9,7 @@ export const state = {
   typing: new Map(), // conversationId -> Map(userId -> timeout)
   stories: [],
   blockedIds: new Set(),
+  starred: new Set(), // ids de mensajes destacados por mí
   activeId: null,
   tab: "chats",
 };
@@ -51,6 +52,32 @@ export function userName(id, { short = false } = {}) {
 export function messagesOf(conversationId) {
   if (!state.messages.has(conversationId)) state.messages.set(conversationId, { items: [], hasMore: true, loaded: false });
   return state.messages.get(conversationId);
+}
+
+/** Borradores por chat (se guardan en el navegador, como en WhatsApp Web). */
+const DRAFTS_KEY = "yabla:drafts";
+const drafts = (() => {
+  try {
+    return new Map(Object.entries(JSON.parse(localStorage.getItem(DRAFTS_KEY)) || {}));
+  } catch {
+    return new Map();
+  }
+})();
+
+export const getDraft = (conversationId) => drafts.get(String(conversationId)) || "";
+
+/** Guarda (o borra si está vacío). Devuelve true si cambió de "con borrador" a "sin borrador" o al revés. */
+export function setDraft(conversationId, text) {
+  const key = String(conversationId);
+  const had = drafts.has(key);
+  if (text.trim()) drafts.set(key, text.slice(0, 4000));
+  else drafts.delete(key);
+  try {
+    localStorage.setItem(DRAFTS_KEY, JSON.stringify(Object.fromEntries(drafts)));
+  } catch {
+    /* sin persistencia */
+  }
+  return had !== drafts.has(key);
 }
 
 /** Conversaciones ordenadas: fijadas primero y luego por último mensaje. */

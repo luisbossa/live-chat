@@ -56,6 +56,24 @@
   color-scheme: dark;
 }
 
+/* Color de la app (Ajustes → Apariencia). Azul es el valor por defecto de :root */
+[data-accent="violet"] { --brand: #8b6cf0; --brand-2: #6d4ed8; --brand-soft: #f0ecfe; }
+[data-accent="green"] { --brand: #22b573; --brand-2: #129a5c; --brand-soft: #e3f6ec; }
+[data-accent="pink"] { --brand: #ec5f9b; --brand-2: #d63f80; --brand-soft: #fdebf3; }
+[data-accent="orange"] { --brand: #f08a3c; --brand-2: #d9681a; --brand-soft: #fdf0e4; }
+[data-accent="teal"] { --brand: #1fb2b8; --brand-2: #0f8f95; --brand-soft: #e1f5f6; }
+
+[data-theme="dark"][data-accent="violet"] { --brand-soft: #2a2347; }
+[data-theme="dark"][data-accent="green"] { --brand-soft: #14302a; }
+[data-theme="dark"][data-accent="pink"] { --brand-soft: #3a1f2e; }
+[data-theme="dark"][data-accent="orange"] { --brand-soft: #3a2817; }
+[data-theme="dark"][data-accent="teal"] { --brand-soft: #12302f; }
+
+/* Tamaño del texto de mensajes y lista */
+:root { --msg-size: 15px; --list-scale: 1; }
+[data-text-size="sm"] { --msg-size: 14px; --list-scale: 0.94; }
+[data-text-size="lg"] { --msg-size: 17px; --list-scale: 1.08; }
+
 /* --- Reset ---------------------------------------------------------------- */
 *,
 *::before,
@@ -208,7 +226,7 @@ ul {
 }
 
 .btn-brand:hover {
-  box-shadow: 0 6px 20px rgba(58, 111, 216, 0.35);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--brand-2) 35%, transparent);
 }
 
 .btn-ghost {

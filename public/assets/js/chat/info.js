@@ -3,7 +3,7 @@ import { $, $$, icon, escapeHTML, toast, lastSeenLabel, isWide, isMobile, toastE
 import { state, emit, on, activeConv, isGroup, peerOf, convTitle, convAvatar, upsertConversation, isBlockedConv } from "./state.js";
 import { api } from "./api.js";
 import { registerAction, confirmDialog, openLightbox, onModalOpen, renderPicker, closeModal } from "./ui.js";
-import { togglePin, toggleMute, clearChat, deleteChat } from "./conv-actions.js";
+import { togglePin, toggleMute, toggleArchive, clearChat, deleteChat } from "./conv-actions.js";
 
 const app = $("#app");
 
@@ -49,6 +49,9 @@ export function renderInfo(conv = activeConv()) {
   $("#muteIcon").setAttribute("href", `/assets/images/icons.svg#i-${conv.muted ? "bell-off" : "bell"}`);
   $("#muteLabel").textContent = conv.muted ? "Activar" : "Silenciar";
   $("#pinLabel").textContent = conv.pinned ? "Desfijar chat" : "Fijar chat";
+  $("#pinBtn").hidden = conv.archived;
+  $("#archiveLabel").textContent = conv.archived ? "Desarchivar chat" : "Archivar chat";
+  $("#archiveIcon").setAttribute("href", `/assets/images/icons.svg#i-${conv.archived ? "unarchive" : "archive"}`);
 
   $("#infoMembersSection").hidden = !group;
   if (group) {
@@ -81,6 +84,7 @@ export function initInfo() {
   const withActive = (fn) => () => activeConv() && fn(activeConv());
   registerAction("mute", withActive(toggleMute));
   registerAction("pin", withActive(togglePin));
+  registerAction("archive", withActive(toggleArchive));
   registerAction("clear-chat", withActive(clearChat));
   registerAction("delete-chat", withActive(deleteChat));
 
