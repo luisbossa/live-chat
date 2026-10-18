@@ -3,2017 +3,580 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="Yabla - chatea con tus amigos en tiempo real">
-    <title>Dashboard - Yabla</title>
+    <title>Chats - Yabla</title>
     <link rel="icon" href="/assets/images/ui/favicon.png" type="image/png">
 
-    <!-- Librerías -->
-    <link rel="stylesheet" href="/assets/css/vendor/bootstrap.css">
-    <link rel="stylesheet" href="/assets/css/vendor/icofont.min.css">
-    <link rel="stylesheet" href="/assets/css/vendor/plyr.css">
-    <link rel="stylesheet" href="/assets/css/vendor/chosen.css">
-    <link rel="stylesheet" href="/assets/css/vendor/emojionearea.css">
-    <link rel="stylesheet" href="/assets/css/vendor/jquery.mCustomScrollbar.min.css">
-    <link rel="stylesheet" href="/assets/css/vendor/lightgallery.css">
-    <link rel="stylesheet" href="/assets/css/vendor/materialize.css">
-    <link rel="stylesheet" href="/assets/css/vendor/modal-effects.css">
-    <link rel="stylesheet" href="/assets/css/vendor/ripple.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 
-    <!-- Estilos de la app -->
-    <link rel="stylesheet" href="/assets/css/app/style.css">
-    <link rel="stylesheet" href="/assets/css/app/theme.css">
-    <link rel="stylesheet" href="/assets/css/app/responsive.css">
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
+    <script src="/assets/js/common.js"></script>
 </head>
 
 <body>
-    <div class="bidu-area">
-        <div class="menubar skeleton">
-            <div class="logo">
-                <img src="/assets/images/ui/dash_logo.png" alt="">
-            </div>
-            <ul>
-                <li><a href="#">Usuario</a>
-                    <ul class="submenu">
-                        <li>
-                            <a class="md-trigger" data-modal="modal-6" href="#">Tu perfil</a>
-                        </li>
-                    </ul>
-                </li>
-                <li><a href="#">Configuración</a>
-                    <ul class="submenu">
-                        <li>
-                            <a class="md-trigger" data-modal="modal-7" href="#">Cuenta</a>
-                        </li>
-                    </ul>
-                </li>
-                <li><a href="#">Billetera</a>
-                    <ul class="submenu">
-                        <li>
-                            <a class="md-trigger" data-modal="modal-8" href="#">Crear Grupo</a>
-                        </li>
-                        <li>
-                            <a class="md-trigger" data-modal="modal-5" href="#">Hacer pago</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-            <ul class="bidu-log">
-                <li>
-                    <a class="qr-code md-trigger" href="#" title="Scan QR code for Mobile" data-ripple=""
-                        data-modal="modal-3">
-                        <img src="/assets/images/ui/qrcode.png" alt="">
-                    </a>
-                </li>
-                <li>
-                    <div class="night-mode">
-                        <a href="#" title="Switch To Light Skin" class="light-mode" data-ripple="">
-                            <i>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-sun">
-                                    <circle cx="12" cy="12" r="5"></circle>
-                                    <line x1="12" y1="1" x2="12" y2="3"></line>
-                                    <line x1="12" y1="21" x2="12" y2="23"></line>
-                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                                    <line x1="1" y1="12" x2="3" y2="12"></line>
-                                    <line x1="21" y1="12" x2="23" y2="12"></line>
-                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                                </svg>
-                            </i>
-                        </a>
-                        <a href="#" title="Switch To Dark Skin" class="dark-mode" data-ripple="">
-                            <i>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-moon">
-                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                                </svg>
-                            </i>
-                        </a>
-                    </div>
-                </li>
-                <li>
-                    <a class="notification" href="#" title="Notifications" data-ripple="">
-                        <i>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-bell">
-                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                            </svg>
-                        </i>
-                    </a>
-                    <div class="dropdowns">
-                        <span>4 Nuevas notificaciones
-                            <a href="#">Marcar todas leídas</a>
-                        </span>
-                        <ul class="drops-menu">
-                            <li>
-                                <a href="#"> <span>Qapp</span>
-                                    <div class="mesg-meta">
-                                        <span>Actualiza el mensaje</span>
-                                        <i>Hace 2 min</i>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <figure>
-                                        <img src="/assets/images/avatars/friend-avatar10.jpg" alt="">
-                                        <span class="status f-online"></span>
-                                    </figure>
-                                    <div class="mesg-meta">
-                                        <h6>Tom Cruse</h6>
-                                        <span>commented on your new profile status</span> <i>Hace 2 min</i>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <figure>
-                                        <img src="/assets/images/avatars/friend-avatar11.jpg" alt="">
-                                        <span class="status f-online"></span>
-                                    </figure>
-                                    <div class="mesg-meta">
-                                        <h6>Emaa Watson</h6>
-                                        <span>Nicholas Grissom just became friends. Write on his wall.</span>
-                                        <i>Hace 4 horas</i>
-                                        <figure>
-                                            <span>Today is Marina Valentine’s Birthday! wish for
-                                                celebrating</span>
-                                            <img src="/assets/images/ui/birthday.png" alt="">
-                                        </figure>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <figure>
-                                        <img src="/assets/images/avatars/friend-avatar12.jpg" alt="">
-                                        <span class="status f-online"></span>
-                                    </figure>
-                                    <div class="mesg-meta">
-                                        <h6>Sarah K</h6>
-                                        <span>commented on your photo.</span> <i>Sunday</i>
-                                        <figure>
-                                            <span>"Celebrity looks Beautiful in that outfit! We should see each"</span>
-                                            <img src="/assets/images/avatars/friend-avatar9.jpg" alt="">
-                                        </figure>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <figure>
-                                        <img src="/assets/images/avatars/friend-avatar13.jpg" alt="">
-                                        <span class="status f-online"></span>
-                                    </figure>
-                                    <div class="mesg-meta">
-                                        <h6>Minda Tik</h6>
-                                        <span>nvited you to attend to his event Goo in</span> <i>May 19</i>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <figure>
-                                        <img src="/assets/images/avatars/friend-avatar14.jpg" alt="">
-                                        <span class="status f-online"></span>
-                                    </figure>
-                                    <div class="mesg-meta">
-                                        <h6>Xing Chang</h6>
-                                        <span>Andrew Changed his profile picture. </span>
-                                        <i>dec 18</i>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                <li>
-                    <a class="logout md-trigger" data-modal="modal-4" href="#" title="Logout From Desktop"
-                        data-ripple="">
-                        <i>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-power">
-                                <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
-                                <line x1="12" y1="2" x2="12" y2="12"></line>
-                            </svg>
-                        </i>
-                    </a>
-                </li>
-            </ul>
-        </div>
+    <div class="mist" aria-hidden="true"></div>
 
+    <div class="app" id="app">
+        <!-- ============ Barra de navegación (lateral en escritorio, inferior en móvil) ============ -->
+        <nav class="rail" aria-label="Navegación principal">
+            <a href="/" class="logo rail-logo" aria-label="Yabla, ir al inicio">
+                <svg class="icon">
+                    <use href="/assets/images/icons.svg#i-logo"></use>
+                </svg>
+            </a>
 
-        <div class="three-colums-div">
-            <div class="bidu-sidebar">
-                <div class="bidu-head">
-                    <div class="bidu-admin">
-                        <div class="bidu_div">
-                            <figure data-ripple="" data-modal="modal-7" class="md-trigger skeleton">
-                                <img class="" src="/assets/images/avatars/avatar-female-1.jpg" alt="">
-                            </figure>
-                            <div class="admin-meta skeleton">
-                                <span>Karla</span>
-                                <select class="disable-search">
-                                    <option>En línea</option>
-                                    <option>Ausente</option>
-                                    <option>Invisible</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="more-optns">
-                            <i class="skeleton">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="feather feather-more-vertical">
-                                    <circle cx="12" cy="12" r="1"></circle>
-                                    <circle cx="12" cy="5" r="1"></circle>
-                                    <circle cx="12" cy="19" r="1"></circle>
-                                </svg>
-                            </i>
-                            <ul>
-                                <li><a href="#">+Agregar amigo</a></li>
-                                <li><a href="#">+Invitar usuario</a></li>
-                                <li><a href="#" data-modal="modal-8" class="md-trigger">+Crear grupo</a></li>
-                                <li><a href="#" data-modal="modal-5" class="md-trigger">-Ir Premium</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="friend-list">
-                    <div id="searchDir" class="skeleton"></div>
-                    <ul class="nav nav-tabs tab-btn">
-                        <li class="nav-item skeleton"> <a class="active" title="Chat" href="#" data-ripple=""
-                                data-bs-toggle="tab" data-bs-target="#link1"> <i>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="feather feather-home">
-                                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                                    </svg>
-                                </i> </a> </li>
-                        <li class="nav-item skeleton"> <a class="" title="Groups" href="#" data-ripple=""
-                                data-bs-toggle="tab" data-bs-target="#link3"> <i>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="feather feather-user-plus">
-                                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="8.5" cy="7" r="4"></circle>
-                                        <line x1="20" y1="8" x2="20" y2="14"></line>
-                                        <line x1="23" y1="11" x2="17" y2="11"></line>
-                                    </svg>
-                                </i> </a> </li>
-                        <li class="nav-item skeleton"> <a class="#" title="Status" href="#" data-ripple=""
-                                data-bs-toggle="tab" data-bs-target="#link4"> <i>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="feather feather-stop-circle">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <rect x="9" y="9" width="6" height="6"></rect>
-                                    </svg>
-                                </i> </a> </li>
-                    </ul>
-                    <!-- Tab panes -->
-                    <div class="tab-content">
-                        <div class="tab-pane active fade show " id="link1">
-                            <h4 class="heading skeleton">Mensajes</h4>
-                            <ul id="people-list" class="friendz-list">
-                                <li class="unread">
-                                    <figure class="skeleton"> <img src="/assets/images/avatars/friend-avatar.jpg" alt="">
-                                        <span class="status online"></span>
-                                    </figure>
-                                    <div class="friendz-meta skeleton"> <a data-ripple="" href="#">bucky
-                                            barnes</a> <i>hola amigos ¿cómo están hoy?</i>
-                                        <span>3</span> <ins>2:45PM</ins>
-                                    </div>
-                                </li>
-                                <li class="unread">
-                                    <figure class="skeleton"> <img src="/assets/images/avatars/friend-avatar2.jpg" alt="">
-                                        <span class="status online"></span>
-                                    </figure>
-                                    <div class="friendz-meta skeleton"> <a href="#" data-ripple="">Susan
-                                            Miller</a> <i>Hola, este es mi </i>
-                                        <span>1</span> <ins>12:22PM</ins>
-                                    </div>
-                                </li>
-                                <li class="">
-                                    <figure class="skeleton"> <img src="/assets/images/avatars/friend-avatar3.jpg" alt="">
-                                        <span class="status away"></span>
-                                    </figure>
-                                    <div class="friendz-meta skeleton"> <a href="#" data-ripple="">Alan
-                                            Bernaby</a> <i>Tenemos una reunión </i> <ins>1:05PM</ins> </div>
-                                </li>
-                                <li class="">
-                                    <figure class="skeleton"> <img src="/assets/images/avatars/friend-avatar4.jpg" alt="">
-                                        <span class="status online"></span>
-                                    </figure>
-                                    <div class="friendz-meta skeleton"> <a href="#" data-ripple="">Lucie
-                                            Logan</a> <i>¿Mi dinero? 💰 </i>
-                                        <ins>3:43PM</ins>
-                                    </div>
-                                </li>
-                                <li class="">
-                                    <figure class="skeleton"> <img src="/assets/images/avatars/friend-avatar7.jpg" alt="">
-                                        <span class="status offline"></span>
-                                    </figure>
-                                    <div class="friendz-meta skeleton"> <a href="#" data-ripple="">Lucy
-                                            Will</a> <i>Curso básico de Aleman </i> <ins>hace 2 días</ins> </div>
-                                </li>
-                                <li class="">
-                                    <figure class="skeleton"> <img src="/assets/images/avatars/friend-avatar8.jpg" alt="">
-                                        <span class="status offline"></span>
-                                    </figure>
-                                    <div class="friendz-meta skeleton"> <a href="#" data-ripple="">Sarah k</a>
-                                        <i>Ok, nos vemos mañana </i> <ins>hace 2 días</ins>
-                                    </div>
-                                </li>
-                                <li class="">
-                                    <figure class="skeleton"> <img src="/assets/images/avatars/friend-avatar9.jpg" alt="">
-                                        <span class="status away"></span>
-                                    </figure>
-                                    <div class="friendz-meta skeleton"> <a href="#" data-ripple="">Alan
-                                            Bernaby</a> <i>Partido el viernes? </i> <ins>1:05PM</ins> </div>
-                                </li>
-                                <li class="">
-                                    <figure class="skeleton"> <img src="/assets/images/avatars/friend-avatar10.jpg" alt="">
-                                        <span class="status online"></span>
-                                    </figure>
-                                    <div class="friendz-meta skeleton"> <a href="#" data-ripple="">Fawad K.</a>
-                                        <i>Donde conseguiste esas </i> <ins>3:43PM</ins>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="tab-pane fade" id="link3">
-                            <h4 class="heading">Grupos</h4>
-                            <ul class="groups">
-                                <li class="friend">
-                                    <figure class="group-chat"> <img alt="" src="/assets/images/avatars/friend-avatar10.jpg">
-                                        <img alt="" src="/assets/images/avatars/friend-avatar11.jpg" class="two"> <span
-                                            class="status online"></span>
-                                    </figure>
-                                    <div class="friendz-meta"> <a href="#" data-ripple="">Diversión de chicos</a>
-                                        <i>hola amigos ¿cómo están hoy?</i> <span>3</span> <ins>2:34AM</ins>
-                                    </div>
-                                </li>
-                                <li class="friend">
-                                    <figure class="group-chat"> <img alt="" src="/assets/images/avatars/friend-avatar9.jpg">
-                                        <img alt="" src="/assets/images/avatars/friend-avatar8.jpg" class="two"> <span
-                                            class="status online"></span>
-                                    </figure>
-                                    <div class="friendz-meta"> <a href="#" data-ripple="">Mundo de películas</a>
-                                        <i>vamos chicos a ver</i> <span>3</span>
-                                        <ins>12:30AM</ins>
-                                    </div>
-                                </li>
-                                <li class="friend">
-                                    <figure class="group-chat"> <img alt="" src="/assets/images/avatars/friend-avatar.jpg">
-                                        <img alt="" src="/assets/images/avatars/friend-avatar2.jpg" class="two"> <span
-                                            class="status away"></span>
-                                    </figure>
-                                    <div class="friendz-meta"> <a href="#" data-ripple="">Hobbies de primos</a> <i>Hola,
-                                            quiero verte por primera vez </i>
-                                        <ins>12:30AM</ins>
-                                    </div>
-                                </li>
-                                <li class="friend">
-                                    <figure class="group-chat"> <img alt="" src="/assets/images/avatars/friend-avatar3.jpg">
-                                        <img alt="" src="/assets/images/avatars/friend-avatar4.jpg" class="two"> <span
-                                            class="status away"></span>
-                                    </figure>
-                                    <div class="friendz-meta"> <a href="#" data-ripple="">Mi Familia</a>
-                                        <i>Hey Andrew, ¿dónde estás ahora?</i> <ins>12:30AM</ins>
-                                    </div>
-                                </li>
-                                <li class="friend">
-                                    <figure class="group-chat"> <img alt="" src="/assets/images/avatars/friend-avatar5.jpg">
-                                        <img alt="" src="/assets/images/avatars/friend-avatar6.jpg" class="two"> <span
-                                            class="status away"></span>
-                                    </figure>
-                                    <div class="friendz-meta"> <a href="#" data-ripple="">Grupo de Ciencia</a> <i>La
-                                            última fórmula del círculo mundial</i>
-                                        <ins>12:30AM</ins>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div class="tab-pane fade" id="link4">
-                            <h4 class="heading">Estados</h4>
-                            <div class="status-head">
-                                <figure>
-                                    <img src="/assets/images/avatars/avatar-female-2.jpg" alt="">
-                                </figure>
-                                <div class="status-meta">
-                                    <span>Mi estado</span>
-                                    <p>Añadir a mi estado</p>
-                                </div>
-                                <ul class="edit-meta">
-                                    <li>
-                                        <a href="#" data-ripple="">
-                                            <i>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="feather feather-camera">
-                                                    <path
-                                                        d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z">
-                                                    </path>
-                                                    <circle cx="12" cy="13" r="4"></circle>
-                                                </svg>
-                                            </i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" data-ripple="">
-                                            <i>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="feather feather-edit">
-                                                    <path
-                                                        d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7">
-                                                    </path>
-                                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z">
-                                                    </path>
-                                                </svg>
-                                            </i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="users-status">
-                                <span>Ver actualizaciones</span>
-                                <ul>
-                                    <li class="story-user" data-ripple="">
-                                        <figure><img src="/assets/images/avatars/avatar-male-1.jpg" alt=""></figure>
-                                        <div class="statusr"> <span>Emily kate</span> <i>hace 21h</i> </div>
-                                    </li>
-                                    <li class="story-user" data-ripple="">
-                                        <figure><img src="/assets/images/avatars/friend-avatar13.jpg" alt=""></figure>
-                                        <div class="statusr"> <span>Dasha danial</span> <i>hace 22h</i> </div>
-                                    </li>
-                                    <li class="story-user" data-ripple="">
-                                        <figure><img src="/assets/images/avatars/friend-avatar10.jpg" alt=""></figure>
-                                        <div class="statusr"> <span>Jawan king</span> <i>hace 1 día</i> </div>
-                                    </li>
-                                    <li class="story-user" data-ripple="">
-                                        <figure><img src="/assets/images/avatars/friend-avatar3.jpg" alt=""></figure>
-                                        <div class="statusr"> <span>Mikal</span> <i>hace 2 días</i> </div>
-                                    </li>
-                                    <li class="story-user" data-ripple="">
-                                        <figure><img src="/assets/images/avatars/friend-avatar5.jpg" alt=""></figure>
-                                        <div class="statusr"> <span>Frank Bob</span> <i>hace 3 días</i> </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="rail-tabs" role="tablist">
+                <button class="rail-btn is-active" role="tab" data-tab="chats" aria-selected="true">
+                    <svg class="icon">
+                        <use href="/assets/images/icons.svg#i-chat"></use>
+                    </svg>
+                    <span>Chats</span>
+                    <b class="badge" data-badge="chats" hidden></b>
+                </button>
+                <button class="rail-btn" role="tab" data-tab="groups" aria-selected="false">
+                    <svg class="icon">
+                        <use href="/assets/images/icons.svg#i-users"></use>
+                    </svg>
+                    <span>Grupos</span>
+                    <b class="badge" data-badge="groups" hidden></b>
+                </button>
+                <button class="rail-btn" role="tab" data-tab="status" aria-selected="false">
+                    <svg class="icon">
+                        <use href="/assets/images/icons.svg#i-status"></use>
+                    </svg>
+                    <span>Estados</span>
+                </button>
             </div>
 
-            <!-- left sidebar -->
-            <div class="bidu-chat-area">
-                <div class="chatarea-head"> <span class="close-chat"><i>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-x">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                        </i></span>
-                    <figure class="see-info skeleton" data-ripple="">
-                        <img src="/assets/images/avatars/avatar-female-1.jpg" alt="">
-                    </figure>
-                    <div class="user-name skeleton">
-                        <span>Karla Castro</span>
-                        <i class="">Última hora a las 9:48 AM</i>
-                    </div>
-                </div>
-                <div class="chat-content skeleton">
-                    <ul class="bidu-chat">
-                        <li class="left">
-                            <span>+353 87 1234 567 ~ Georg</span>
-                            <div class="text"> Hola, bebé ¿cómo estás cariño? 😀
-                                <br>
-                                Encontré un postre delicioso para ti. Te está esperando en casa.
-                                <ins class="seen-time">visto 10:24PM
-                                    <i>
-                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-                                            width="15px" height="15px" viewBox="0 0 594.149 594.149">
-                                            <g>
-                                                <g>
-                                                    <path fill="currentColor"
-                                                        d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1l-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z" />
-                                                </g>
-                                            </g>
-                                        </svg>
-                                    </i>
-                                </ins>
-                            </div>
-                            <div class="text">
-                                <img src="/assets/images/avatars/avatar-female-5.jpg" alt="">
-                                <i>Mira esta foto tuya antigua</i>
-                                <ins class="seen-time">visto 10:24PM <i>
-                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-                                            width="15px" height="15px" viewBox="0 0 594.149 594.149">
-                                            <g>
-                                                <g>
-                                                    <path fill="currentColor"
-                                                        d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1l-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z" />
-                                                </g>
-                                            </g>
-                                        </svg>
-                                    </i>
-                                </ins>
-                            </div>
-                            <div class="chat-date"><span>Ayer</span></div>
-                        </li>
-                        <li class="right">
-                            <span>+353 87 1234 567</span>
-                            <div class="text"> Hola, gracias cariño 💔
-                                <ins class="seen-time">visto 10:24PM
-                                    <i>
-                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-                                            width="15px" height="15px" viewBox="0 0 594.149 594.149">
-                                            <g>
-                                                <g>
-                                                    <path fill="currentColor"
-                                                        d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1l-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z" />
-                                                </g>
-                                            </g>
-                                        </svg>
-                                    </i>
-                                </ins>
-                            </div>
-                            <div class="text"> Estoy muy ocupada hoy en la oficina, no puedo ir hoy, ¿puedes
-                                por favor enviarme $200 urgentemente?, te lo devuelvo con mi salario.😔
-                                <ins class="seen-time">visto 10:24PM <i>
-                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-                                            width="15px" height="15px" viewBox="0 0 594.149 594.149">
-                                            <g>
-                                                <g>
-                                                    <path fill="currentColor"
-                                                        d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1l-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z" />
-                                                </g>
-                                            </g>
-                                        </svg>
-                                    </i> </ins>
-                            </div>
-                            <div class="chat-date"><span>Ayer</span></div>
-                        </li>
-                        <li class="left"> <span>+353 87 1234 567 ~ Georg</span>
-                            <div class="text"> NO HAY PROBLEMA... <ins class="seen-time">visto 10:24PM
-                                    <i>
-                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-                                            width="15px" height="15px" viewBox="0 0 594.149 594.149">
-                                            <g>
-                                                <g>
-                                                    <path fill="currentColor"
-                                                        d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1l-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z" />
-                                                </g>
-                                            </g>
-                                        </svg>
-                                    </i>
-                                </ins>
-                            </div>
-                        </li>
-
-                        <li class="right"> <span>Emmawatson ~ MAK</span>
-                            <div class="aud-vid">
-                                <audio id="plyr-audio-player" class="audio-player" controls>
-                                    <source
-                                        src="https://cdn.plyr.io/static/demo/Kishi_Bashi_-_It_All_Began_With_a_Burst.mp3"
-                                        type="audio/mp3" />
-                                    <source
-                                        src="https://cdn.plyr.io/static/demo/Kishi_Bashi_-_It_All_Began_With_a_Burst.ogg"
-                                        type="audio/ogg" />
-                                </audio>
-                                <ins class="seen-time">visto 10:24PM
-                                    <i>
-                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-                                            width="15px" height="15px" viewBox="0 0 594.149 594.149">
-                                            <g>
-                                                <g>
-                                                    <path fill="currentColor"
-                                                        d="M448.8,161.925l-35.7-35.7l-160.65,160.65l35.7,35.7L448.8,161.925z M555.899,126.225l-267.75,270.3l-107.1-107.1l-35.7,35.7l142.8,142.8l306-306L555.899,126.225z M0,325.125l142.8,142.8l35.7-35.7l-142.8-142.8L0,325.125z" />
-                                                </g>
-                                            </g>
-                                        </svg>
-                                    </i>
-                                </ins>
-                            </div>
-                            <div class="more-optns">
-                                <i>
-                                    <svg class="feather feather-more-vertical" stroke-linejoin="round"
-                                        stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none"
-                                        viewBox="0 0 24 24" height="16" width="16" xmlns="http://www.w3.org/2000/svg">
-                                        <circle r="1" cy="12" cx="12" />
-                                        <circle r="1" cy="5" cx="12" />
-                                        <circle r="1" cy="19" cx="12" />
-                                    </svg>
-                                </i>
-                                <ul>
-                                    <li><a href="#">Responder</a></li>
-                                    <li><a href="#">Reenviar</a></li>
-                                    <li><a href="#">Descargar</a></li>
-                                    <li><a href="#">Eliminar</a></li>
-                                    <li><a href="#">Ocultar</a></li>
-                                </ul>
-                            </div>
-                            <div class="chat-date"><span>23/5/2026</span></div>
-                        </li>
-                    </ul>
-                    <div class="type-div">
-                        <div class="type-area skeleton">
-                            <div class="typing-indigator">
-                                <div class="loader-bar-2"></div>
-                                <div class="loader-bar-2"></div>
-                                <div class="loader-bar-2"></div>
-                            </div>
-                            <textarea id="emojionearea1" placeholder="Escribir mensaje..."></textarea>
-                            <div class="toggle-sticker"> <span class="">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                        <path fill="currentColor"
-                                            d="M13.177 12.013l-.001-.125v-.541-.512c0-.464 0-.827-.002-1.178a.723.723 0 0 0-.557-.7.715.715 0 0 0-.826.4c-.05.115-.072.253-.073.403-.003 1.065-.003 1.917-.002 3.834v.653c0 .074.003.136.009.195a.72.72 0 0 0 .57.619c.477.091.878-.242.881-.734.002-.454.003-.817.002-1.633l-.001-.681zm-3.21-.536a35.751 35.751 0 0 0-1.651-.003c-.263.005-.498.215-.565.48a.622.622 0 0 0 .276.7.833.833 0 0 0 .372.104c.179.007.32.008.649.005l.137-.001v.102c-.001.28-.001.396.003.546.001.044-.006.055-.047.081-.242.15-.518.235-.857.275-.767.091-1.466-.311-1.745-1.006a2.083 2.083 0 0 1-.117-1.08 1.64 1.64 0 0 1 1.847-1.41c.319.044.616.169.917.376.196.135.401.184.615.131a.692.692 0 0 0 .541-.562c.063-.315-.057-.579-.331-.766-.789-.542-1.701-.694-2.684-.482-2.009.433-2.978 2.537-2.173 4.378.483 1.105 1.389 1.685 2.658 1.771.803.054 1.561-.143 2.279-.579.318-.193.498-.461.508-.803.014-.52.015-1.046.001-1.578-.009-.362-.29-.669-.633-.679zM18 4.25H6A4.75 4.75 0 0 0 1.25 9v6A4.75 4.75 0 0 0 6 19.75h12A4.75 4.75 0 0 0 22.75 15V9A4.75 4.75 0 0 0 18 4.25zM21.25 15A3.25 3.25 0 0 1 18 18.25H6A3.25 3.25 0 0 1 2.75 15V9A3.25 3.25 0 0 1 6 5.75h12A3.25 3.25 0 0 1 21.25 9v6zm-2.869-6.018H15.3c-.544 0-.837.294-.837.839V14.309c0 .293.124.525.368.669.496.292 1.076-.059 1.086-.651.005-.285.006-.532.004-1.013v-.045l-.001-.46v-.052h1.096l1.053-.001a.667.667 0 0 0 .655-.478c.09-.298-.012-.607-.271-.757a.985.985 0 0 0-.468-.122 82.064 82.064 0 0 0-1.436-.006h-.05l-.523.001h-.047v-1.051h1.267l1.22-.001c.458-.001.768-.353.702-.799-.053-.338-.35-.56-.737-.561z">
-                                        </path>
-                                    </svg>
-                                </span>
-                                <div class="sticker-sub-contain">
-                                    <ul>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker1.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker2.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker3.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker4.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker5.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker6.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker7.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker8.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker9.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker10.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker11.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker12.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker13.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker14.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker15.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker16.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker17.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker18.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker19.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker20.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker21.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker22.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker23.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker24.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker25.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker26.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker27.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker28.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker29.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker30.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker31.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker32.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker33.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker34.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                        <li><a href="#"><img class="" src="/assets/images/stickers/sticker35.gif"
-                                                    alt="sticker" /></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="upload-media"> <span><i class="icofont-paper-clip"></i></span>
-                                <ul class="upload-items">
-                                    <li><a href="#"><i class="icofont-user-alt-3"></i></a>
-                                        <span>Contacto</span>
-                                    </li>
-                                    <li>
-                                        <a href="#"><i class="icofont-camera"></i></a> <span>Camara</span>
-                                    </li>
-                                    <li>
-                                        <a href="#"><i class="icofont-image"></i></a> <span>Fotos &
-                                            Video</span>
-                                    </li>
-                                    <li>
-                                        <a href="#"><i class="icofont-location-pin"></i></a> <span>Enviar
-                                            ubicación</span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <button type="submit" class="send-mesg" data-ripple=""><i>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="feather feather-send">
-                                        <line x1="22" y1="2" x2="11" y2="13"></line>
-                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                                    </svg>
-                                </i></button>
-                        </div>
-                    </div>
-                </div>
+            <div class="rail-bottom">
+                <button class="rail-btn" data-action="theme" aria-label="Cambiar tema">
+                    <svg class="icon">
+                        <use href="/assets/images/icons.svg#i-moon" data-theme-icon></use>
+                    </svg>
+                    <span>Tema</span>
+                </button>
+                <button class="rail-btn rail-me" data-open="modal-profile" aria-label="Mi perfil">
+                    <img src="" alt="" data-user="avatar">
+                    <span>Perfil</span>
+                </button>
             </div>
-            <!-- central content -->
-            <div class="info-area"> <span class="close-area"> <i>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="feather feather-x">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
+        </nav>
+
+        <!-- ============ Lista de conversaciones ============ -->
+        <aside class="sidebar" aria-label="Conversaciones">
+            <header class="sidebar-head">
+                <div>
+                    <p class="muted greeting">Hola, <span data-user="firstName"></span> 👋</p>
+                    <h1 id="sidebarTitle">Chats</h1>
+                </div>
+                <div class="head-actions">
+                    <button class="icon-btn" data-open="modal-group" aria-label="Nuevo grupo" title="Nuevo grupo">
+                        <svg class="icon">
+                            <use href="/assets/images/icons.svg#i-plus"></use>
                         </svg>
-                    </i>
-                </span>
-
-                <div class="nav_div">
-                    <span class="skeleton">
-                        <i>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-trash-2">
-                                <polyline points="3 6 5 6 21 6"></polyline>
-                                <path
-                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                                </path>
-                                <line x1="10" y1="11" x2="10" y2="17"></line>
-                                <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </button>
+                    <div class="dropdown">
+                        <button class="icon-btn" data-dropdown aria-label="Más opciones" aria-expanded="false">
+                            <svg class="icon">
+                                <use href="/assets/images/icons.svg#i-more"></use>
                             </svg>
-                        </i>Vaciar chat
+                        </button>
+                        <div class="menu" role="menu">
+                            <button role="menuitem" data-open="modal-qr">
+                                <svg class="icon">
+                                    <use href="/assets/images/icons.svg#i-qr"></use>
+                                </svg>Yabla en tu móvil
+                            </button>
+                            <button role="menuitem" data-open="modal-wallet">
+                                <svg class="icon">
+                                    <use href="/assets/images/icons.svg#i-wallet"></use>
+                                </svg>Billetera
+                            </button>
+                            <button role="menuitem" data-open="modal-settings">
+                                <svg class="icon">
+                                    <use href="/assets/images/icons.svg#i-settings"></use>
+                                </svg>Ajustes
+                            </button>
+                            <hr>
+                            <button role="menuitem" class="is-danger" data-open="modal-logout">
+                                <svg class="icon">
+                                    <use href="/assets/images/icons.svg#i-logout"></use>
+                                </svg>Cerrar sesión
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <label class="search">
+                <svg class="icon icon-sm">
+                    <use href="/assets/images/icons.svg#i-search"></use>
+                </svg>
+                <input type="search" id="listSearch" placeholder="Buscar contactos…" autocomplete="off">
+            </label>
+
+            <div class="panel is-active" data-panel="chats">
+                <div class="stories-strip" id="storiesStrip"></div>
+                <ul class="conv-list" id="chatList"></ul>
+            </div>
+
+            <div class="panel" data-panel="groups">
+                <button class="new-item" data-open="modal-group">
+                    <span><svg class="icon">
+                            <use href="/assets/images/icons.svg#i-plus"></use>
+                        </svg></span>
+                    Crear un grupo nuevo
+                </button>
+                <ul class="conv-list" id="groupList"></ul>
+            </div>
+
+            <div class="panel" data-panel="status">
+                <button class="my-status" id="myStatus">
+                    <span class="avatar">
+                        <img src="" alt="" data-user="avatar">
+                        <i><svg class="icon icon-sm">
+                                <use href="/assets/images/icons.svg#i-plus"></use>
+                            </svg></i>
                     </span>
-
-
-
-                    <div class="search-mesg skeleton" title="Buscar en Chat"><i>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-search">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                            </svg>
-                        </i> </div>
-                    <form method="" class="searchinchat">
-                        <input type="text" placeholder="Buscando mensaje...">
-                        <button type="submit"></button>
-                    </form>
-
-                    <div class="more-optns">
-                        <i class="skeleton">
-                            <svg class="feather feather-more-vertical" stroke-linejoin="round" stroke-linecap="round"
-                                stroke-width="2" stroke="currentColor" fill="none" viewBox="0 0 24 24" height="16"
-                                width="16" xmlns="http://www.w3.org/2000/svg">
-                                <circle r="1" cy="12" cx="12" />
-                                <circle r="1" cy="5" cx="12" />
-                                <circle r="1" cy="19" cx="12" />
-                            </svg>
-                        </i>
-
-                        <ul>
-                            <li><a href="#"><i><img src="/assets/images/ui/check-box.png" alt=""></i>Seleccionar mensajes</a></li>
-                            <li><a href="#"><i><img src="/assets/images/ui/hide.png" alt=""></i>Esconder mensajes</a></li>
-                            <li><a href="#"><i><img src="/assets/images/ui/mute.png" alt=""></i>Silenciar notificación</a></li>
-                            <li><a href="#"><i><img src="/assets/images/ui/user.png" alt=""></i>Bloquear</a></li>
-                            <li><a href="#"><i><img src="/assets/images/ui/close.png" alt=""></i>Cerrar Chat</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-
-                <div class="user-info">
-                    <div class="user-dp">
-                        <figure class="skeleton"><img src="/assets/images/avatars/avatar-female-1.jpg" alt=""></figure>
-                        <div class="active-uzr-name skeleton">
-                            <h6>Karla Castro</h6>
-                            <span class="status online"></span> <i>Activo ahora</i>
-                        </div>
-                    </div>
-                    <div class="media-uploadvert">
-                        <span class="skeleton p_left">Personas conetadas <i>43</i></span>
-                        <ul class="pic-vid" id="lightgallery2">
-                            <li class="skeleton" data-src="/assets/images/avatars/avatar-female-1.jpg" data-responsive=""
-                                data-sub-html="">
-                                <a href="#">
-                                    <img src="/assets/images/avatars/avatar-female-1.jpg" alt="">
-                                </a>
-                            </li>
-                            <li class="skeleton" data-src="/assets/images/avatars/avatar-male-1.jpg" data-responsive=""
-                                data-sub-html="">
-                                <a href="#">
-                                    <img src="/assets/images/avatars/avatar-male-1.jpg" alt="">
-                                </a>
-                            </li>
-                            <li class="skeleton" data-src="/assets/images/avatars/avatar-female-3.jpg" data-responsive=""
-                                data-sub-html="">
-                                <a href="#">
-                                    <img src="/assets/images/avatars/avatar-female-3.jpg" alt="">
-                                </a>
-                            </li>
-                            <li class="skeleton" data-src="/assets/images/avatars/avatar-female-6.jpg" data-responsive=""
-                                data-sub-html="">
-                                <a href="#">
-                                    <img src="/assets/images/avatars/avatar-female-6.jpg" alt="">
-                                </a>
-                            </li>
-                            <li class="skeleton" data-src="/assets/images/avatars/avatar-female-5.jpg" data-responsive=""
-                                data-sub-html="">
-                                <a href="#">
-                                    <img src="/assets/images/avatars/avatar-female-5.jpg" alt="">
-                                </a>
-                            </li>
-                            <li class="skeleton" data-src="/assets/images/avatars/avatar-female-2.jpg" data-responsive=""
-                                data-sub-html="">
-                                <a href="#">
-                                    <img src="/assets/images/avatars/avatar-female-2.jpg" alt="">
-                                </a>
-                            </li>
-                            <li class="skeleton" data-src="/assets/images/avatars/avatar-female-1.jpg" data-responsive=""
-                                data-sub-html="">
-                                <a href="#">
-                                    <img src="/assets/images/avatars/avatar-female-1.jpg" alt="">
-                                </a>
-                            </li>
-                            <li class="skeleton" data-src="/assets/images/avatars/avatar-male-3.jpg" data-responsive=""
-                                data-sub-html="">
-                                <a href="#">
-                                    <img src="/assets/images/avatars/avatar-male-3.jpg" alt="">
-                                </a>
-                            </li>
-                        </ul>
-
-                        <ol class="bunch skeleton">
-                            <li>
-                                <a href="#">
-                                    <img src="/assets/images/avatars/avatar-female-2.jpg" alt="">
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <img src="/assets/images/avatars/avatar-female-5.jpg" alt="">
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <img src="/assets/images/avatars/avatar-female-3.jpg" alt="">
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <img src="/assets/images/avatars/avatar-female-6.jpg" alt="">
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <img src="/assets/images/avatars/avatar-female-1.jpg" alt="">
-                                </a>
-                            </li>
-                            <li class="more-files">
-                                <a href="#">20+ Más</a>
-                            </li>
-                        </ol>
-                    </div>
-                </div>
+                    <span>
+                        <strong>Mi estado</strong>
+                        <small class="muted">Toca para añadir una actualización</small>
+                    </span>
+                </button>
+                <h3 class="list-title">Actualizaciones recientes</h3>
+                <ul class="conv-list" id="statusList"></ul>
             </div>
-        </div>
-    </div>
+        </aside>
 
-    <!-- stories -->
-    <div class="stories-wraper">
-        <div class="status-story">
-            <span class="close-story">
-                <i class="icofont-close-circled"></i>
-            </span>
-            <div id="btns-wrapper"></div>
-            <div id="slideshow">
-                <img class="slide" src="/assets/images/stories/story1.jpg" alt="1" />
-                <img class="slide" src="/assets/images/stories/story4.gif" alt="2" />
-                <img class="slide" src="/assets/images/stories/story2.jpg" alt="3" />
-                <img class="slide" src="/assets/images/stories/story3.jpg" alt="4" />
+        <!-- ============ Conversación ============ -->
+        <main class="chat" id="chat">
+            <div class="chat-empty" id="chatEmpty">
+                <span class="logo logo-lg"><svg class="icon">
+                        <use href="/assets/images/icons.svg#i-logo"></use>
+                    </svg></span>
+                <h2>Tus mensajes</h2>
+                <p class="muted">Elige una conversación para empezar a chatear.</p>
             </div>
-        </div>
-    </div>
 
-    <!--- Modal popup -->
-    <div class="md-modal md-effect-1" id="modal-1">
-        <div class="modal__dialog">
-            <div class="md-content">
-                <div class="bg-image"
-                    style="background-image: url(/assets/images/avatars/avatar-female-1.jpg); filter: blur(15px);"></div>
-                <div class="audio-call">
-                    <span>End to End Encrypted</span>
-                    <div id="basicUsage">00:00:00</div>
-                    <h6 class="call-in-out">Incoming Call...</h6>
-                    <figure><img src="/assets/images/avatars/avatar-female-1.jpg" alt=""></figure>
-                    <h4>Karla Castro</h4>
-                    <ins>+971-58-2235010</ins>
-                    <div class="callz-btns">
-                        <button title="call-accept" class="call-animation">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-phone-call">
-                                <path
-                                    d="M15.05 5A5 5 0 0 1 19 8.95M15.05 1A9 9 0 0 1 23 8.94m-1 7.98v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
-                                </path>
-                            </svg>
-                        </button>
-                        <button title="call Reject" class="md-close cancelcall">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-phone">
-                                <path
-                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
-                                </path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="md-modal md-effect-1 video-call" id="modal-2">
-        <div class="modal__dialog">
-            <div class="md-content">
-                <div class="bg-image"
-                    style="background-image: url(/assets/images/avatars/avatar-female-1.jpg); filter: blur(15px);"></div>
-                <div class="audio-call">
-                    <span>End to End Encrypted</span>
-                    <div id="basicUsage2">00:00:00</div>
-                    <h6 class="call-in-out">Incoming Video Call...</h6>
-                    <div class="group-call">
-                        <span>My Group</span>
-                        <a href="#" title="You">You</a>
-                        <a href="#" title="Georg"><img src="/assets/images/avatars/avatar-male-1.jpg" alt=""></a>
-                        <a href="#" title="Emy"><img src="/assets/images/avatars/avatar-female-3.jpg" alt=""></a>
-                    </div>
-                    <figure><img src="/assets/images/avatars/avatar-female-1.jpg" alt=""></figure>
-                    <figure class="your-came"><img src="/assets/images/stories/videocall.jpg" alt=""></figure>
-                    <h4>Karla Castro</h4>
-                    <ins>+971-58-2235010</ins>
-                    <div class="callz-btns">
-                        <button title="call-accept" class="call-animation">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-phone-call">
-                                <path
-                                    d="M15.05 5A5 5 0 0 1 19 8.95M15.05 1A9 9 0 0 1 23 8.94m-1 7.98v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
-                                </path>
-                            </svg>
-                        </button>
-                        <button class="md-close cancelcall">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round" class="feather feather-phone">
-                                <path
-                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
-                                </path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div><!-- video call popup -->
-
-    <div class="md-modal md-effect-1" id="modal-3">
-        <div class="modal__dialog">
-            <div class="md-content">
-                <div class="qr-code-popup">
-                    <button class="md-close">
-                        <i class="icofont-close"></i>
+            <header class="chat-head">
+                <button class="icon-btn back-btn" data-action="close-chat" aria-label="Volver">
+                    <svg class="icon">
+                        <use href="/assets/images/icons.svg#i-arrow-left"></use>
+                    </svg>
+                </button>
+                <button class="chat-peer" data-action="toggle-info">
+                    <span class="avatar" id="peerAvatar"><img src="" alt=""></span>
+                    <span>
+                        <strong id="peerName"></strong>
+                        <small id="peerStatus"></small>
+                    </span>
+                </button>
+                <div class="head-actions">
+                    <button class="icon-btn" data-call="audio" aria-label="Llamada de voz" title="Llamada de voz">
+                        <svg class="icon">
+                            <use href="/assets/images/icons.svg#i-phone"></use>
+                        </svg>
                     </button>
-                    <div class="qr-meta">
-                        <h6>To use this messenger on your phone</h6>
-                        <ol>
-                            <li>Open your phone</li>
-                            <li>Go to the left side button</li>
-                            <li>Tap menu : or settings : and select Messenger Web</li>
-                            <li>Point your phone camera to this screen to capture the code.</li>
-                        </ol>
-                        <a href="#">Need Help</a>
-                    </div>
-                    <div class="qr-captcha">
-                        <img src="/assets/images/ui/qrcode.svg" alt="QR a bstudio.site" width="200">
-                        <form method="">
-                            <input class="qrcode-rem" type="checkbox" id="scales" name="scales" checked>
-                            <label for="scales">Keep me sign in</label>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="md-modal md-effect-1" id="modal-4">
-        <div class="modal__dialog">
-            <div class="md-content">
-                <div class="logout-popup">
-                    <span>are you sure you want to logout </span>
-                    <div class="answer-div">
-                        <button class="logout-close">No</button>
-                        <a href="/" class="a_close">Yes</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="md-modal md-effect-1" id="modal-5">
-        <div class="modal__dialog">
-            <div class="md-content">
-                <div class="wallet-popup">
-                    <button class="md-close">
-                        <i class="icofont-close"></i>
+                    <button class="icon-btn" data-call="video" aria-label="Videollamada" title="Videollamada">
+                        <svg class="icon">
+                            <use href="/assets/images/icons.svg#i-video"></use>
+                        </svg>
                     </button>
-                    <div class="wallet-head">
-                        <h6>Billetera</h6>
-                        <span>Pago Qapp</span>
-                    </div>
-                    <div class="wallet-subico">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="sub-box">
-                                    <i class="icofont-diamond"></i>
-                                    <span>Balance: $304.06</span>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="sub-box">
-                                    <i class="icofont-card"></i>
-                                    <span>Tárjetas</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <ul class="payment-wallet">
-                        <li><a href="#"><i class="icofont-pay"></i>Pago rápido</a></li>
-                        <li><a href="#"><i class="icofont-bank-transfer"></i>Transferencia</a></li>
-                        <li><a href="#"><i class="icofont-bill"></i>Utilidades</a></li>
-                        <li><a href="#"><i class="icofont-space"></i>Especiales</a></li>
-                    </ul>
+                    <button class="icon-btn" data-action="search-chat" aria-label="Buscar en el chat" title="Buscar">
+                        <svg class="icon">
+                            <use href="/assets/images/icons.svg#i-search"></use>
+                        </svg>
+                    </button>
+                    <button class="icon-btn" data-action="toggle-info" aria-label="Información" title="Información">
+                        <svg class="icon">
+                            <use href="/assets/images/icons.svg#i-info"></use>
+                        </svg>
+                    </button>
                 </div>
+            </header>
+
+            <div class="chat-search" id="chatSearch" hidden>
+                <svg class="icon icon-sm">
+                    <use href="/assets/images/icons.svg#i-search"></use>
+                </svg>
+                <input type="search" id="chatSearchInput" placeholder="Buscar en la conversación…">
+                <span class="muted" id="chatSearchCount"></span>
+                <button class="icon-btn" data-action="search-chat" aria-label="Cerrar búsqueda">
+                    <svg class="icon icon-sm">
+                        <use href="/assets/images/icons.svg#i-x"></use>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="messages" id="messages" aria-live="polite"></div>
+
+            <footer class="composer" id="composer">
+                <div class="blocked-note" id="blockedNote" hidden>
+                    Bloqueaste a este contacto. <button data-action="block">Desbloquear</button>
+                </div>
+
+                <!-- Paneles emergentes -->
+                <div class="popover emoji-panel" id="emojiPanel" hidden></div>
+                <div class="popover sticker-panel" id="stickerPanel" hidden></div>
+                <div class="popover attach-menu" id="attachMenu" hidden>
+                    <button data-attach="image"><span class="tone-blue"><svg class="icon">
+                                <use href="/assets/images/icons.svg#i-image"></use>
+                            </svg></span>Foto</button>
+                    <button data-attach="file"><span class="tone-violet"><svg class="icon">
+                                <use href="/assets/images/icons.svg#i-file"></use>
+                            </svg></span>Documento</button>
+                    <button data-attach="camera"><span class="tone-pink"><svg class="icon">
+                                <use href="/assets/images/icons.svg#i-camera"></use>
+                            </svg></span>Cámara</button>
+                </div>
+
+                <form class="composer-bar" id="composerForm">
+                    <button type="button" class="icon-btn" data-popover="emojiPanel" aria-label="Emojis">
+                        <svg class="icon">
+                            <use href="/assets/images/icons.svg#i-smile"></use>
+                        </svg>
+                    </button>
+                    <button type="button" class="icon-btn" data-popover="attachMenu" aria-label="Adjuntar">
+                        <svg class="icon">
+                            <use href="/assets/images/icons.svg#i-paperclip"></use>
+                        </svg>
+                    </button>
+                    <textarea id="messageInput" rows="1" placeholder="Escribe un mensaje…"
+                        aria-label="Mensaje"></textarea>
+                    <button type="button" class="icon-btn" data-popover="stickerPanel" aria-label="Stickers">
+                        <svg class="icon">
+                            <use href="/assets/images/icons.svg#i-sticker"></use>
+                        </svg>
+                    </button>
+                    <button type="submit" class="send-btn" aria-label="Enviar">
+                        <svg class="icon">
+                            <use href="/assets/images/icons.svg#i-send"></use>
+                        </svg>
+                    </button>
+                </form>
+                <input type="file" id="fileInput" hidden>
+            </footer>
+        </main>
+
+        <!-- ============ Información del contacto ============ -->
+        <aside class="info" id="info" aria-label="Información del contacto">
+            <header class="info-head">
+                <h2>Información</h2>
+                <button class="icon-btn" data-action="toggle-info" aria-label="Cerrar">
+                    <svg class="icon">
+                        <use href="/assets/images/icons.svg#i-x"></use>
+                    </svg>
+                </button>
+            </header>
+            <div class="info-body">
+                <div class="info-profile">
+                    <span class="avatar avatar-lg" id="infoAvatar"><img src="" alt=""></span>
+                    <h3 id="infoName"></h3>
+                    <p class="muted" id="infoMeta"></p>
+                    <div class="info-actions">
+                        <button data-call="audio"><svg class="icon">
+                                <use href="/assets/images/icons.svg#i-phone"></use>
+                            </svg>Llamar</button>
+                        <button data-call="video"><svg class="icon">
+                                <use href="/assets/images/icons.svg#i-video"></use>
+                            </svg>Video</button>
+                        <button data-action="mute"><svg class="icon">
+                                <use href="/assets/images/icons.svg#i-bell" id="muteIcon"></use>
+                            </svg><span id="muteLabel">Silenciar</span></button>
+                        <button data-action="search-chat"><svg class="icon">
+                                <use href="/assets/images/icons.svg#i-search"></use>
+                            </svg>Buscar</button>
+                    </div>
+                </div>
+
+                <section class="info-section">
+                    <h4>Info</h4>
+                    <p id="infoBio"></p>
+                </section>
+
+                <section class="info-section" id="infoMembersSection">
+                    <h4>Miembros</h4>
+                    <ul class="member-list" id="infoMembers"></ul>
+                </section>
+
+                <section class="info-section">
+                    <h4>Archivos compartidos <span class="muted" id="mediaCount"></span></h4>
+                    <div class="media-grid" id="mediaGrid"></div>
+                </section>
+
+                <section class="info-section info-options">
+                    <button data-action="clear-chat"><svg class="icon">
+                            <use href="/assets/images/icons.svg#i-trash"></use>
+                        </svg>Vaciar chat</button>
+                    <button data-action="block" class="is-danger"><svg class="icon">
+                            <use href="/assets/images/icons.svg#i-ban"></use>
+                        </svg><span id="blockLabel">Bloquear</span></button>
+                </section>
+            </div>
+        </aside>
+        <div class="scrim" data-action="toggle-info"></div>
+    </div>
+
+    <!-- ============ Visor de estados ============ -->
+    <div class="story-viewer" id="storyViewer" hidden>
+        <div class="story-progress" id="storyProgress"></div>
+        <header class="story-head">
+            <img src="" alt="" id="storyAvatar">
+            <div><strong id="storyName"></strong><small id="storyTime"></small></div>
+            <button class="icon-btn" data-action="close-story" aria-label="Cerrar">
+                <svg class="icon">
+                    <use href="/assets/images/icons.svg#i-x"></use>
+                </svg>
+            </button>
+        </header>
+        <img class="story-media" id="storyMedia" src="" alt="">
+        <button class="story-nav prev" data-story="prev" aria-label="Anterior"></button>
+        <button class="story-nav next" data-story="next" aria-label="Siguiente"></button>
+        <form class="story-reply" id="storyReply">
+            <input type="text" placeholder="Responder…" aria-label="Responder al estado">
+            <button class="send-btn" aria-label="Enviar"><svg class="icon">
+                    <use href="/assets/images/icons.svg#i-send"></use>
+                </svg></button>
+        </form>
+    </div>
+
+    <!-- ============ Visor de imágenes ============ -->
+    <div class="modal lightbox" id="modal-lightbox">
+        <button class="icon-btn lightbox-close" data-close aria-label="Cerrar">
+            <svg class="icon">
+                <use href="/assets/images/icons.svg#i-x"></use>
+            </svg>
+        </button>
+        <img src="" alt="" id="lightboxImg">
+    </div>
+
+    <!-- ============ Llamada ============ -->
+    <div class="modal call-modal" id="modal-call">
+        <div class="call" id="callBox">
+            <div class="call-bg" id="callBg"></div>
+            <img class="call-video" src="/assets/images/stories/videocall.jpg" alt="">
+            <img class="call-self" src="" alt="" data-user="avatar">
+            <div class="call-info">
+                <span class="call-lock"><svg class="icon icon-sm">
+                        <use href="/assets/images/icons.svg#i-lock"></use>
+                    </svg>Cifrado de extremo a extremo</span>
+                <img class="call-avatar" id="callAvatar" src="" alt="">
+                <h2 id="callName"></h2>
+                <p id="callState">Llamando…</p>
+            </div>
+            <div class="call-controls">
+                <button class="call-btn" data-action="call-mute" aria-label="Silenciar micrófono">
+                    <svg class="icon">
+                        <use href="/assets/images/icons.svg#i-mic"></use>
+                    </svg>
+                </button>
+                <button class="call-btn" data-action="call-camera" aria-label="Cámara">
+                    <svg class="icon">
+                        <use href="/assets/images/icons.svg#i-video"></use>
+                    </svg>
+                </button>
+                <button class="call-btn is-end" data-action="call-end" aria-label="Colgar">
+                    <svg class="icon">
+                        <use href="/assets/images/icons.svg#i-phone-off"></use>
+                    </svg>
+                </button>
             </div>
         </div>
     </div>
 
-    <div class="md-modal md-effect-1" id="modal-6">
-        <div class="modal__dialog">
-            <div class="md-content">
-                <div class="porfile-popup">
-                    <button class="md-close">
-                        <i class="icofont-close"></i>
-                    </button>
-                    <div class="wallet-head">
-                        <h6>Perfil</h6>
-                        <span>Editar perfil</span>
-                    </div>
-                    <div class="profile-box">
-                        <div class="profile-head">
-                            <div class="avatar-upload">
-                                <div class="avatar-edit">
-                                    <input type="file" id="imageUpload1" accept=".png, .jpg, .jpeg" />
-                                    <label for="imageUpload1"></label>
-                                </div>
-                                <div class="avatar-preview">
-                                    <div id="imagePreview1"
-                                        style="background-image: url(/assets/images/avatars/avatar-female-1.jpg);">
-                                    </div>
-                                </div>
-                            </div>
-                            <span contenteditable>Sophia <i class="icofont-edit-alt"></i></span>
-                            <ul class="socials">
-                                <li><a class="facebook" href="#"><i class="icofont-facebook"></i></a></li>
-                                <li><a class="twitter" href="#"><i class="icofont-twitter"></i></a></li>
-                                <li><a class="instagram" href="#"><i class="icofont-instagram"></i></a>
-                                </li>
-                                <li><a class="reddit" href="#"><i class="icofont-reddit"></i></a></li>
-                            </ul>
-                        </div>
-                        <ul class="usr-info">
-                            <li>
-                                <span>Nombre de pila</span>
-                                <ins contenteditable>~Georg <i class="icofont-edit-alt"></i></ins>
-                            </li>
-                            <li>
-                                <span>Nombre de usuario:</span>
-                                <ins contenteditable>Sophia <i class="icofont-edit-alt"></i></ins>
-                            </li>
-                            <li>
-                                <span>Correo electrónico:</span>
-                                <ins contenteditable><a href="/cdn-cgi/l/email-protection" class="__cf_email__"
-                                        data-cfemail="f0b59d9d91b0919293de939f9d">[email&#160;protected]</a> <i
-                                        class="icofont-edit-alt"></i></ins>
-                            </li>
-                            <li>
-                                <span>Localizaión:</span>
-                                <ins contenteditable>Ontario, Canada <i class="icofont-edit-alt"></i></ins>
-                            </li>
-                            <li>
-                                <span>Fecha de nacimiento:</span>
-                                <ins contenteditable>02 Jan, 2000 <i class="icofont-edit-alt"></i></ins>
-                            </li>
-                        </ul>
-                        <a href="#" class="main-btn">Guardar actualización</a>
-                    </div>
-                </div>
+    <!-- ============ Perfil ============ -->
+    <div class="modal" id="modal-profile">
+        <div class="modal-dialog">
+            <div class="modal-head">
+                <h2>Mi perfil</h2>
+                <button class="icon-btn" data-close aria-label="Cerrar"><svg class="icon">
+                        <use href="/assets/images/icons.svg#i-x"></use>
+                    </svg></button>
             </div>
-        </div>
-    </div><!-- your profile popup -->
-
-    <div class="md-modal md-effect-1" id="modal-7">
-        <div class="modal__dialog">
-            <div class="md-content">
-                <div class="settings-popup">
-                    <button class="md-close">
-                        <i class="icofont-close"></i>
-                    </button>
-                    <div class="wallet-head">
-                        <h6>Configuración</h6>
-                        <span>Editar tu cuenta</span>
+            <form class="stack" id="profileForm">
+                <div class="avatar-upload">
+                    <div class="avatar-edit">
+                        <input type="file" id="imageUpload2" accept=".png, .jpg, .jpeg, .webp">
+                        <label for="imageUpload2" aria-label="Cambiar foto"><svg class="icon icon-sm">
+                                <use href="/assets/images/icons.svg#i-camera"></use>
+                            </svg></label>
                     </div>
-                    <div class="settings-box">
-                        <div class="about">
-                            <div class="d-flex flex-row mt-2">
-                                <ul class="nav nav-tabs nav-tabs--vertical nav-tabs--left">
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link" data-bs-toggle="tab"
-                                            data-bs-target="#gen-setting"><i class="fa fa-gear"></i>Configuración
-                                            general</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link active" data-bs-toggle="tab"
-                                            data-bs-target="#edit-profile"><i class="fa fa-pencil"></i>Editar perfil</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link" data-bs-toggle="tab" data-bs-target="#notifi"><i
-                                                class="fa fa-bell"></i>Notificaciones</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link" data-bs-toggle="tab" data-bs-target="#messages"><i
-                                                class="fa fa-comment"></i>Mensajes</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link" data-bs-toggle="tab" data-bs-target="#privacy"><i
-                                                class="fa fa-shield"></i>Privacidad & datos</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="#" class="nav-link" data-bs-toggle="tab" data-bs-target="#security"><i
-                                                class="fa fa-lock"></i>Seguridad</a>
-                                    </li>
-                                </ul>
-                                <div class="tab-content">
-                                    <div class="tab-pane fade" id="gen-setting">
-                                        <div class="set-title">
-                                            <h5>Configuración general</h5>
-                                            <span>
-                                                Configura tus preferencias de inicio de sesión, ayúdanos a personalizar
-                                                tu experiencia y realiza cambios importantes de cuenta aquí.
-                                            </span>
-                                        </div>
-                                        <div class="onoff-options ">
-                                            <form method="">
-                                                <div class="setting-row">
-                                                    <span>Sub usuarios</span>
-                                                    <p>Activa esto si quieres que la gente te siga</p>
-                                                    <input type="checkbox" id="switch00" />
-                                                    <label for="switch00" data-on-label="ON"
-                                                        data-off-label="OFF"></label>
-                                                </div>
-                                                <div class="setting-row">
-                                                    <span>Habilitar seguirme</span>
-                                                    <p>Activa esto si quieres que la gente te siga</p>
-                                                    <input type="checkbox" id="switch01" />
-                                                    <label for="switch01" data-on-label="ON"
-                                                        data-off-label="OFF"></label>
-                                                </div>
-                                                <div class="setting-row">
-                                                    <span>Enviar notificaciones</span>
-                                                    <p>Envíame correos de notificación cuando mis amigos den like,
-                                                        compartan o me envíen mensajes</p>
-                                                    <input type="checkbox" id="switch02" />
-                                                    <label for="switch02" data-on-label="ON"
-                                                        data-off-label="OFF"></label>
-                                                </div>
-                                                <div class="setting-row">
-                                                    <span>Mensajes de texto</span>
-                                                    <p>Envíame mensajes a mi teléfono celular</p>
-                                                    <input type="checkbox" id="switch03" />
-                                                    <label for="switch03" data-on-label="ON"
-                                                        data-off-label="OFF"></label>
-                                                </div>
-                                                <div class="setting-row">
-                                                    <span>Habilitar etiquetado</span>
-                                                    <p>Permite que mis amigos me etiqueten en sus publicaciones</p>
-                                                    <input type="checkbox" id="switch04" />
-                                                    <label for="switch04" data-on-label="ON"
-                                                        data-off-label="OFF"></label>
-                                                </div>
-                                                <div class="setting-row">
-                                                    <span>Habilitar sonido de notificación</span>
-                                                    <p>Escucharás un sonido de notificación cuando alguien te envíe un
-                                                        mensaje privado</p>
-                                                    <input type="checkbox" id="switch05" checked="" />
-                                                    <label for="switch05" data-on-label="ON"
-                                                        data-off-label="OFF"></label>
-                                                </div>
-
-                                                <div class="submit-btns">
-                                                    <button type="button" class="main-btn"
-                                                        data-ripple=""><span>Guardar</span></button>
-                                                    <button type="button" class="main-btn2"
-                                                        data-ripple=""><span>Cancelar</span></button>
-                                                </div>
-                                            </form>
-
-                                        </div>
-                                        <div class="account-delete">
-                                            <h5>Cambios de cuenta</h5>
-                                            <div>
-                                                <span>Elimina tu cuenta y datos</span>
-                                                <button type="button" class="main-btn"><span>Desactivar
-                                                        cuenta</span></button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- general setting -->
-                                    <div class="tab-pane fade show active" id="edit-profile">
-                                        <div class="set-title">
-                                            <h5>Editar perfil</h5>
-                                            <span>Las personas en Qapp te conocerán con la información de abajo</span>
-                                        </div>
-                                        <div class="setting-meta">
-                                            <div class="change-photo">
-                                                <div class="avatar-upload">
-                                                    <div class="avatar-edit">
-                                                        <input type="file" id="imageUpload2"
-                                                            accept=".png, .jpg, .jpeg" />
-                                                        <label for="imageUpload2"></label>
-                                                    </div>
-                                                    <div class="avatar-preview">
-                                                        <div id="imagePreview"
-                                                            style="background-image: url(/assets/images/avatars/avatar-female-1.jpg);">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="stg-form-area">
-                                            <form method="" class="c-form">
-                                                <div>
-                                                    <label>Nombre para mostrar</label>
-                                                    <input type="text" placeholder="Jack Carter">
-                                                </div>
-
-                                                <div class="uzer-nam">
-                                                    <label>Nombre de usuario</label>
-                                                    <span>www.Qapp.com/</span><input type="text"
-                                                        placeholder="jackcarter4023">
-                                                </div>
-                                                <div>
-                                                    <label>Correo electrónico</label>
-                                                    <input type="text" placeholder="abc@Qappmail.com">
-                                                </div>
-                                                <div>
-                                                    <label>Género</label>
-                                                    <div class="form-radio">
-                                                        <div class="radio">
-                                                            <label>
-                                                                <input type="radio" checked="checked" name="radio"><i
-                                                                    class="check-box"></i>Hombre
-                                                            </label>
-                                                        </div>
-                                                        <div class="radio">
-                                                            <label>
-                                                                <input type="radio" name="radio"><i
-                                                                    class="check-box"></i>Mujer
-                                                            </label>
-                                                        </div>
-                                                        <div class="radio">
-                                                            <label>
-                                                                <input type="radio" name="radio"><i
-                                                                    class="check-box"></i>Personalizado
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <label>Sobre tu perfil</label>
-                                                    <textarea rows="3" placeholder="Escribe algo sobre ti"></textarea>
-                                                </div>
-
-                                                <div>
-                                                    <label>Ubicación</label>
-                                                    <input type="text" placeholder="Ej. San Francisco, CA">
-                                                </div>
-                                                <div>
-                                                    <label>País</label>
-                                                    <select>
-                                                        <option value="country">País</option>
-                                                        <option value="AFG">Afghanistan</option>
-                                                        <option value="ALA">Ƭand Islands</option>
-                                                        <option value="ALB">Albania</option>
-                                                        <option value="DZA">Algeria</option>
-                                                        <option value="ASM">American Samoa</option>
-                                                        <option value="AND">Andorra</option>
-                                                        <option value="AGO">Angola</option>
-                                                        <option value="AIA">Anguilla</option>
-
-                                                        <option value="ATA">Antarctica</option>
-                                                        <option value="ATG">Antigua and Barbuda</option>
-                                                        <option value="ARG">Argentina</option>
-                                                        <option value="ARM">Armenia</option>
-                                                        <option value="ABW">Aruba</option>
-                                                        <option value="AUS">Australia</option>
-                                                        <option value="AUT">Austria</option>
-                                                        <option value="AZE">Azerbaijan</option>
-                                                        <option value="BHS">Bahamas</option>
-                                                        <option value="BHR">Bahrain</option>
-                                                        <option value="BGD">Bangladesh</option>
-                                                        <option value="BRB">Barbados</option>
-                                                        <option value="BLR">Belarus</option>
-                                                        <option value="BEL">Belgium</option>
-                                                        <option value="BLZ">Belize</option>
-                                                        <option value="BEN">Benin</option>
-                                                        <option value="BMU">Bermuda</option>
-                                                        <option value="BTN">Bhutan</option>
-                                                        <option value="BOL">Bolivia, Plurinational State of</option>
-                                                        <option value="BES">Bonaire, Sint Eustatius and Saba
-                                                        </option>
-                                                        <option value="BIH">Bosnia and Herzegovina</option>
-                                                        <option value="BWA">Botswana</option>
-                                                        <option value="BVT">Bouvet Island</option>
-                                                        <option value="BRA">Brazil</option>
-                                                        <option value="IOT">British Indian Ocean Territory</option>
-                                                        <option value="BRN">Brunei Darussalam</option>
-                                                        <option value="BGR">Bulgaria</option>
-                                                        <option value="BFA">Burkina Faso</option>
-                                                        <option value="BDI">Burundi</option>
-                                                        <option value="KHM">Cambodia</option>
-                                                        <option value="CMR">Cameroon</option>
-                                                        <option value="CAN">Canada</option>
-                                                        <option value="CPV">Cape Verde</option>
-                                                        <option value="CYM">Cayman Islands</option>
-                                                        <option value="CAF">Central African Republic</option>
-                                                        <option value="TCD">Chad</option>
-                                                        <option value="CHL">Chile</option>
-                                                        <option value="CHN">China</option>
-                                                        <option value="CXR">Christmas Island</option>
-                                                        <option value="CCK">Cocos (Keeling) Islands</option>
-                                                        <option value="COL">Colombia</option>
-                                                        <option value="COM">Comoros</option>
-                                                        <option value="COG">Congo</option>
-                                                        <option value="COD">Congo, the Democratic Republic of the
-                                                        </option>
-                                                        <option value="COK">Cook Islands</option>
-                                                        <option value="CRI">Costa Rica</option>
-                                                        <option value="CIV">C𴥠d'Ivoire</option>
-                                                        <option value="HRV">Croatia</option>
-                                                        <option value="CUB">Cuba</option>
-                                                        <option value="CUW">Cura袯</option>
-                                                        <option value="CYP">Cyprus</option>
-                                                        <option value="CZE">Czech Republic</option>
-                                                        <option value="DNK">Denmark</option>
-                                                        <option value="DJI">Djibouti</option>
-                                                        <option value="DMA">Dominica</option>
-                                                        <option value="DOM">Dominican Republic</option>
-                                                        <option value="ECU">Ecuador</option>
-                                                        <option value="EGY">Egypt</option>
-                                                        <option value="SLV">El Salvador</option>
-                                                        <option value="GNQ">Equatorial Guinea</option>
-                                                        <option value="ERI">Eritrea</option>
-                                                        <option value="EST">Estonia</option>
-                                                        <option value="ETH">Ethiopia</option>
-                                                        <option value="FLK">Falkland Islands (Malvinas)</option>
-                                                        <option value="FRO">Faroe Islands</option>
-                                                        <option value="FJI">Fiji</option>
-                                                        <option value="FIN">Finland</option>
-                                                        <option value="FRA">France</option>
-                                                        <option value="GUF">French Guiana</option>
-                                                        <option value="PYF">French Polynesia</option>
-                                                        <option value="ATF">French Southern Territories</option>
-                                                        <option value="GAB">Gabon</option>
-                                                        <option value="GMB">Gambia</option>
-                                                        <option value="GEO">Georgia</option>
-                                                        <option value="DEU">Germany</option>
-                                                        <option value="GHA">Ghana</option>
-                                                        <option value="GIB">Gibraltar</option>
-                                                        <option value="GRC">Greece</option>
-                                                        <option value="GRL">Greenland</option>
-                                                        <option value="GRD">Grenada</option>
-                                                        <option value="GLP">Guadeloupe</option>
-                                                        <option value="GUM">Guam</option>
-                                                        <option value="GTM">Guatemala</option>
-                                                        <option value="GGY">Guernsey</option>
-                                                        <option value="GIN">Guinea</option>
-                                                        <option value="GNB">Guinea-Bissau</option>
-                                                        <option value="GUY">Guyana</option>
-                                                        <option value="HTI">Haiti</option>
-                                                        <option value="HMD">Heard Island and McDonald Islands
-                                                        </option>
-                                                        <option value="VAT">Holy See (Vatican City State)</option>
-                                                        <option value="HND">Honduras</option>
-                                                        <option value="HKG">Hong Kong</option>
-                                                        <option value="HUN">Hungary</option>
-                                                        <option value="ISL">Iceland</option>
-                                                        <option value="IND">India</option>
-                                                        <option value="IDN">Indonesia</option>
-                                                        <option value="IRN">Iran, Islamic Republic of</option>
-                                                        <option value="IRQ">Iraq</option>
-                                                        <option value="IRL">Ireland</option>
-                                                        <option value="IMN">Isle of Man</option>
-                                                        <option value="ISR">Israel</option>
-                                                        <option value="ITA">Italy</option>
-                                                        <option value="JAM">Jamaica</option>
-                                                        <option value="JPN">Japan</option>
-                                                        <option value="JEY">Jersey</option>
-                                                        <option value="JOR">Jordan</option>
-                                                        <option value="KAZ">Kazakhstan</option>
-                                                        <option value="KEN">Kenya</option>
-                                                        <option value="KIR">Kiribati</option>
-                                                        <option value="PRK">Korea, Democratic People's Republic of
-                                                        </option>
-                                                        <option value="KOR">Korea, Republic of</option>
-                                                        <option value="KWT">Kuwait</option>
-                                                        <option value="KGZ">Kyrgyzstan</option>
-                                                        <option value="LAO">Lao People's Democratic Republic
-                                                        </option>
-                                                        <option value="LVA">Latvia</option>
-                                                        <option value="LBN">Lebanon</option>
-                                                        <option value="LSO">Lesotho</option>
-                                                        <option value="LBR">Liberia</option>
-                                                        <option value="LBY">Libya</option>
-                                                        <option value="LIE">Liechtenstein</option>
-                                                        <option value="LTU">Lithuania</option>
-                                                        <option value="LUX">Luxembourg</option>
-                                                        <option value="MAC">Macao</option>
-                                                        <option value="MKD">Macedonia, the former Yugoslav Republic
-                                                            of</option>
-                                                        <option value="MDG">Madagascar</option>
-                                                        <option value="MWI">Malawi</option>
-                                                        <option value="MYS">Malaysia</option>
-                                                        <option value="MDV">Maldives</option>
-                                                        <option value="MLI">Mali</option>
-                                                        <option value="MLT">Malta</option>
-                                                        <option value="MHL">Marshall Islands</option>
-                                                        <option value="MTQ">Martinique</option>
-                                                        <option value="MRT">Mauritania</option>
-                                                        <option value="MUS">Mauritius</option>
-                                                        <option value="MYT">Mayotte</option>
-                                                        <option value="MEX">Mexico</option>
-                                                        <option value="FSM">Micronesia, Federated States of</option>
-                                                        <option value="MDA">Moldova, Republic of</option>
-                                                        <option value="MCO">Monaco</option>
-                                                        <option value="MNG">Mongolia</option>
-                                                        <option value="MNE">Montenegro</option>
-                                                        <option value="MSR">Montserrat</option>
-                                                        <option value="MAR">Morocco</option>
-                                                        <option value="MOZ">Mozambique</option>
-                                                        <option value="MMR">Myanmar</option>
-                                                        <option value="NAM">Namibia</option>
-                                                        <option value="NRU">Nauru</option>
-                                                        <option value="NPL">Nepal</option>
-                                                        <option value="NLD">Netherlands</option>
-                                                        <option value="NCL">New Caledonia</option>
-                                                        <option value="NZL">New Zealand</option>
-                                                        <option value="NIC">Nicaragua</option>
-                                                        <option value="NER">Niger</option>
-                                                        <option value="NGA">Nigeria</option>
-                                                        <option value="NIU">Niue</option>
-                                                        <option value="NFK">Norfolk Island</option>
-                                                        <option value="MNP">Northern Mariana Islands</option>
-                                                        <option value="NOR">Norway</option>
-                                                        <option value="OMN">Oman</option>
-                                                        <option value="PAK">Pakistan</option>
-                                                        <option value="PLW">Palau</option>
-                                                        <option value="PSE">Palestinian Territory, Occupied</option>
-                                                        <option value="PAN">Panama</option>
-                                                        <option value="PNG">Papua New Guinea</option>
-                                                        <option value="PRY">Paraguay</option>
-                                                        <option value="PER">Peru</option>
-                                                        <option value="PHL">Philippines</option>
-                                                        <option value="PCN">Pitcairn</option>
-                                                        <option value="POL">Poland</option>
-                                                        <option value="PRT">Portugal</option>
-                                                        <option value="PRI">Puerto Rico</option>
-                                                        <option value="QAT">Qatar</option>
-                                                        <option value="REU">R궮ion</option>
-                                                        <option value="ROU">Romania</option>
-                                                        <option value="RUS">Russian Federation</option>
-                                                        <option value="RWA">Rwanda</option>
-                                                        <option value="BLM">Saint Barthꭥmy</option>
-                                                        <option value="SHN">Saint Helena, Ascension and Tristan da
-                                                            Cunha</option>
-                                                        <option value="KNA">Saint Kitts and Nevis</option>
-                                                        <option value="LCA">Saint Lucia</option>
-                                                        <option value="MAF">Saint Martin (French part)</option>
-                                                        <option value="SPM">Saint Pierre and Miquelon</option>
-                                                        <option value="VCT">Saint Vincent and the Grenadines
-                                                        </option>
-                                                        <option value="WSM">Samoa</option>
-                                                        <option value="SMR">San Marino</option>
-                                                        <option value="STP">Sao Tome and Principe</option>
-                                                        <option value="SAU">Saudi Arabia</option>
-                                                        <option value="SEN">Senegal</option>
-                                                        <option value="SRB">Serbia</option>
-                                                        <option value="SYC">Seychelles</option>
-                                                        <option value="SLE">Sierra Leone</option>
-                                                        <option value="SGP">Singapore</option>
-                                                        <option value="SXM">Sint Maarten (Dutch part)</option>
-                                                        <option value="SVK">Slovakia</option>
-                                                        <option value="SVN">Slovenia</option>
-                                                        <option value="SLB">Solomon Islands</option>
-                                                        <option value="SOM">Somalia</option>
-                                                        <option value="ZAF">South Africa</option>
-                                                        <option value="SGS">South Georgia and the South Sandwich
-                                                            Islands</option>
-                                                        <option value="SSD">South Sudan</option>
-                                                        <option value="ESP">Spain</option>
-                                                        <option value="LKA">Sri Lanka</option>
-                                                        <option value="SDN">Sudan</option>
-                                                        <option value="SUR">Suriname</option>
-                                                        <option value="SJM">Svalbard and Jan Mayen</option>
-                                                        <option value="SWZ">Swaziland</option>
-                                                        <option value="SWE">Sweden</option>
-                                                        <option value="CHE">Switzerland</option>
-                                                        <option value="SYR">Syrian Arab Republic</option>
-                                                        <option value="TWN">Taiwan, Province of China</option>
-                                                        <option value="TJK">Tajikistan</option>
-                                                        <option value="TZA">Tanzania, United Republic of</option>
-                                                        <option value="THA">Thailand</option>
-                                                        <option value="TLS">Timor-Leste</option>
-                                                        <option value="TGO">Togo</option>
-                                                        <option value="TKL">Tokelau</option>
-                                                        <option value="TON">Tonga</option>
-                                                        <option value="TTO">Trinidad and Tobago</option>
-                                                        <option value="TUN">Tunisia</option>
-                                                        <option value="TUR">Turkey</option>
-                                                        <option value="TKM">Turkmenistan</option>
-                                                        <option value="TCA">Turks and Caicos Islands</option>
-                                                        <option value="TUV">Tuvalu</option>
-                                                        <option value="UGA">Uganda</option>
-                                                        <option value="UKR">Ukraine</option>
-                                                        <option value="ARE">United Arab Emirates</option>
-                                                        <option value="GBR">United Kingdom</option>
-                                                        <option value="USA" selected>United States</option>
-                                                        <option value="UMI">United States Minor Outlying Islands
-                                                        </option>
-                                                        <option value="URY">Uruguay</option>
-                                                        <option value="UZB">Uzbekistan</option>
-                                                        <option value="VUT">Vanuatu</option>
-                                                        <option value="VEN">Venezuela, Bolivarian Republic of
-                                                        </option>
-                                                        <option value="VNM">Viet Nam</option>
-                                                        <option value="VGB">Virgin Islands, British</option>
-                                                        <option value="VIR">Virgin Islands, U.S.</option>
-                                                        <option value="WLF">Wallis and Futuna</option>
-                                                        <option value="ESH">Western Sahara</option>
-                                                        <option value="YEM">Yemen</option>
-                                                        <option value="ZMB">Zambia</option>
-                                                        <option value="ZWE">Zimbabwe</option>
-                                                    </select>
-                                                </div>
-                                                <div>
-                                                    <button class="main-btn" type="submit"
-                                                        data-ripple="">Cancelar</button>
-                                                    <button class="main-btn2" type="submit"
-                                                        data-ripple="">Guardar</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-
-                                    <!-- edit profile -->
-                                    <div class="tab-pane fade" id="notifi" role="tabpanel">
-                                        <div class="set-title">
-                                            <h5>Configuración de notificaciones</h5>
-                                            <span>Selecciona las notificaciones push y por correo que deseas
-                                                recibir.</span>
-                                        </div>
-                                        <div class="notifi-seting">
-                                            <div class="form-radio">
-                                                <div class="radio">
-                                                    <label>
-                                                        <input type="radio" checked="checked" name="radio"><i
-                                                            class="check-box"></i>
-                                                        Envíame correos sobre mi actividad excepto aquellos de los que
-                                                        me haya dado de baja.
-                                                    </label>
-                                                </div>
-                                                <div class="radio">
-                                                    <label>
-                                                        <input type="radio" name="radio"><i class="check-box"></i>
-                                                        Solo envíame anuncios de servicios necesarios.
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="set-title">
-                                                <h6>Me gustaría recibir correos y actualizaciones de Qapp sobre</h6>
-                                            </div>
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
-                                                    Siempre anuncios generales, actualizaciones, publicaciones y videos.
-                                                </label>
-                                                <label>
-                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
-                                                    Consejos personalizados para mi página.
-                                                </label>
-                                                <label>
-                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
-                                                    Anuncios y recomendaciones.
-                                                </label>
-                                                <p><a href="#">Más información</a> sobre correos de Qapp</p>
-                                            </div>
-                                            <div class="set-title">
-                                                <h6>Otras notificaciones</h6>
-                                            </div>
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
-                                                    Videos recomendados.
-                                                </label>
-                                                <label>
-                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
-                                                    Actividad en mi página o canal.
-                                                </label>
-                                                <label>
-                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
-                                                    Actividad en mis comentarios.
-                                                </label>
-                                                <label>
-                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
-                                                    Respuestas a comentarios.
-                                                </label>
-                                                <label>
-                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
-                                                    Menciones.
-                                                </label>
-                                            </div>
-                                            <div class="set-title">
-                                                <h6>Preferencia de idioma</h6>
-                                                <span>Selecciona el idioma de tus correos</span>
-                                            </div>
-                                            <select class="select">
-                                                <option value="">Inglés (US)</option>
-                                                <option value="">Inglés (UK)</option>
-                                                <option value="">Ruso</option>
-                                            </select>
-                                            <p>
-                                                Siempre recibirás las notificaciones que hayas activado de forma
-                                                individual
-                                                <a href="#">Administrar todas las suscripciones</a>
-                                            </p>
-                                        </div>
-                                    </div><!-- notification -->
-                                    <div class="tab-pane fade" id="messages" role="tabpanel">
-                                        <div class="set-title">
-                                            <h5>Configuración de mensajes</h5>
-                                            <span>Configura tus preferencias de inicio de sesión, ayúdanos a
-                                                personalizar tu experiencia y realiza cambios importantes de cuenta
-                                                aquí.</span>
-                                        </div>
-                                        <div class="mesg-seting">
-
-                                            <div class="set-title">
-                                                <h6>Me gustaría recibir correos y actualizaciones de Qapp sobre</h6>
-                                            </div>
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
-                                                    Siempre anuncios generales, actualizaciones, publicaciones y videos.
-                                                </label>
-                                                <label>
-                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
-                                                    Consejos personalizados para mi página.
-                                                </label>
-                                                <label>
-                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
-                                                    Anuncios y recomendaciones.
-                                                </label>
-                                                <p><a href="#">Más información</a> sobre correos de Qapp</p>
-                                            </div>
-                                            <div class="set-title">
-                                                <h6>Otros mensajes</h6>
-                                            </div>
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
-                                                    De videos recomendados.
-                                                </label>
-                                                <label>
-                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
-                                                    Mensajes por actividad en mi página o canal.
-                                                </label>
-                                                <label>
-                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
-                                                    Mensajes sobre actividad en mis comentarios.
-                                                </label>
-                                                <label>
-                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
-                                                    Respuestas a comentarios.
-                                                </label>
-                                                <label>
-                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
-                                                    Menciones.
-                                                </label>
-                                            </div>
-                                            <div class="set-title">
-                                                <h6>Preferencia de idioma</h6>
-                                                <span>Selecciona el idioma de tus mensajes</span>
-                                            </div>
-                                            <select class="select">
-                                                <option value="">Inglés (US)</option>
-                                                <option value="">Inglés (UK)</option>
-                                                <option value="">Ruso</option>
-                                            </select>
-                                            <p>
-                                                Siempre recibirás las notificaciones que hayas activado de forma
-                                                individual
-                                                <a href="#">Administrar todas las suscripciones</a>
-                                            </p>
-                                        </div>
-
-                                    </div><!-- messages -->
-                                    <div class="tab-pane fade" id="privacy" role="tabpanel">
-                                        <div class="set-title">
-                                            <h5>Privacidad y datos</h5>
-                                            <span>Decide si tu perfil será ocultado de los motores de búsqueda y qué
-                                                tipo de datos quieres usar para mejorar las recomendaciones y anuncios
-                                                que ves <a href="#">Más información</a></span>
-                                        </div>
-                                        <div class="onoff-options ">
-                                            <form method="">
-                                                <div class="setting-row">
-                                                    <span>Buscar privacidad</span>
-                                                    <p>Ocultar tu perfil de motores de búsqueda (Ej. Google) <a
-                                                            href="#">Más información</a>
-                                                    </p>
-                                                    <input type="checkbox" id="switch0001" />
-                                                    <label for="switch0001" data-on-label="ON"
-                                                        data-off-label="OFF"></label>
-                                                </div>
-                                                <div class="set-title">
-                                                    <h5>Personalización</h5>
-                                                </div>
-                                                <div class="setting-row">
-                                                    <span>Buscar privacidad</span>
-                                                    <p>Usar los sitios que visitas para mejorar las recomendaciones y
-                                                        anuncios que ves. <a href="#">Más información</a>
-                                                    </p>
-                                                    <input type="checkbox" id="switch0002" />
-                                                    <label for="switch0002" data-on-label="ON"
-                                                        data-off-label="OFF"></label>
-                                                </div>
-                                                <div class="setting-row">
-                                                    <span>Buscar privacidad</span>
-                                                    <p>Usar información de nuestros socios para mejorar los anuncios que
-                                                        ves <a href="#">Más información</a>
-                                                    </p>
-                                                    <input type="checkbox" id="switch0003" />
-                                                    <label for="switch0003" data-on-label="ON"
-                                                        data-off-label="OFF"></label>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div><!-- privacy -->
-                                    <div class="tab-pane fade" id="security" role="tabpanel">
-                                        <div class="set-title">
-                                            <h5>Configuración de seguridad</h5>
-                                            <span>Activa la autenticación de dos factores y revisa tu lista de
-                                                dispositivos conectados para mantener segura tu cuenta y publicaciones
-                                                <a href="#">Más información</a>.</span>
-                                        </div>
-                                        <div class="seting-box">
-                                            <p>Para activar la autenticación en dos pasos, debes <a href="#">Confirmar
-                                                    tu correo</a> y <a href="#">Configurar una contraseña</a></p>
-                                            <div class="set-title">
-                                                <h5>Dispositivos conectados</h5>
-                                            </div>
-                                            <p>Esta es una lista de dispositivos que han iniciado sesión en tu cuenta.
-                                                Revoca cualquier sesión que no reconozcas. <a href="#">Ocultar
-                                                    sesiones</a></p>
-                                            <span>Último acceso</span>
-                                            <p>30 de agosto de 2026 2:00PM</p>
-                                            <span>Tipo de dispositivo</span>
-                                            <p>Chrome en Windows 11</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="avatar-preview">
+                        <div id="profilePreview"></div>
                     </div>
                 </div>
+                <div class="field">
+                    <label class="label" for="pfName">Nombre</label>
+                    <input class="input" id="pfName" name="name" required>
+                </div>
+                <div class="field">
+                    <label class="label" for="pfUsername">Usuario</label>
+                    <input class="input" id="pfUsername" name="username">
+                </div>
+                <div class="field">
+                    <label class="label" for="pfPhone">Teléfono</label>
+                    <input class="input" id="pfPhone" name="phone" type="tel">
+                </div>
+                <div class="field">
+                    <label class="label" for="pfBio">Info</label>
+                    <input class="input" id="pfBio" name="bio" maxlength="80">
+                </div>
+                <button class="btn btn-primary btn-block" type="submit">Guardar cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============ Ajustes ============ -->
+    <div class="modal" id="modal-settings">
+        <div class="modal-dialog">
+            <div class="modal-head">
+                <h2>Ajustes</h2>
+                <button class="icon-btn" data-close aria-label="Cerrar"><svg class="icon">
+                        <use href="/assets/images/icons.svg#i-x"></use>
+                    </svg></button>
+            </div>
+            <div class="settings">
+                <h4>General</h4>
+                <label class="setting-row">
+                    <span><strong>Modo oscuro</strong><small>Tema oscuro para toda la app</small></span>
+                    <span class="switch"><input type="checkbox" id="darkSwitch"><span></span></span>
+                </label>
+                <label class="setting-row">
+                    <span><strong>Enviar con Enter</strong><small>Shift + Enter para salto de línea</small></span>
+                    <span class="switch"><input type="checkbox" id="enterSwitch" checked><span></span></span>
+                </label>
+                <h4>Notificaciones</h4>
+                <label class="setting-row">
+                    <span><strong>Sonidos</strong><small>Sonido al recibir mensajes</small></span>
+                    <span class="switch"><input type="checkbox" checked><span></span></span>
+                </label>
+                <label class="setting-row">
+                    <span><strong>Vista previa</strong><small>Mostrar el texto del mensaje</small></span>
+                    <span class="switch"><input type="checkbox" checked><span></span></span>
+                </label>
+                <h4>Privacidad</h4>
+                <label class="setting-row">
+                    <span><strong>Confirmaciones de lectura</strong><small>Los demás verán cuando lees sus
+                            mensajes</small></span>
+                    <span class="switch"><input type="checkbox" checked><span></span></span>
+                </label>
+                <label class="setting-row">
+                    <span><strong>Última conexión</strong><small>Mostrar cuándo estuviste en línea</small></span>
+                    <span class="switch"><input type="checkbox"><span></span></span>
+                </label>
             </div>
         </div>
     </div>
 
-    <div class="md-modal md-effect-1" id="modal-8">
-        <div class="modal__dialog">
-            <div class="md-content">
-                <div class="group-popup">
-                    <button class="md-close">
-                        <i class="icofont-close"></i>
-                    </button>
-                    <div class="wallet-head">
-                        <h6>Crear Nuevo Grupo</h6>
-                        <span>Qapp Chat de Grupo</span>
+    <!-- ============ Nuevo grupo ============ -->
+    <div class="modal" id="modal-group">
+        <div class="modal-dialog">
+            <div class="modal-head">
+                <h2>Nuevo grupo</h2>
+                <button class="icon-btn" data-close aria-label="Cerrar"><svg class="icon">
+                        <use href="/assets/images/icons.svg#i-x"></use>
+                    </svg></button>
+            </div>
+            <form class="stack" id="groupForm">
+                <div class="avatar-upload">
+                    <div class="avatar-edit">
+                        <input type="file" id="imageUpload3" accept=".png, .jpg, .jpeg, .webp">
+                        <label for="imageUpload3" aria-label="Foto del grupo"><svg class="icon icon-sm">
+                                <use href="/assets/images/icons.svg#i-camera"></use>
+                            </svg></label>
                     </div>
-                    <div class="group-create">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <form method="" class="c-form">
-                                    <div>
-                                        <label>Nombre del Grupo</label>
-                                        <input type="text" placeholder="Escribe aquí el nombre del grupo">
-                                    </div>
-                                    <div class="form-radio">
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" checked="checked" name="group">
-                                                <i class="check-box"></i>Grupo Privado </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label>
-                                                <input type="radio" checked="checked" name="group">
-                                                <i class="check-box"></i>Grupo Público </label>
-                                        </div>
-                                    </div>
-                                    <div class="avatar-upload">
-                                        <div class="avatar-edit">
-                                            <input type="file" id="imageUpload" accept=".png, .jpg, .jpeg" />
-                                            <label for="imageUpload"></label>
-                                        </div>
-                                        <div class="avatar-preview">
-                                            <div id="imgprew"
-                                                style="background-image: url(/assets/images/avatars/avatar-female-1.jpg);">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="search-people">
-                                    <form method="" class="c-form">
-                                        <label>Buscar personas</label>
-                                        <input type="text" placeholder="Buscar">
-                                        <button class="searchbtn" type="submit"><i
-                                                class="icofont-search-1"></i></button>
-                                    </form>
-                                    <ul class="public-list">
-                                        <li>
-                                            <figure><span class="status online"></span><img
-                                                    src="/assets/images/avatars/friend-avatar.jpg" alt=""></figure>
-                                            <div class="user-meta">
-                                                <span>Bob Frank</span>
-                                                <i>en línea</i>
-                                            </div>
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
-                                                </label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <figure><span class="status online"></span><img
-                                                    src="/assets/images/avatars/friend-avatar2.jpg" alt=""></figure>
-                                            <div class="user-meta">
-                                                <span>Sarah K.</span>
-                                                <i>en línea</i>
-                                            </div>
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
-                                                </label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <figure><span class="status offline"></span><img
-                                                    src="/assets/images/avatars/friend-avatar3.jpg" alt=""></figure>
-                                            <div class="user-meta">
-                                                <span>Andrew</span>
-                                                <i>fuera de línea</i>
-                                            </div>
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
-                                                </label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <figure><span class="status away"></span><img
-                                                    src="/assets/images/avatars/friend-avatar4.jpg" alt=""></figure>
-                                            <div class="user-meta">
-                                                <span>Diana Will</span>
-                                                <i>ausente</i>
-                                            </div>
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" checked="checked"><i class="check-box"></i>
-                                                </label>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <button class="main-btn" type="submit">Crear Grupo</button>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="avatar-preview">
+                        <div style="background-image: url(/assets/images/avatars/friend-avatar12.jpg);"></div>
                     </div>
                 </div>
+                <div class="field">
+                    <label class="label" for="groupName">Nombre del grupo</label>
+                    <input class="input" id="groupName" name="name" placeholder="Ej. Viaje a la playa 🏖️" required>
+                </div>
+                <div class="field">
+                    <span class="label">Miembros <span class="muted" id="memberCount"></span></span>
+                    <div class="member-picker" id="memberPicker"></div>
+                </div>
+                <button class="btn btn-primary btn-block" type="submit">Crear grupo</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============ Yabla en el móvil ============ -->
+    <div class="modal" id="modal-qr">
+        <div class="modal-dialog">
+            <div class="modal-head">
+                <h2>Yabla en tu móvil</h2>
+                <button class="icon-btn" data-close aria-label="Cerrar"><svg class="icon">
+                        <use href="/assets/images/icons.svg#i-x"></use>
+                    </svg></button>
+            </div>
+            <div class="qr">
+                <img src="/assets/images/ui/qrcode.svg" alt="Código QR para iniciar sesión">
+                <ol>
+                    <li>Abre Yabla en tu teléfono.</li>
+                    <li>Toca <strong>Menú</strong> → <strong>Dispositivos vinculados</strong>.</li>
+                    <li>Apunta la cámara a este código.</li>
+                </ol>
             </div>
         </div>
     </div>
-    <div class="md-overlay"></div>
 
-    <!-- Librerías -->
-    <script src="/assets/js/vendor/jquery.js"></script>
-    <script src="/assets/js/vendor/bootstrap.js"></script>
-    <script src="/assets/js/vendor/plyr.js"></script>
-    <script src="/assets/js/vendor/easytimer.js"></script>
-    <script src="/assets/js/vendor/chosen.jquery.js"></script>
-    <script src="/assets/js/vendor/emojionearea.js"></script>
-    <script src="/assets/js/vendor/jquery.mCustomScrollbar.js"></script>
-    <script src="/assets/js/vendor/TimelineMax.js"></script>
-    <script src="/assets/js/vendor/jquery-stories.js"></script>
-    <script src="/assets/js/vendor/lightgallery-all.min.js"></script>
-    <script src="/assets/js/vendor/lightgallery.mousewheel.min.js"></script>
-    <script src="/assets/js/vendor/classie.js"></script>
-    <script src="/assets/js/vendor/ripple.js"></script>
+    <!-- ============ Billetera ============ -->
+    <div class="modal" id="modal-wallet">
+        <div class="modal-dialog">
+            <div class="modal-head">
+                <h2>Billetera</h2>
+                <button class="icon-btn" data-close aria-label="Cerrar"><svg class="icon">
+                        <use href="/assets/images/icons.svg#i-x"></use>
+                    </svg></button>
+            </div>
+            <div class="wallet-card">
+                <small>Saldo disponible</small>
+                <strong id="walletBalance"></strong>
+                <span>Yabla Pay</span>
+            </div>
+            <div class="wallet-actions">
+                <button><span><svg class="icon">
+                            <use href="/assets/images/icons.svg#i-transfer"></use>
+                        </svg></span>Enviar</button>
+                <button><span><svg class="icon">
+                            <use href="/assets/images/icons.svg#i-zap"></use>
+                        </svg></span>Pago rápido</button>
+                <button><span><svg class="icon">
+                            <use href="/assets/images/icons.svg#i-card"></use>
+                        </svg></span>Tarjetas</button>
+                <button><span><svg class="icon">
+                            <use href="/assets/images/icons.svg#i-gift"></use>
+                        </svg></span>Regalos</button>
+            </div>
+            <h4 class="list-title">Actividad reciente</h4>
+            <ul class="wallet-activity" id="walletActivity"></ul>
+        </div>
+    </div>
 
-    <!-- App -->
-    <script src="/assets/js/app/image-upload.js"></script>
-    <script src="/assets/js/app/modal-popup.js"></script>
-    <script src="/assets/js/app/main.js"></script>
+    <!-- ============ Cerrar sesión ============ -->
+    <div class="modal" id="modal-logout">
+        <div class="modal-dialog confirm">
+            <span class="confirm-icon"><svg class="icon">
+                    <use href="/assets/images/icons.svg#i-logout"></use>
+                </svg></span>
+            <h2>¿Cerrar sesión?</h2>
+            <p class="muted">Tendrás que volver a iniciar sesión para ver tus chats.</p>
+            <div class="confirm-actions">
+                <button class="btn btn-ghost" data-close>Cancelar</button>
+                <button class="btn btn-danger" data-action="logout">Cerrar sesión</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/assets/js/image-upload.js"></script>
+    <script src="/assets/js/data.js"></script>
+    <script src="/assets/js/dashboard.js"></script>
 </body>
 
 </html>
