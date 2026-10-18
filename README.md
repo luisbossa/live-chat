@@ -142,11 +142,58 @@ Todas las rutas `/api/*` (salvo la de disponibilidad) requieren sesión y respon
 | `story:new`, `story:viewed`, `story:deleted`, `wallet:update`, `user:update` | `call:signal` (SDP e ICE), `call:end` |
 | `call:incoming`, `call:accepted`, `call:signal`, `call:ended` | |
 
+## Despliegue
+
+La app necesita un **servidor Node siempre encendido** (Socket.IO mantiene conexiones abiertas) y un **disco persistente** (SQLite y archivos subidos). Por eso **no funciona en Vercel, Netlify ni otras plataformas serverless**. Está preparada para Render y Railway.
+
+### Render (recomendado)
+
+El archivo [`render.yaml`](render.yaml) describe el servicio, el disco y las variables.
+
+1. Sube el repositorio a GitHub.
+2. En [Render](https://dashboard.render.com): **New → Blueprint** y elige el repositorio.
+3. Confirma. Render crea el servicio web (plan Starter, necesario para el disco), un disco de 1 GB en `/var/data` y genera `SESSION_SECRET`.
+4. Al terminar, abre la URL `https://<nombre>.onrender.com`. Con `SEED_DEMO=true` ya podrás entrar con `alex@yabla.app` / `demo1234`.
+
+### Railway
+
+El archivo [`railway.json`](railway.json) define cómo se construye y arranca.
+
+1. En [Railway](https://railway.com): **New Project → Deploy from GitHub repo**.
+2. En el servicio: **Settings → Volumes → New Volume** con *mount path* `/data`.
+3. En **Variables** añade:
+
+   | Variable | Valor |
+   |---|---|
+   | `NODE_ENV` | `production` |
+   | `SESSION_SECRET` | una clave aleatoria de 64+ caracteres |
+   | `DATABASE_PATH` | `/data/yabla.db` |
+   | `UPLOADS_DIR` | `/data/uploads` |
+   | `SEED_DEMO` | `true` (opcional) |
+
+4. En **Settings → Networking** pulsa *Generate Domain*.
+
+### Variables de entorno
+
+Todas están documentadas en [`.env.example`](.env.example). El archivo `.env` es solo para desarrollo local y no se sube a git; en producción se definen en el panel de la plataforma.
+
+| Variable | Producción | Descripción |
+|---|---|---|
+| `NODE_ENV` | `production` | Cookies seguras y validaciones estrictas |
+| `SESSION_SECRET` | **obligatoria** | Firma de la cookie de sesión (mín. 32 caracteres) |
+| `DATABASE_PATH` | ruta en el disco | Archivo SQLite |
+| `UPLOADS_DIR` | ruta en el disco | Fotos, documentos y notas de voz |
+| `BASE_URL` | opcional | URL pública; Render y Railway la detectan solas |
+| `SEED_DEMO` | `true` / `false` | Crea los usuarios demo si la base está vacía |
+| `ICE_SERVERS` | opcional | Servidores STUN/TURN para WebRTC |
+| `PORT` | no definir | Lo asigna la plataforma |
+
 ## Notas para producción
 
-- Define `SESSION_SECRET`, `BASE_URL` y `NODE_ENV=production` en el entorno.
-- Sirve la app detrás de **HTTPS**: los navegadores solo permiten cámara y micrófono en contextos seguros.
+- Render y Railway sirven la app con **HTTPS**, necesario para cámara y micrófono.
+- Pon `SEED_DEMO=false` antes de abrir la app al público (solo actúa con la base de datos vacía).
 - Para llamadas entre redes distintas (datos móviles, NAT estrictos) añade un servidor **TURN** en `ICE_SERVERS`.
+- `/healthz` responde `{"status":"ok"}` para las comprobaciones de salud de la plataforma.
 - Los archivos subidos se guardan en `data/uploads` con nombres aleatorios y se sirven públicamente por URL.
 - La presencia y las llamadas activas viven en memoria: con varias instancias del servidor haría falta un adaptador de Socket.IO (por ejemplo, Redis).
 

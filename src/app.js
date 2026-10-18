@@ -2,6 +2,7 @@ const path = require("path");
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const config = require("./config");
+const db = require("./config/database");
 const sessionMiddleware = require("./config/session");
 const { loadUser } = require("./middleware/auth");
 const { notFound, errorHandler } = require("./middleware/errorHandler");
@@ -29,6 +30,12 @@ app.use((req, res, next) => {
     "Referrer-Policy": "same-origin",
   });
   next();
+});
+
+// Comprobación de salud para la plataforma de despliegue (sin sesión)
+app.get("/healthz", (req, res) => {
+  db.prepare("SELECT 1").get();
+  res.json({ status: "ok", uptime: Math.round(process.uptime()) });
 });
 
 // Archivos estáticos y subidas de usuarios
