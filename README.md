@@ -48,7 +48,7 @@ npm run seed      # crea usuarios y chats de demostración (opcional)
 npm run dev       # servidor con recarga automática en http://localhost:3000
 ```
 
-En producción usa `npm start`. La configuración se lee de un archivo `.env` (copia [`.env.example`](.env.example)); sin él se usan valores por defecto para desarrollo.
+En producción usa `npm start`. La configuración se lee de un archivo `.env` (copia [`.env.example`](.env.example)); sin él se usan valores por defecto y una base de datos SQLite local en `data/`.
 
 | Script | Descripción |
 |---|---|
@@ -81,7 +81,7 @@ Para probar el tiempo real y las llamadas, abre dos navegadores (o una ventana n
 │   ├── app.js                 # Configuración de Express (vistas, estáticos, sesión, rutas)
 │   ├── config/                # Variables de entorno, conexión SQLite y sesiones
 │   ├── db/                    # schema.sql y seed.js
-│   ├── models/                # Acceso a datos: User, Conversation, Message, Story, Transaction
+│   ├── models/                # Acceso a datos: User, Conversation, Message, Story, Transaction, File
 │   ├── controllers/           # Lógica de cada ruta (auth, páginas, chats, mensajes, estados, billetera)
 │   ├── routes/                # web.js (páginas) y api.js (REST)
 │   ├── middleware/            # Autenticación, subida de archivos y errores
@@ -98,7 +98,7 @@ Para probar el tiempo real y las llamadas, abre dos navegadores (o una ventana n
 │   │   ├── chat/              # Módulos ES del chat (ver abajo)
 │   │   └── landing/           # Código generado por Framer (no editar)
 │   └── images/                # Iconos (sprite SVG), avatares, stickers, estados
-└── data/                      # Base de datos y archivos subidos (no se versiona)
+└── data/                      # Base de datos SQLite local para desarrollo (no se versiona)
 ```
 
 ### Módulos del cliente (`public/assets/js/chat/`)
@@ -142,64 +142,66 @@ Todas las rutas `/api/*` (salvo la de disponibilidad) requieren sesión y respon
 | `story:new`, `story:viewed`, `story:deleted`, `wallet:update`, `user:update` | `call:signal` (SDP e ICE), `call:end` |
 | `call:incoming`, `call:accepted`, `call:signal`, `call:ended` | |
 
-## Despliegue
+## Despliegue gratis (Render + Turso)
 
-La app necesita un **servidor Node siempre encendido** (Socket.IO mantiene conexiones abiertas) y un **disco persistente** (SQLite y archivos subidos). Por eso **no funciona en Vercel, Netlify ni otras plataformas serverless**. Está preparada para Render y Railway.
+La app necesita un **servidor Node siempre encendido** (Socket.IO mantiene conexiones abiertas), así que **no funciona en Vercel, Netlify ni otras plataformas serverless**. Esta combinación es **100 % gratuita**:
 
-### Render (recomendado)
+| Pieza | Servicio gratuito | Qué guarda |
+|---|---|---|
+| Servidor (Express + Socket.IO) | [Render](https://render.com) · plan Free | La app |
+| Base de datos | [Turso](https://turso.tech) · plan Free | Usuarios, mensajes, sesiones **y archivos subidos** |
 
-El archivo [`render.yaml`](render.yaml) describe el servicio, el disco y las variables.
+En local, sin variables de Turso, la app usa un archivo SQLite en `data/`. El código es el mismo en los dos casos.
+
+### 1. Crear la base de datos en Turso
+
+1. Crea una cuenta gratis en [turso.tech](https://turso.tech) (puedes entrar con GitHub).
+2. **Create Database**: ponle un nombre (p. ej. `yabla`) y elige la región **más cercana a Render Oregon** (por ejemplo *AWS US West (Oregon)*) para que vaya rápido.
+3. En la base de datos copia la **URL**, que empieza por `libsql://…turso.io`.
+4. **Create Token** (sin caducidad, permiso de lectura y escritura) y copia el token.
+
+No hace falta crear tablas: la app las crea sola al arrancar.
+
+### 2. Desplegar en Render
 
 1. Sube el repositorio a GitHub.
-2. En [Render](https://dashboard.render.com): **New → Blueprint** y elige el repositorio.
-3. Confirma. Render crea el servicio web (plan Starter, necesario para el disco), un disco de 1 GB en `/var/data` y genera `SESSION_SECRET`.
-4. Al terminar, abre la URL `https://<nombre>.onrender.com`. Con `SEED_DEMO=true` ya podrás entrar con `alex@yabla.app` / `demo1234`.
+2. En [Render](https://dashboard.render.com): **New → Blueprint** y elige el repositorio. Render lee [`render.yaml`](render.yaml).
+3. Te pedirá dos valores: pega la URL en `TURSO_DATABASE_URL` y el token en `TURSO_AUTH_TOKEN`.
+4. Pulsa **Apply**. En unos minutos tendrás la app en `https://yabla-chat.onrender.com` (o el nombre que elijas). Con `SEED_DEMO=true` ya podrás entrar con `alex@yabla.app` / `demo1234`.
 
-### Railway
+`SESSION_SECRET` lo genera Render automáticamente; no tienes que crearlo.
 
-El archivo [`railway.json`](railway.json) define cómo se construye y arranca.
+### 3. (Opcional) Evitar que se duerma
 
-1. En [Railway](https://railway.com): **New Project → Deploy from GitHub repo**.
-2. En el servicio: **Settings → Volumes → New Volume** con *mount path* `/data`.
-3. En **Variables** añade:
-
-   | Variable | Valor |
-   |---|---|
-   | `NODE_ENV` | `production` |
-   | `SESSION_SECRET` | una clave aleatoria de 64+ caracteres |
-   | `DATABASE_PATH` | `/data/yabla.db` |
-   | `UPLOADS_DIR` | `/data/uploads` |
-   | `SEED_DEMO` | `true` (opcional) |
-
-4. En **Settings → Networking** pulsa *Generate Domain*.
+En el plan Free, Render **apaga la app tras 15 minutos sin visitas** y la primera visita después tarda ~1 minuto en despertar. Para evitarlo, crea un monitor gratuito en [UptimeRobot](https://uptimerobot.com) o [cron-job.org](https://cron-job.org) que visite `https://tu-app.onrender.com/healthz` cada 10 minutos. Render Free incluye 750 horas al mes, suficientes para un servicio encendido todo el mes.
 
 ### Variables de entorno
 
-Todas están documentadas en [`.env.example`](.env.example). El archivo `.env` es solo para desarrollo local y no se sube a git; en producción se definen en el panel de la plataforma.
+Todas están documentadas en [`.env.example`](.env.example). El archivo `.env` es solo para desarrollo local y no se sube a git.
 
-| Variable | Producción | Descripción |
+| Variable | En Render | Descripción |
 |---|---|---|
+| `TURSO_DATABASE_URL` | **la pegas tú** | URL `libsql://…` de Turso (vacía = SQLite local) |
+| `TURSO_AUTH_TOKEN` | **la pegas tú** | Token de Turso |
+| `SESSION_SECRET` | automática | Firma de la cookie de sesión (mín. 32 caracteres) |
 | `NODE_ENV` | `production` | Cookies seguras y validaciones estrictas |
-| `SESSION_SECRET` | **obligatoria** | Firma de la cookie de sesión (mín. 32 caracteres) |
-| `DATABASE_PATH` | ruta en el disco | Archivo SQLite |
-| `UPLOADS_DIR` | ruta en el disco | Fotos, documentos y notas de voz |
-| `BASE_URL` | opcional | URL pública; Render y Railway la detectan solas |
 | `SEED_DEMO` | `true` / `false` | Crea los usuarios demo si la base está vacía |
+| `BASE_URL` | opcional | URL pública; Render la detecta sola |
 | `ICE_SERVERS` | opcional | Servidores STUN/TURN para WebRTC |
-| `PORT` | no definir | Lo asigna la plataforma |
+| `DATABASE_PATH` | no usar | Archivo SQLite para desarrollo local |
+| `PORT` | no definir | Lo asigna Render |
 
-## Notas para producción
+### Límites del plan gratuito
 
-- Render y Railway sirven la app con **HTTPS**, necesario para cámara y micrófono.
-- Pon `SEED_DEMO=false` antes de abrir la app al público (solo actúa con la base de datos vacía).
+- **Arranque en frío:** si la app se durmió, la primera carga tarda ~1 minuto (ver paso 3).
+- **Archivos de hasta 5 MB:** fotos, documentos y notas de voz se guardan dentro de la base de datos de Turso.
+- **Una sola instancia:** la presencia y las llamadas activas viven en memoria; para escalar a varias haría falta un adaptador de Socket.IO (por ejemplo, Redis).
+- Pon `SEED_DEMO=false` antes de abrir la app al público.
 - Para llamadas entre redes distintas (datos móviles, NAT estrictos) añade un servidor **TURN** en `ICE_SERVERS`.
-- `/healthz` responde `{"status":"ok"}` para las comprobaciones de salud de la plataforma.
-- Los archivos subidos se guardan en `data/uploads` con nombres aleatorios y se sirven públicamente por URL.
-- La presencia y las llamadas activas viven en memoria: con varias instancias del servidor haría falta un adaptador de Socket.IO (por ejemplo, Redis).
 
 ## Tecnologías
 
-- **Backend:** Node.js, Express, EJS + express-ejs-layouts, better-sqlite3, express-session, Socket.IO, multer, bcryptjs, qrcode
+- **Backend:** Node.js, Express, EJS + express-ejs-layouts, SQLite / Turso (@libsql/client), express-session, Socket.IO, multer, bcryptjs, qrcode
 - **Frontend:** HTML, CSS y JavaScript moderno (módulos ES) sin frameworks, WebRTC, MediaRecorder
 - Tipografía [Inter](https://fonts.google.com/specimen/Inter) e iconos al estilo de [Lucide](https://lucide.dev/)
 - Landing creada con [Framer](https://www.framer.com/)

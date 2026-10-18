@@ -35,11 +35,12 @@ module.exports = {
   baseUrl: publicUrl(),
   seedDemo: process.env.SEED_DEMO === "true",
   sessionSecret: process.env.SESSION_SECRET || "yabla-dev-secret",
-  databasePath: resolve(process.env.DATABASE_PATH || "./data/yabla.db"),
-  uploadsDir: resolve(process.env.UPLOADS_DIR || "./data/uploads"),
+  // Turso en producción; archivo SQLite local si no se define TURSO_DATABASE_URL
+  databaseUrl: process.env.TURSO_DATABASE_URL || `file:${resolve(process.env.DATABASE_PATH || "./data/yabla.db").replace(/\\/g, "/")}`,
+  databaseAuthToken: process.env.TURSO_AUTH_TOKEN || undefined,
   iceServers: parseIceServers(process.env.ICE_SERVERS),
   sessionMaxAge: 1000 * 60 * 60 * 24 * 30, // 30 días
   storyTtl: 1000 * 60 * 60 * 24, // 24 horas
-  uploadLimit: 25 * 1024 * 1024, // 25 MB
+  uploadLimit: 5 * 1024 * 1024, // 5 MB: los archivos se guardan en la base de datos
   initialBalanceCents: 50000, // $500 de saldo de demostración
 };

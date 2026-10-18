@@ -2,6 +2,7 @@
 // Cada usuario está en la sala `user:<id>` (todas sus pestañas y dispositivos).
 const User = require("../models/User");
 const Conversation = require("../models/Conversation");
+const presence = require("./presence");
 
 let io = null;
 
@@ -19,32 +20,38 @@ const realtime = {
     io.to(userIds.map(room)).emit(event, payload);
   },
 
-  toConversation(conversationId, event, payload) {
-    realtime.toUsers(Conversation.memberIds(conversationId), event, payload);
+  async toConversation(conversationId, event, payload) {
+    realtime.toUsers(await Conversation.memberIds(conversationId), event, payload);
   },
 
   message(message) {
-    realtime.toConversation(message.conversationId, "message:new", message);
+    return realtime.toConversation(message.conversationId, "message:new", message);
   },
 
   messageUpdated(message) {
-    realtime.toConversation(message.conversationId, "message:update", message);
+    return realtime.toConversation(message.conversationId, "message:update", message);
   },
 
   /** Cada miembro recibe la conversación tal como él la ve (no leídos, silencio, etc.). */
-  conversation(conversationId, userIds = Conversation.memberIds(conversationId), event = "conversation:new") {
-    userIds.forEach((userId) => {
-      const viewer = User.findById(userId);
-      const conversation = viewer && Conversation.getForUser(conversationId, viewer);
-      if (conversation) realtime.toUsers([userId], event, conversation);
-    });
+  async conversation(conversationId, userIds, event = "conversation:new") {
+    const ids = userIds || (await Conversation.memberIds(conversationId));
+    const viewers = await User.findMany(ids);
+    await Promise.all(
+      ids.map(async (userId) => {
+        const viewer = viewers.get(userId);
+        const conversation = viewer && (await Conversation.getForUser(conversationId, viewer));
+        if (conversation) realtime.toUsers([userId], event, conversation);
+      })
+    );
   },
 
   /** Avisa de lecturas/entregas respetando la privacidad de cada usuario. */
-  receipt(conversationId, reader, member) {
-    Conversation.memberIds(conversationId).forEach((userId) => {
-      const viewer = userId === reader.id ? reader : User.findById(userId);
-      const showRead = userId === reader.id || (reader.read_receipts && viewer.read_receipts);
+  async receipt(conversationId, reader, member) {
+    const ids = await Conversation.memberIds(conversationId);
+    const viewers = await User.findMany(ids);
+    ids.forEach((userId) => {
+      const viewer = userId === reader.id ? reader : viewers.get(userId);
+      const showRead = userId === reader.id || (reader.read_receipts && viewer?.read_receipts);
       realtime.toUsers([userId], "receipt", {
         conversationId,
         userId: reader.id,
@@ -54,20 +61,15 @@ const realtime = {
     });
   },
 
-  presence(user) {
-    realtime.toUsers(User.contactIds(user.id), "presence", {
+  async presence(user) {
+    realtime.toUsers(await User.contactIds(user.id), "presence", {
       userId: user.id,
-      online: realtime.isOnline(user.id),
+      online: presence.isOnline(user.id),
       lastSeen: user.show_last_seen ? user.last_seen : null,
     });
   },
 
-  isOnline: (userId) => require("./presence").isOnline(userId),
-
-  /** Sockets conectados de un usuario (para llamadas). */
-  async socketsOf(userId) {
-    return io ? io.in(room(userId)).fetchSockets() : [];
-  },
+  isOnline: (userId) => presence.isOnline(userId),
 
   toSocket(socketId, event, payload) {
     io?.to(socketId).emit(event, payload);

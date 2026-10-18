@@ -101,6 +101,17 @@ CREATE TABLE IF NOT EXISTS transactions (
   created_at    INTEGER NOT NULL
 );
 
+-- Archivos subidos (fotos, documentos, notas de voz). Se guardan en la base de datos
+-- para no depender de un disco: así funciona en alojamientos gratuitos sin almacenamiento.
+CREATE TABLE IF NOT EXISTS files (
+  id          TEXT    PRIMARY KEY,
+  mime        TEXT    NOT NULL,
+  name        TEXT,
+  size        INTEGER NOT NULL,
+  data        BLOB    NOT NULL,
+  created_at  INTEGER NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS sessions (
   sid      TEXT    PRIMARY KEY,
   sess     TEXT    NOT NULL,

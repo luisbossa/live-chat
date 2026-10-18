@@ -526,7 +526,7 @@ function submitText() {
 
 function sendFile(file, kind) {
   if (!file) return;
-  if (file.size > 25 * 1024 * 1024) return toast("El archivo supera el límite de 25 MB.");
+  if (file.size > 5 * 1024 * 1024) return toast("El archivo supera el límite de 5 MB.");
   const isImage = file.type.startsWith("image/") && kind !== "file";
   const preview = isImage
     ? { type: "image", mediaUrl: URL.createObjectURL(file) }

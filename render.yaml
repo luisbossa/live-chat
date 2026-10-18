@@ -1,21 +1,16 @@
-# Blueprint de Render: https://render.com/docs/blueprint-spec
-# En Render: New → Blueprint → elige este repositorio. Crea el servicio, el disco y las variables.
+# Blueprint de Render (plan gratuito): https://render.com/docs/blueprint-spec
+# En Render: New → Blueprint → elige este repositorio.
+# Render te pedirá TURSO_DATABASE_URL y TURSO_AUTH_TOKEN (la base de datos gratuita en Turso).
 services:
   - type: web
     name: yabla-chat
     runtime: node
-    # Los discos persistentes requieren un plan de pago (Starter o superior).
-    # Sin disco, la base de datos y las subidas se borrarían en cada despliegue.
-    plan: starter
+    plan: free
     region: oregon
     buildCommand: npm ci --omit=dev
     startCommand: npm start
     healthCheckPath: /healthz
     autoDeploy: true
-    disk:
-      name: yabla-data
-      mountPath: /var/data
-      sizeGB: 1
     envVars:
       - key: NODE_ENV
         value: production
@@ -24,11 +19,12 @@ services:
       # Render genera una clave aleatoria segura en el primer despliegue
       - key: SESSION_SECRET
         generateValue: true
-      - key: DATABASE_PATH
-        value: /var/data/yabla.db
-      - key: UPLOADS_DIR
-        value: /var/data/uploads
-      # true = crea los usuarios demo si la base de datos está vacía. Pon false cuando abras la app al público.
+      # Base de datos en Turso: Render las pide al crear el Blueprint (no se guardan en el repo)
+      - key: TURSO_DATABASE_URL
+        sync: false
+      - key: TURSO_AUTH_TOKEN
+        sync: false
+      # true = crea los usuarios demo si la base de datos está vacía. Pon false al abrir la app al público.
       - key: SEED_DEMO
         value: "true"
       - key: ICE_SERVERS

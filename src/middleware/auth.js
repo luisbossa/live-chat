@@ -1,9 +1,9 @@
 const User = require("../models/User");
 
 /** Carga el usuario de la sesión en req.user y res.locals.user. */
-function loadUser(req, res, next) {
+async function loadUser(req, res, next) {
   const id = req.session?.userId;
-  req.user = id ? User.findById(id) : null;
+  req.user = id ? await User.findById(id) : null;
   if (id && !req.user) delete req.session.userId; // el usuario ya no existe
   res.locals.user = req.user ? User.toSelf(req.user) : null;
   next();

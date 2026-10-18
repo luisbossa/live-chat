@@ -26,53 +26,45 @@ exports.showLogin = (req, res) => {
   res.render("pages/login", { title: "Iniciar sesión", styles: ["register"], next: safeNext(req.query.next) });
 };
 
-exports.checkUsername = (req, res) => {
+exports.checkUsername = async (req, res) => {
   const username = validate.str(req.query.username, 20);
   const valid = validate.USERNAME.test(username);
-  res.json({ valid, available: valid && !User.findByUsername(username) });
+  res.json({ valid, available: valid && !(await User.findByUsername(username)) });
 };
 
-exports.register = async (req, res, next) => {
-  try {
-    const data = {
-      name: validate.str(req.body.name, 60),
-      email: validate.str(req.body.email, 120).toLowerCase(),
-      password: typeof req.body.password === "string" ? req.body.password : "",
-      username: validate.str(req.body.username, 20).replace(/^@/, "").toLowerCase(),
-    };
+exports.register = async (req, res) => {
+  const data = {
+    name: validate.str(req.body.name, 60),
+    email: validate.str(req.body.email, 120).toLowerCase(),
+    password: typeof req.body.password === "string" ? req.body.password : "",
+    username: validate.str(req.body.username, 20).replace(/^@/, "").toLowerCase(),
+  };
 
-    const errors = validate.registration(data);
-    if (!errors.email && User.findByEmail(data.email)) errors.email = "Ya existe una cuenta con este correo.";
-    if (!errors.username && User.findByUsername(data.username)) errors.username = "Este nombre de usuario ya está en uso.";
-    if (Object.keys(errors).length) return res.status(422).json({ error: "Revisa los datos del formulario.", errors });
+  const errors = validate.registration(data);
+  if (!errors.email && (await User.findByEmail(data.email))) errors.email = "Ya existe una cuenta con este correo.";
+  if (!errors.username && (await User.findByUsername(data.username))) errors.username = "Este nombre de usuario ya está en uso.";
+  if (Object.keys(errors).length) return res.status(422).json({ error: "Revisa los datos del formulario.", errors });
 
-    const user = User.create({ ...data, avatar: upload.urlFor(req.file) });
-    await startSession(req, user.id);
-    res.status(201).json({ redirect: "/chat" });
-  } catch (err) {
-    next(err);
-  }
+  const user = await User.create({ ...data, avatar: await upload.save(req.file) });
+  await startSession(req, user.id);
+  res.status(201).json({ redirect: "/chat" });
 };
 
-exports.login = async (req, res, next) => {
-  try {
-    const login = validate.str(req.body.email || req.body.login, 120).replace(/^@/, "");
-    const password = typeof req.body.password === "string" ? req.body.password : "";
-    const user = login && User.findByLogin(login);
+exports.login = async (req, res) => {
+  const login = validate.str(req.body.email || req.body.login, 120).replace(/^@/, "");
+  const password = typeof req.body.password === "string" ? req.body.password : "";
+  const user = login ? await User.findByLogin(login) : null;
 
-    if (!User.verifyPassword(user, password)) {
-      const error = "Correo o contraseña incorrectos.";
-      if (req.is("json")) return res.status(401).json({ error });
-      return res.status(401).render("pages/login", { title: "Iniciar sesión", styles: ["register"], error, next: safeNext(req.body.next), login });
-    }
-
-    await startSession(req, user.id);
-    const redirect = safeNext(req.body.next);
-    if (req.is("json")) return res.json({ redirect });
-    res.redirect(redirect);
-  } catch (err) {
-    next(err);
+  if (!User.verifyPassword(user, password)) {
+    const error = "Correo o contraseña incorrectos.";
+    if (req.is("json")) return res.status(401).json({ error });
+    return res.status(401).render("pages/login", { title: "Iniciar sesión", styles: ["register"], error, next: safeNext(req.body.next), login });
   }
+
+  await startSession(req, user.id);
+  const redirect = safeNext(req.body.next);
+  if (req.is("json")) return res.json({ redirect });
+  res.redirect(redirect);
 };
 
 exports.logout = (req, res, next) => {
