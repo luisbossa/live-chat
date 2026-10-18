@@ -1,0 +1,25 @@
+<!-- Barra de navegación: lateral en escritorio, inferior en móvil -->
+<nav class="rail" aria-label="Navegación principal">
+    <a href="/chat" class="logo rail-logo" aria-label="Yabla"><%- icon('logo') %></a>
+
+    <div class="rail-tabs" role="tablist">
+        <button class="rail-btn is-active" role="tab" data-tab="chats" aria-selected="true">
+            <%- icon('chat') %><span>Chats</span><b class="badge" data-badge="chats" hidden></b>
+        </button>
+        <button class="rail-btn" role="tab" data-tab="groups" aria-selected="false">
+            <%- icon('users') %><span>Grupos</span><b class="badge" data-badge="groups" hidden></b>
+        </button>
+        <button class="rail-btn" role="tab" data-tab="status" aria-selected="false">
+            <%- icon('status') %><span>Estados</span><b class="badge badge-dot" data-badge="status" hidden></b>
+        </button>
+    </div>
+
+    <div class="rail-bottom">
+        <button class="rail-btn" data-action="theme" aria-label="Cambiar tema">
+            <svg class="icon" aria-hidden="true"><use href="/assets/images/icons.svg#i-moon" data-theme-icon></use></svg><span>Tema</span>
+        </button>
+        <button class="rail-btn rail-me" data-open="modal-profile" aria-label="Mi perfil">
+            <img src="<%= user.avatar %>" alt="" data-me="avatar"><span>Perfil</span>
+        </button>
+    </div>
+</nav>

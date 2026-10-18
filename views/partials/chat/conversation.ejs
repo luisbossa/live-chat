@@ -1,0 +1,81 @@
+<!-- Conversación activa -->
+<main class="chat" id="chat">
+    <div class="chat-empty" id="chatEmpty">
+        <span class="logo logo-lg"><%- icon('logo') %></span>
+        <h2>Tus mensajes</h2>
+        <p class="muted">Elige una conversación o empieza una nueva.</p>
+        <button class="btn btn-primary" data-open="modal-new-chat"><%- icon('chat-plus') %>Nuevo chat</button>
+    </div>
+
+    <header class="chat-head">
+        <button class="icon-btn back-btn" data-action="close-chat" aria-label="Volver"><%- icon('arrow-left') %></button>
+        <button class="chat-peer" data-action="toggle-info">
+            <span class="avatar" id="peerAvatar"><img src="" alt=""></span>
+            <span>
+                <strong id="peerName"></strong>
+                <small id="peerStatus"></small>
+            </span>
+        </button>
+        <div class="head-actions">
+            <button class="icon-btn" data-call="audio" aria-label="Llamada de voz" title="Llamada de voz"><%- icon('phone') %></button>
+            <button class="icon-btn" data-call="video" aria-label="Videollamada" title="Videollamada"><%- icon('video') %></button>
+            <button class="icon-btn" data-action="search-chat" aria-label="Buscar en el chat" title="Buscar"><%- icon('search') %></button>
+            <button class="icon-btn" data-action="toggle-info" aria-label="Información" title="Información"><%- icon('info') %></button>
+        </div>
+    </header>
+
+    <div class="chat-search" id="chatSearch" hidden>
+        <%- icon('search', 'icon-sm') %>
+        <input type="search" id="chatSearchInput" placeholder="Buscar en la conversación…">
+        <span class="muted" id="chatSearchCount"></span>
+        <button class="icon-btn" data-action="search-chat" aria-label="Cerrar búsqueda"><%- icon('x', 'icon-sm') %></button>
+    </div>
+
+    <div class="messages" id="messages" aria-live="polite"></div>
+    <button class="scroll-down" id="scrollDown" aria-label="Ir al último mensaje" hidden><%- icon('chevron-down') %><b class="badge" hidden></b></button>
+
+    <footer class="composer" id="composer">
+        <div class="blocked-note" id="blockedNote" hidden>
+            Bloqueaste a este contacto. <button data-action="block">Desbloquear</button>
+        </div>
+
+        <!-- Respondiendo / editando -->
+        <div class="compose-context" id="composeContext" hidden>
+            <span class="compose-context-icon"></span>
+            <div>
+                <strong id="composeContextTitle"></strong>
+                <p id="composeContextText"></p>
+            </div>
+            <button class="icon-btn" data-action="cancel-context" aria-label="Cancelar"><%- icon('x', 'icon-sm') %></button>
+        </div>
+
+        <!-- Paneles emergentes -->
+        <div class="popover emoji-panel" id="emojiPanel" hidden></div>
+        <div class="popover sticker-panel" id="stickerPanel" hidden></div>
+        <div class="popover attach-menu" id="attachMenu" hidden>
+            <button data-attach="image"><span class="tone-blue"><%- icon('image') %></span>Foto o GIF</button>
+            <button data-attach="camera"><span class="tone-pink"><%- icon('camera') %></span>Cámara</button>
+            <button data-attach="file"><span class="tone-violet"><%- icon('file') %></span>Documento</button>
+            <button data-attach="payment"><span class="tone-green"><%- icon('wallet') %></span>Enviar dinero</button>
+        </div>
+
+        <!-- Grabando nota de voz -->
+        <div class="recorder" id="recorder" hidden>
+            <button class="icon-btn" data-action="cancel-recording" aria-label="Descartar"><%- icon('trash') %></button>
+            <span class="rec-dot"></span>
+            <span class="rec-time" id="recTime">0:00</span>
+            <span class="rec-wave" id="recWave"></span>
+            <button class="send-btn" data-action="send-recording" aria-label="Enviar nota de voz"><%- icon('send') %></button>
+        </div>
+
+        <form class="composer-bar" id="composerForm">
+            <button type="button" class="icon-btn" data-popover="emojiPanel" aria-label="Emojis"><%- icon('smile') %></button>
+            <button type="button" class="icon-btn" data-popover="attachMenu" aria-label="Adjuntar"><%- icon('paperclip') %></button>
+            <textarea id="messageInput" rows="1" placeholder="Escribe un mensaje…" aria-label="Mensaje" maxlength="4000"></textarea>
+            <button type="button" class="icon-btn" data-popover="stickerPanel" aria-label="Stickers"><%- icon('sticker') %></button>
+            <button type="button" class="send-btn is-mic" id="micBtn" data-action="start-recording" aria-label="Grabar nota de voz"><%- icon('mic') %></button>
+            <button type="submit" class="send-btn" id="sendBtn" aria-label="Enviar" hidden><%- icon('send') %></button>
+        </form>
+        <input type="file" id="fileInput" hidden>
+    </footer>
+</main>

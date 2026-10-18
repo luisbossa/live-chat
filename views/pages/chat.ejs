@@ -1,0 +1,26 @@
+<div class="app" id="app">
+    <%- include('../partials/chat/rail') %>
+    <%- include('../partials/chat/sidebar') %>
+    <%- include('../partials/chat/conversation') %>
+    <%- include('../partials/chat/info') %>
+    <div class="scrim" data-action="toggle-info"></div>
+</div>
+
+<%- include('../partials/chat/story-viewer') %>
+<%- include('../partials/chat/calls') %>
+<%- include('../partials/chat/modals') %>
+
+<!-- Menú contextual de mensajes -->
+<div class="msg-menu" id="msgMenu" role="menu" hidden>
+    <div class="msg-menu-reactions" id="msgMenuReactions"></div>
+    <button role="menuitem" data-msg-action="reply"><%- icon('reply') %>Responder</button>
+    <button role="menuitem" data-msg-action="copy"><%- icon('copy') %>Copiar</button>
+    <button role="menuitem" data-msg-action="edit"><%- icon('edit') %>Editar</button>
+    <button role="menuitem" data-msg-action="delete" class="is-danger"><%- icon('trash') %>Eliminar para todos</button>
+</div>
+
+<script type="application/json" id="clientConfig"><%- json(clientConfig) %></script>
+
+<%- contentFor('scripts') %>
+<script src="/socket.io/socket.io.js"></script>
+<script type="module" src="/assets/js/chat/main.js"></script>

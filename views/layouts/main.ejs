@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Yabla: chatea y haz videollamadas con tus amigos en tiempo real">
+    <title><%= locals.title ? `${title} - ${appName}` : appName %></title>
+    <link rel="icon" href="/assets/images/ui/favicon.png" type="image/png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <% (locals.styles || []).forEach((name) => { %>
+    <link rel="stylesheet" href="/assets/css/<%= name %>.css">
+    <% }) %>
+    <script src="/assets/js/common.js"></script>
+</head>
+
+<body class="<%= locals.bodyClass || '' %>">
+    <div class="mist" aria-hidden="true"></div>
+
+    <%- body %>
+
+    <%- defineContent('scripts') %>
+</body>
+
+</html>

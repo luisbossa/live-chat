@@ -1,0 +1,33 @@
+<!-- Llamada entrante -->
+<div class="modal incoming-modal" id="modal-incoming">
+    <div class="incoming">
+        <img class="incoming-avatar" id="incomingAvatar" src="" alt="">
+        <p class="incoming-label" id="incomingLabel">Videollamada entrante</p>
+        <h2 id="incomingName"></h2>
+        <div class="incoming-actions">
+            <button class="call-btn is-end" data-action="call-decline" aria-label="Rechazar"><%- icon('phone-off') %></button>
+            <button class="call-btn is-accept" data-action="call-accept" aria-label="Aceptar"><%- icon('phone') %></button>
+        </div>
+    </div>
+</div>
+
+<!-- Llamada en curso (WebRTC) -->
+<div class="modal call-modal" id="modal-call">
+    <div class="call" id="callBox">
+        <div class="call-bg" id="callBg"></div>
+        <video class="call-remote" id="remoteVideo" autoplay playsinline></video>
+        <video class="call-local" id="localVideo" autoplay playsinline muted></video>
+        <div class="call-info">
+            <span class="call-lock"><%- icon('lock', 'icon-sm') %>Cifrado de extremo a extremo</span>
+            <img class="call-avatar" id="callAvatar" src="" alt="">
+            <h2 id="callName"></h2>
+            <p id="callState">Llamando…</p>
+        </div>
+        <div class="call-controls">
+            <button class="call-btn" data-action="call-mute" aria-label="Silenciar micrófono"><%- icon('mic') %></button>
+            <button class="call-btn" data-action="call-camera" aria-label="Apagar cámara"><%- icon('video') %></button>
+            <button class="call-btn" data-action="call-screen" aria-label="Compartir pantalla"><%- icon('monitor') %></button>
+            <button class="call-btn is-end" data-action="call-end" aria-label="Colgar"><%- icon('phone-off') %></button>
+        </div>
+    </div>
+</div>

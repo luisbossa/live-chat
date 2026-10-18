@@ -1,0 +1,22 @@
+<!-- Visor de estados -->
+<div class="story-viewer" id="storyViewer" hidden>
+    <div class="story-progress" id="storyProgress"></div>
+    <header class="story-head">
+        <img src="" alt="" id="storyAvatar">
+        <div><strong id="storyName"></strong><small id="storyTime"></small></div>
+        <button class="icon-btn" data-action="delete-story" id="storyDeleteBtn" aria-label="Eliminar estado" hidden><%- icon('trash') %></button>
+        <button class="icon-btn" data-action="close-story" aria-label="Cerrar"><%- icon('x') %></button>
+    </header>
+    <img class="story-media" id="storyMedia" src="" alt="">
+    <p class="story-caption" id="storyCaption" hidden></p>
+    <button class="story-nav prev" data-story="prev" aria-label="Anterior"></button>
+    <button class="story-nav next" data-story="next" aria-label="Siguiente"></button>
+
+    <!-- Para estados ajenos: responder -->
+    <form class="story-reply" id="storyReply">
+        <input type="text" placeholder="Responder…" aria-label="Responder al estado" maxlength="500">
+        <button class="send-btn" aria-label="Enviar"><%- icon('send') %></button>
+    </form>
+    <!-- Para mis estados: quién lo vio -->
+    <button class="story-views" id="storyViews" data-action="story-viewers" hidden><%- icon('eye') %><span></span></button>
+</div>

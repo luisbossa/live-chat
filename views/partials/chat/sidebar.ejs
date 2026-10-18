@@ -1,0 +1,54 @@
+<!-- Lista de conversaciones y estados -->
+<aside class="sidebar" aria-label="Conversaciones">
+    <header class="sidebar-head">
+        <div>
+            <p class="muted greeting">Hola, <span data-me="firstName"><%= user.name.split(' ')[0] %></span> 👋</p>
+            <h1 id="sidebarTitle">Chats</h1>
+        </div>
+        <div class="head-actions">
+            <button class="icon-btn" data-open="modal-new-chat" aria-label="Nuevo chat" title="Nuevo chat"><%- icon('chat-plus') %></button>
+            <div class="dropdown">
+                <button class="icon-btn" data-dropdown aria-label="Más opciones" aria-expanded="false"><%- icon('more') %></button>
+                <div class="menu" role="menu">
+                    <button role="menuitem" data-open="modal-group"><%- icon('users') %>Nuevo grupo</button>
+                    <button role="menuitem" data-open="modal-qr"><%- icon('qr') %>Mi código QR</button>
+                    <button role="menuitem" data-open="modal-wallet"><%- icon('wallet') %>Billetera</button>
+                    <button role="menuitem" data-open="modal-settings"><%- icon('settings') %>Ajustes</button>
+                    <hr>
+                    <button role="menuitem" class="is-danger" data-open="modal-logout"><%- icon('logout') %>Cerrar sesión</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <label class="search">
+        <%- icon('search', 'icon-sm') %>
+        <input type="search" id="listSearch" placeholder="Buscar chats…" autocomplete="off">
+    </label>
+
+    <div class="panel is-active" data-panel="chats">
+        <div class="stories-strip" id="storiesStrip"></div>
+        <ul class="conv-list" id="chatList"></ul>
+    </div>
+
+    <div class="panel" data-panel="groups">
+        <button class="new-item" data-open="modal-group">
+            <span><%- icon('plus') %></span>Crear un grupo nuevo
+        </button>
+        <ul class="conv-list" id="groupList"></ul>
+    </div>
+
+    <div class="panel" data-panel="status">
+        <button class="my-status" data-action="my-status">
+            <span class="avatar">
+                <img src="<%= user.avatar %>" alt="" data-me="avatar">
+                <i><%- icon('plus', 'icon-sm') %></i>
+            </span>
+            <span>
+                <strong>Mi estado</strong>
+                <small class="muted" id="myStatusHint">Toca para añadir una actualización</small>
+            </span>
+        </button>
+        <div id="statusLists"></div>
+    </div>
+</aside>

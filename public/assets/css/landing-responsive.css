@@ -1,0 +1,66 @@
+/* ==========================================================================
+   Ajustes responsive para la landing exportada de Framer.
+   Framer inyecta sus estilos desde JS, por eso estas reglas usan !important.
+   ========================================================================== */
+
+@media (max-width: 809px) {
+  /* "Más de 5,000 personas ya usan Yabla para chatear."
+     Framer lo deja en una sola línea (nowrap + white-space: pre) y se corta
+     en pantallas estrechas. Lo convertimos en un párrafo centrado que fluye:
+     "Más de 5,000" va siempre junto y el resto se parte con normalidad. */
+  .framer-1g3i9qv {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    padding: 0 24px !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    text-align: center !important;
+  }
+
+  .framer-1d2nlyx {
+    display: inline-flex !important;
+    vertical-align: top !important;
+    margin-right: 4px !important;
+  }
+
+  .framer-1nwtvzy,
+  .framer-1nwtvzy p {
+    display: inline !important;
+    white-space: normal !important;
+  }
+
+  /* Ilustración de la mano.
+     Framer coloca la neblina blanca con "bottom: -220px", un valor pensado
+     para escritorio: en móvil el bloque es mucho más bajo y la neblina queda
+     debajo de la mano, dejando a la vista el corte recto de la imagen y del
+     resplandor azul. La subimos y agrandamos para que cubra esa zona. */
+  .framer-p8t2ds {
+    width: 190% !important;
+    bottom: -70px !important;
+  }
+
+  .framer-18tahzm {
+    width: 150% !important;
+    bottom: -40px !important;
+  }
+
+  /* Respaldo: la base de la mano y del resplandor se desvanecen suavemente */
+  .framer-1f2c7t8 {
+    -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 98%);
+    mask-image: linear-gradient(to bottom, #000 62%, transparent 98%);
+  }
+
+  .framer-gb877p {
+    -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 92%);
+    mask-image: linear-gradient(to bottom, #000 55%, transparent 92%);
+  }
+
+  /* Formulario: en tablet no debe ocupar todo el ancho */
+  .framer-17960rj {
+    width: 100% !important;
+    max-width: 480px !important;
+    margin: 0 auto !important;
+  }
+}

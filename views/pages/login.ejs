@@ -1,0 +1,43 @@
+<main class="auth">
+    <section class="auth-card auth-card-sm">
+        <div class="auth-form">
+            <header class="auth-top">
+                <a href="/" class="icon-btn" aria-label="Volver al inicio"><%- icon('arrow-left') %></a>
+                <button class="icon-btn" type="button" data-theme-toggle aria-label="Cambiar tema"><%- icon('moon') %></button>
+            </header>
+
+            <div class="auth-step is-active">
+                <span class="logo logo-lg"><%- icon('logo') %></span>
+                <h1 class="title">Bienvenido de nuevo</h1>
+                <p class="subtitle">Inicia sesión para seguir chateando.</p>
+
+                <% if (locals.error) { %>
+                <p class="form-alert" role="alert"><%= error %></p>
+                <% } %>
+
+                <form method="post" action="/login">
+                    <input type="hidden" name="next" value="<%= locals.next || '/chat' %>">
+                    <div class="field">
+                        <label for="login" class="label">Correo o usuario</label>
+                        <input id="login" name="login" class="input" value="<%= locals.login || '' %>"
+                            placeholder="tu@correo.com" autocomplete="username" required autofocus>
+                    </div>
+                    <div class="field">
+                        <label for="password" class="label">Contraseña</label>
+                        <div class="input-group">
+                            <input type="password" id="password" name="password" class="input" placeholder="Tu contraseña"
+                                autocomplete="current-password" required>
+                            <button type="button" class="icon-btn toggle-password" data-target="password" aria-label="Mostrar contraseña"><%- icon('eye') %></button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Iniciar sesión</button>
+                </form>
+
+                <p class="auth-foot">¿No tienes cuenta? <a href="/register">Crea una</a></p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<%- contentFor('scripts') %>
+<script src="/assets/js/auth-ui.js"></script>

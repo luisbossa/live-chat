@@ -1,0 +1,41 @@
+{
+  "name": "yabla-chat",
+  "version": "2.0.0",
+  "description": "App de chat y videollamadas en tiempo real con Node.js, Express, EJS, SQLite y Socket.IO",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "seed": "node src/db/seed.js",
+    "db:reset": "node src/db/seed.js --reset"
+  },
+  "author": "Luis Bossa",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.8.1",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.18.1",
+    "multer": "^1.4.5-lts.1",
+    "qrcode": "^1.5.4",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "server.js",
+      "src",
+      "views"
+    ],
+    "ext": "js,ejs,sql"
+  }
+}

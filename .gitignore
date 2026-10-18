@@ -12,3 +12,7 @@ desktop.ini
 
 # Logs
 *.log
+
+# Datos locales
+.env
+data/

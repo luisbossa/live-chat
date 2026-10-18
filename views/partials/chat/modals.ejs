@@ -1,0 +1,225 @@
+<%
+  const head = (title) => `<div class="modal-head"><h2>${title}</h2><button class="icon-btn" data-close aria-label="Cerrar">${icon('x')}</button></div>`;
+%>
+
+<!-- Visor de imágenes -->
+<div class="modal lightbox" id="modal-lightbox">
+    <button class="icon-btn lightbox-close" data-close aria-label="Cerrar"><%- icon('x') %></button>
+    <img src="" alt="" id="lightboxImg">
+</div>
+
+<!-- Perfil -->
+<div class="modal" id="modal-profile">
+    <div class="modal-dialog">
+        <%- head('Mi perfil') %>
+        <form class="stack" id="profileForm">
+            <div class="avatar-upload">
+                <div class="avatar-edit">
+                    <input type="file" id="profileAvatar" name="avatar" accept="image/*">
+                    <label for="profileAvatar" aria-label="Cambiar foto"><%- icon('camera', 'icon-sm') %></label>
+                </div>
+                <div class="avatar-preview"><div></div></div>
+            </div>
+            <div class="field">
+                <label class="label" for="pfName">Nombre</label>
+                <input class="input" id="pfName" name="name" maxlength="60" required>
+            </div>
+            <div class="field">
+                <label class="label" for="pfUsername">Usuario</label>
+                <div class="input-prefix"><span>@</span><input class="input" id="pfUsername" name="username" maxlength="20"></div>
+            </div>
+            <div class="field">
+                <label class="label" for="pfBio">Info</label>
+                <input class="input" id="pfBio" name="bio" maxlength="140">
+            </div>
+            <div class="field">
+                <label class="label" for="pfPhone">Teléfono</label>
+                <input class="input" id="pfPhone" name="phone" type="tel" maxlength="30">
+            </div>
+            <button class="btn btn-primary btn-block" type="submit">Guardar cambios</button>
+        </form>
+    </div>
+</div>
+
+<!-- Ajustes -->
+<div class="modal" id="modal-settings">
+    <div class="modal-dialog">
+        <%- head('Ajustes') %>
+        <div class="settings">
+            <h4>General</h4>
+            <label class="setting-row">
+                <span><strong>Modo oscuro</strong><small>Tema oscuro para toda la app</small></span>
+                <span class="switch"><input type="checkbox" id="darkSwitch"><span></span></span>
+            </label>
+            <label class="setting-row">
+                <span><strong>Enviar con Enter</strong><small>Shift + Enter para salto de línea</small></span>
+                <span class="switch"><input type="checkbox" id="enterSwitch"><span></span></span>
+            </label>
+            <label class="setting-row">
+                <span><strong>Sonidos</strong><small>Sonido al recibir mensajes</small></span>
+                <span class="switch"><input type="checkbox" id="soundSwitch"><span></span></span>
+            </label>
+            <h4>Privacidad</h4>
+            <label class="setting-row">
+                <span><strong>Confirmaciones de lectura</strong><small>Si las desactivas, tampoco verás las de los demás</small></span>
+                <span class="switch"><input type="checkbox" id="readSwitch" data-setting="readReceipts"><span></span></span>
+            </label>
+            <label class="setting-row">
+                <span><strong>Última conexión</strong><small>Mostrar cuándo estuviste en línea</small></span>
+                <span class="switch"><input type="checkbox" id="lastSeenSwitch" data-setting="showLastSeen"><span></span></span>
+            </label>
+        </div>
+    </div>
+</div>
+
+<!-- Nuevo chat -->
+<div class="modal" id="modal-new-chat">
+    <div class="modal-dialog">
+        <%- head('Nuevo chat') %>
+        <label class="search search-modal">
+            <%- icon('search', 'icon-sm') %>
+            <input type="search" id="userSearch" placeholder="Buscar por nombre o @usuario" autocomplete="off">
+        </label>
+        <button class="new-item" data-open="modal-group"><span><%- icon('users') %></span>Nuevo grupo</button>
+        <ul class="user-list" id="userResults"></ul>
+    </div>
+</div>
+
+<!-- Nuevo grupo -->
+<div class="modal" id="modal-group">
+    <div class="modal-dialog">
+        <%- head('Nuevo grupo') %>
+        <form class="stack" id="groupForm">
+            <div class="avatar-upload">
+                <div class="avatar-edit">
+                    <input type="file" id="groupAvatar" name="avatar" accept="image/*">
+                    <label for="groupAvatar" aria-label="Foto del grupo"><%- icon('camera', 'icon-sm') %></label>
+                </div>
+                <div class="avatar-preview"><div style="background-image: url(/assets/images/ui/avatar-default.svg);"></div></div>
+            </div>
+            <div class="field">
+                <label class="label" for="groupName">Nombre del grupo</label>
+                <input class="input" id="groupName" name="name" placeholder="Ej. Viaje a la playa 🏖️" maxlength="60" required>
+            </div>
+            <div class="field">
+                <span class="label">Participantes <span class="muted" data-member-count></span></span>
+                <div class="member-picker" id="groupPicker"></div>
+            </div>
+            <button class="btn btn-primary btn-block" type="submit">Crear grupo</button>
+        </form>
+    </div>
+</div>
+
+<!-- Añadir participantes -->
+<div class="modal" id="modal-add-members">
+    <div class="modal-dialog">
+        <%- head('Añadir participantes') %>
+        <form class="stack" id="addMembersForm">
+            <div class="member-picker" id="addPicker"></div>
+            <button class="btn btn-primary btn-block" type="submit">Añadir <span data-member-count></span></button>
+        </form>
+    </div>
+</div>
+
+<!-- Mi código QR -->
+<div class="modal" id="modal-qr">
+    <div class="modal-dialog">
+        <%- head('Mi código QR') %>
+        <div class="qr">
+            <div class="qr-card">
+                <img src="<%= user.avatar %>" alt="" class="qr-avatar" data-me="avatar">
+                <strong data-me="name"><%= user.name %></strong>
+                <span class="muted">@<span data-me="username"><%= user.username %></span></span>
+                <img id="qrImage" src="" alt="Código QR de tu perfil">
+            </div>
+            <p class="muted">Tus amigos pueden escanear este código para empezar a chatear contigo.</p>
+            <button class="btn btn-ghost btn-block" data-action="copy-profile-link"><%- icon('link') %>Copiar enlace</button>
+        </div>
+    </div>
+</div>
+
+<!-- Billetera -->
+<div class="modal" id="modal-wallet">
+    <div class="modal-dialog">
+        <%- head('Billetera') %>
+        <div class="wallet-card">
+            <small>Saldo disponible</small>
+            <strong id="walletBalance"></strong>
+            <span>Yabla Pay · <span data-me="name"><%= user.name %></span></span>
+        </div>
+        <form class="wallet-send stack" id="walletForm">
+            <h4 class="list-title">Enviar dinero</h4>
+            <div class="field">
+                <label class="label" for="walletTo">Para</label>
+                <select class="input" id="walletTo" name="toUserId" required></select>
+            </div>
+            <div class="wallet-row">
+                <div class="field">
+                    <label class="label" for="walletAmount">Monto ($)</label>
+                    <input class="input" id="walletAmount" name="amount" type="number" min="0.01" max="1000" step="0.01" placeholder="0.00" required>
+                </div>
+                <div class="field">
+                    <label class="label" for="walletNote">Concepto</label>
+                    <input class="input" id="walletNote" name="note" maxlength="80" placeholder="Opcional">
+                </div>
+            </div>
+            <button class="btn btn-brand btn-block" type="submit"><%- icon('transfer') %>Enviar</button>
+        </form>
+        <h4 class="list-title">Actividad reciente</h4>
+        <ul class="wallet-activity" id="walletActivity"></ul>
+    </div>
+</div>
+
+<!-- Nuevo estado -->
+<div class="modal" id="modal-story">
+    <div class="modal-dialog">
+        <%- head('Nuevo estado') %>
+        <form class="stack" id="storyForm">
+            <label class="story-drop" id="storyDrop">
+                <input type="file" name="media" id="storyFile" accept="image/*" required>
+                <img id="storyPreview" alt="" hidden>
+                <span id="storyDropHint"><%- icon('image') %>Elige una foto</span>
+            </label>
+            <div class="field">
+                <label class="label" for="storyCaptionInput">Texto (opcional)</label>
+                <input class="input" id="storyCaptionInput" name="caption" maxlength="200" placeholder="Escribe algo…">
+            </div>
+            <p class="muted small">Tus contactos podrán verlo durante 24 horas.</p>
+            <button class="btn btn-primary btn-block" type="submit">Publicar estado</button>
+        </form>
+    </div>
+</div>
+
+<!-- Quién vio mi estado -->
+<div class="modal" id="modal-viewers">
+    <div class="modal-dialog">
+        <%- head('Visto por') %>
+        <ul class="user-list" id="viewersList"></ul>
+    </div>
+</div>
+
+<!-- Confirmación genérica -->
+<div class="modal" id="modal-confirm">
+    <div class="modal-dialog confirm">
+        <span class="confirm-icon"><%- icon('trash') %></span>
+        <h2 id="confirmTitle"></h2>
+        <p class="muted" id="confirmText"></p>
+        <div class="confirm-actions">
+            <button class="btn btn-ghost" data-close>Cancelar</button>
+            <button class="btn btn-danger" id="confirmOk">Aceptar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Cerrar sesión -->
+<div class="modal" id="modal-logout">
+    <div class="modal-dialog confirm">
+        <span class="confirm-icon"><%- icon('logout') %></span>
+        <h2>¿Cerrar sesión?</h2>
+        <p class="muted">Tendrás que volver a iniciar sesión para ver tus chats.</p>
+        <form class="confirm-actions" method="post" action="/logout">
+            <button type="button" class="btn btn-ghost" data-close>Cancelar</button>
+            <button type="submit" class="btn btn-danger">Cerrar sesión</button>
+        </form>
+    </div>
+</div>

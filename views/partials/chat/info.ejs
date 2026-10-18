@@ -1,0 +1,43 @@
+<!-- Información del contacto o del grupo -->
+<aside class="info" id="info" aria-label="Información">
+    <header class="info-head">
+        <h2 id="infoTitle">Información</h2>
+        <button class="icon-btn" data-action="toggle-info" aria-label="Cerrar"><%- icon('x') %></button>
+    </header>
+    <div class="info-body">
+        <div class="info-profile">
+            <span class="avatar avatar-lg" id="infoAvatar"><img src="" alt=""></span>
+            <h3 id="infoName"></h3>
+            <p class="muted" id="infoMeta"></p>
+            <div class="info-actions">
+                <button data-call="audio"><%- icon('phone') %>Llamar</button>
+                <button data-call="video"><%- icon('video') %>Video</button>
+                <button data-action="mute"><svg class="icon" aria-hidden="true"><use href="/assets/images/icons.svg#i-bell" id="muteIcon"></use></svg><span id="muteLabel">Silenciar</span></button>
+                <button data-action="search-chat"><%- icon('search') %>Buscar</button>
+            </div>
+        </div>
+
+        <section class="info-section">
+            <h4 id="infoBioTitle">Info</h4>
+            <p id="infoBio"></p>
+        </section>
+
+        <section class="info-section" id="infoMembersSection" hidden>
+            <h4><span id="infoMembersCount"></span> participantes</h4>
+            <button class="new-item" data-open="modal-add-members" id="addMembersBtn"><span><%- icon('user-plus') %></span>Añadir participantes</button>
+            <ul class="member-list" id="infoMembers"></ul>
+        </section>
+
+        <section class="info-section">
+            <h4>Archivos compartidos <span class="muted" id="mediaCount"></span></h4>
+            <div class="media-grid" id="mediaGrid"></div>
+        </section>
+
+        <section class="info-section info-options">
+            <button data-action="pin"><%- icon('pin') %><span id="pinLabel">Fijar chat</span></button>
+            <button data-action="clear-chat"><%- icon('trash') %>Vaciar chat</button>
+            <button data-action="block" class="is-danger" id="blockBtn"><%- icon('ban') %><span id="blockLabel">Bloquear</span></button>
+            <button data-action="leave-group" class="is-danger" id="leaveBtn" hidden><%- icon('logout') %>Salir del grupo</button>
+        </section>
+    </div>
+</aside>
