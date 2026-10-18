@@ -36,6 +36,17 @@ async function start() {
   // Mensajes programados y temporales
   require("./src/services/scheduler").start();
 
+  // Puerto ocupado (otra copia del servidor ya está encendida): mensaje claro en lugar de un error largo
+  server.on("error", (err) => {
+    if (err.code !== "EADDRINUSE") throw err;
+    console.error(
+      `\n✖ El puerto ${config.port} ya está en uso: probablemente Yabla ya está encendido en otra terminal.\n` +
+        `  · Ciérralo (Ctrl + C en esa terminal) o usa otro puerto: PORT=3001 npm run dev\n` +
+        `  · En Windows puedes ver qué lo usa con: netstat -ano | findstr :${config.port}\n`
+    );
+    process.exit(1);
+  });
+
   server.listen(config.port, () => {
     const where = db.isLocal ? "SQLite local" : "Turso";
     console.log(`Yabla escuchando en ${config.isProduction ? config.baseUrl : `http://localhost:${config.port}`} · base de datos: ${where}`);

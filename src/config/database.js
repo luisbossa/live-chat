@@ -99,7 +99,12 @@ const db = {
 
   /** Crea las tablas si no existen y aplica las migraciones pendientes. Se llama una vez al arrancar. */
   async init() {
-    if (isLocal) await client.execute("PRAGMA journal_mode = WAL");
+    if (isLocal) {
+      await client.execute("PRAGMA journal_mode = WAL");
+      // Si otro proceso está escribiendo (p. ej. npm run db:reset con el servidor encendido),
+      // se espera hasta 5 s en lugar de fallar con "database is locked"
+      await client.execute("PRAGMA busy_timeout = 5000");
+    }
     await client.execute("PRAGMA foreign_keys = ON");
     await client.executeMultiple(fs.readFileSync(path.join(__dirname, "../db/schema.sql"), "utf8"));
     await migrate();
