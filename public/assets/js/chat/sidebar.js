@@ -26,7 +26,7 @@ function convItem(conv) {
         <span class="avatar ${peer?.online ? "is-online" : ""}"><img src="${convAvatar(conv)}" alt="" loading="lazy"></span>
         <span class="conv-body">
           <span class="conv-row">
-            <span class="conv-name">${escapeHTML(convTitle(conv))}</span>
+            <span class="conv-name">${escapeHTML(convTitle(conv))}${peer?.official ? icon("verified", "badge-verified") : ""}</span>
             <span class="conv-time">${listTime(msg?.createdAt || conv.createdAt)}</span>
           </span>
           <span class="conv-row">

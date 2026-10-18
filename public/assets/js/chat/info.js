@@ -40,12 +40,12 @@ export function renderInfo(conv = activeConv()) {
   $("#infoTitle").textContent = group ? "Info del grupo" : "Info del contacto";
   $("#infoAvatar img").src = convAvatar(conv);
   $("#infoAvatar img").dataset.lightboxSrc = convAvatar(conv);
-  $("#infoName").textContent = convTitle(conv);
+  $("#infoName").innerHTML = escapeHTML(convTitle(conv)) + (peer?.official ? icon("verified", "badge-verified") : "");
   $("#infoMeta").textContent = group ? `Grupo · ${conv.members.length} participantes` : [peer?.username && `@${peer.username}`, peer?.phone].filter(Boolean).join(" · ");
   $("#infoBioTitle").textContent = group ? "Descripción" : "Info";
   $("#infoBio").textContent = group ? conv.description || "Sin descripción." : `${peer?.bio || ""}${peer ? `\n${lastSeenLabel(peer)}` : ""}`;
 
-  $$(".info-actions [data-call]").forEach((b) => (b.hidden = group));
+  $$(".info-actions [data-call]").forEach((b) => (b.hidden = group || Boolean(peer?.official)));
   $("#muteIcon").setAttribute("href", `/assets/images/icons.svg#i-${conv.muted ? "bell-off" : "bell"}`);
   $("#muteLabel").textContent = conv.muted ? "Activar" : "Silenciar";
   $("#pinLabel").textContent = conv.pinned ? "Desfijar chat" : "Fijar chat";

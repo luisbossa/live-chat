@@ -22,6 +22,9 @@ async function start() {
     if (await seed()) console.log("Datos de demostración creados (contraseña: demo1234).");
   }
 
+  // Cuenta oficial que da la bienvenida a los usuarios nuevos
+  await require("./src/services/welcome").ensureOfficialAccount();
+
   const server = http.createServer(app);
   const io = createSocketServer(server);
 

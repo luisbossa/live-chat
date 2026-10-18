@@ -14,6 +14,7 @@ import { initInfo, toggleInfo } from "./info.js";
 import { initStories, openStories, step as storyStep, closeStories, storyViewerOpen, refreshStories, onStoryViewed } from "./stories.js";
 import { initCalls, startCall } from "./calls.js";
 import { initAccount, renderMe, onWalletUpdate } from "./account.js";
+import { initHome } from "./home.js";
 
 const app = $("#app");
 
@@ -161,6 +162,7 @@ async function start() {
   initStories();
   initCalls();
   initAccount();
+  initHome();
   bindSocket();
   bindClicks();
   bindKeys();
@@ -176,20 +178,12 @@ async function start() {
 
   setTab("chats");
 
-  // ?c=ID abre un chat concreto (enlaces de QR o notificaciones)
+  // ?c=ID abre un chat concreto (enlaces de QR o notificaciones); si no, se ve la pantalla de inicio
   const requested = Number(new URLSearchParams(location.search).get("c"));
-  const first = [...state.conversations.values()][0];
   if (requested && getConv(requested)) openChat(requested);
-  else if (!isMobile() && first) openChat(renderListsFirstId() ?? first.id);
 
   window.addEventListener("focus", () => markRead());
   window.yabla = { state, rerenderActive }; // depuración
-}
-
-/** Id del primer chat visible en la lista (respeta el orden y los fijados). */
-function renderListsFirstId() {
-  const btn = $("#chatList [data-conv]");
-  return btn ? Number(btn.dataset.conv) : null;
 }
 
 start();

@@ -46,8 +46,9 @@ module.exports = function registerCallHandlers(io, socket, safe) {
         return ack({ error: "Solo puedes llamar en chats individuales." });
       }
       const calleeId = memberIds.find((uid) => uid !== userId);
-      const [blocked, caller] = await Promise.all([User.isBlocked(userId, calleeId), User.findById(userId)]);
+      const [blocked, caller, callee] = await Promise.all([User.isBlocked(userId, calleeId), User.findById(userId), User.findById(calleeId)]);
       if (blocked) return ack({ error: "No puedes llamar a este contacto." });
+      if (callee?.username === User.OFFICIAL_USERNAME) return ack({ error: "La cuenta oficial no recibe llamadas." });
 
       // A partir de aquí no hay await hasta registrar la llamada: evita dos llamadas simultáneas
       if (busy(userId)) return ack({ error: "Ya estás en una llamada." });

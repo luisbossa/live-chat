@@ -4,6 +4,7 @@ const config = require("../config");
 const presence = require("../services/presence");
 
 const DEFAULT_AVATAR = "/assets/images/ui/avatar-default.svg";
+const OFFICIAL_USERNAME = "yabla"; // cuenta oficial que da la bienvenida (services/welcome.js)
 
 const SQL = {
   insert: `
@@ -39,6 +40,7 @@ const placeholders = (n) => Array(n).fill("?").join(",");
 
 const User = {
   DEFAULT_AVATAR,
+  OFFICIAL_USERNAME,
 
   async create({ name, username, email, password, avatar = null, phone = null, bio = null }, executor = db) {
     const { lastInsertRowid } = await executor.run(SQL.insert, {
@@ -129,6 +131,7 @@ const User = {
       phone: user.phone,
       online: presence.isOnline(user.id),
       lastSeen: user.show_last_seen ? user.last_seen : null,
+      official: user.username === OFFICIAL_USERNAME,
     };
   },
 

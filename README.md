@@ -8,6 +8,7 @@ App de **chat y videollamadas en tiempo real** hecha con Node.js, Express, EJS, 
 - Registro en dos pasos con validación, comprobación de nombre de usuario en vivo y foto de perfil
 - Inicio de sesión desde la landing o desde `/login`, con sesiones guardadas en SQLite
 - Perfil editable y código QR personal para que otros te agreguen (`/u/tu_usuario`)
+- Bienvenida para usuarios nuevos: chat de la cuenta oficial "Yabla", pantalla de inicio con primeros pasos y personas que quizá conozcas (botón "Saludar")
 
 **Mensajería en tiempo real**
 - Chats individuales y grupos (crear, añadir participantes, salir, administradores)

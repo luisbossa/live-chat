@@ -171,6 +171,7 @@ if (require.main === module) {
   (async () => {
     await db.init();
     const created = await seed({ reset: process.argv.includes("--reset") });
+    await require("../services/welcome").ensureOfficialAccount();
     if (!created) {
       console.log("La base de datos ya tiene usuarios. Usa `npm run db:reset` para borrarla y volver a sembrar.");
     } else {

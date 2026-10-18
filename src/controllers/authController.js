@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const upload = require("../middleware/upload");
 const validate = require("../utils/validate");
+const welcome = require("../services/welcome");
 
 /** Solo se permiten redirecciones internas (evita redirecciones abiertas). */
 function safeNext(next) {
@@ -46,6 +47,8 @@ exports.register = async (req, res) => {
   if (Object.keys(errors).length) return res.status(422).json({ error: "Revisa los datos del formulario.", errors });
 
   const user = await User.create({ ...data, avatar: await upload.save(req.file) });
+  // Chat de bienvenida de la cuenta oficial: la app no está vacía la primera vez
+  await welcome.sendWelcome(user).catch((err) => console.error("[bienvenida]", err));
   await startSession(req, user.id);
   res.status(201).json({ redirect: "/chat" });
 };

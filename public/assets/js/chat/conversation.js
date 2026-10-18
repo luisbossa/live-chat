@@ -232,7 +232,7 @@ export function renderHeader(conv = activeConv()) {
   const peer = peerOf(conv);
   $("#peerAvatar").className = `avatar ${peer?.online ? "is-online" : ""}`;
   $("#peerAvatar img").src = convAvatar(conv);
-  $("#peerName").textContent = convTitle(conv);
+  $("#peerName").innerHTML = escapeHTML(convTitle(conv)) + (peer?.official ? icon("verified", "badge-verified") : "");
 
   const typing = typingText(conv);
   const status = $("#peerStatus");
@@ -242,6 +242,9 @@ export function renderHeader(conv = activeConv()) {
   } else if (isGroup(conv)) {
     status.textContent = conv.members.map((m) => (m.id === state.me.id ? "Tú" : firstName(m.name))).join(", ");
     status.className = "";
+  } else if (peer?.official) {
+    status.textContent = "Cuenta oficial";
+    status.className = "";
   } else if (isBlockedConv(conv)) {
     status.textContent = "Bloqueado";
     status.className = "";
@@ -250,7 +253,7 @@ export function renderHeader(conv = activeConv()) {
     status.className = peer?.online ? "is-online" : "";
   }
 
-  $$('.chat-head [data-call]').forEach((b) => (b.hidden = isGroup(conv)));
+  $$('.chat-head [data-call]').forEach((b) => (b.hidden = isGroup(conv) || Boolean(peer?.official)));
   const blocked = isBlockedConv(conv);
   $("#composer").classList.toggle("is-blocked", blocked);
   $("#blockedNote").hidden = !blocked;

@@ -6,6 +6,7 @@ const upload = require("../middleware/upload");
 const realtime = require("../services/realtime");
 const validate = require("../utils/validate");
 const { httpError } = require("../middleware/errorHandler");
+const welcome = require("../services/welcome");
 
 const MAX_TEXT = 4000;
 const STICKER_PATH = /^\/assets\/images\/stickers\/sticker\d{1,3}\.gif$/;
@@ -20,10 +21,12 @@ exports.loadMembership = async (req, res, next) => {
   next();
 };
 
+/** Comprueba bloqueos y devuelve el otro participante de un chat 1 a 1 (o null). */
 async function assertCanSend(req) {
-  if (req.conversation.type !== "direct") return;
+  if (req.conversation.type !== "direct") return null;
   const peerId = (await Conversation.memberIds(req.conversation.id)).find((id) => id !== req.user.id);
   if (peerId && (await User.isBlocked(req.user.id, peerId))) throw httpError(403, "No puedes enviar mensajes a este contacto.");
+  return peerId ? User.findById(peerId) : null;
 }
 
 async function systemMessage(conversationId, actorId, action, extra = {}) {
@@ -76,7 +79,7 @@ exports.media = async (req, res) => {
 };
 
 exports.send = async (req, res) => {
-  await assertCanSend(req);
+  const peer = await assertCanSend(req);
 
   const conversationId = req.conversation.id;
   const text = validate.str(req.body.text, MAX_TEXT);
@@ -119,6 +122,7 @@ exports.send = async (req, res) => {
   const member = await Conversation.updateReceipts(conversationId, req.user.id, { read: message.id });
   await realtime.message(message);
   await realtime.receipt(conversationId, req.user, member);
+  if (peer?.username === welcome.OFFICIAL_USERNAME) welcome.autoReply(conversationId, peer.id);
   res.status(201).json({ message });
 };
 

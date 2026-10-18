@@ -1,10 +1,36 @@
 <!-- Conversación activa -->
 <main class="chat" id="chat">
-    <div class="chat-empty" id="chatEmpty">
-        <span class="logo logo-lg"><%- icon('logo') %></span>
-        <h2>Tus mensajes</h2>
-        <p class="muted">Elige una conversación o empieza una nueva.</p>
-        <button class="btn btn-primary" data-open="modal-new-chat"><%- icon('chat-plus') %>Nuevo chat</button>
+    <!-- Inicio: se muestra cuando no hay ningún chat abierto -->
+    <div class="chat-empty home" id="chatEmpty">
+        <div class="home-inner">
+            <header class="home-hero">
+                <img class="home-avatar" src="<%= user.avatar %>" alt="" data-me="avatar">
+                <div>
+                    <p class="home-date" id="homeDate"></p>
+                    <h2><span id="homeGreeting">Hola</span>, <span data-me="firstName"><%= user.name.split(' ')[0] %></span> 👋</h2>
+                    <p class="muted" id="homeSummary">Elige una conversación o empieza una nueva.</p>
+                </div>
+            </header>
+
+            <div class="home-actions">
+                <button data-open="modal-new-chat"><span class="tone-blue"><%- icon('chat-plus') %></span><strong>Nuevo chat</strong><small>Escribe a cualquier persona</small></button>
+                <button data-open="modal-group"><span class="tone-violet"><%- icon('users') %></span><strong>Nuevo grupo</strong><small>Reúne a tus amigos</small></button>
+                <button data-action="my-status"><span class="tone-pink"><%- icon('camera') %></span><strong>Publicar estado</strong><small>Desaparece en 24 h</small></button>
+                <button data-open="modal-qr"><span class="tone-green"><%- icon('qr') %></span><strong>Mi código QR</strong><small>Para que te agreguen</small></button>
+            </div>
+
+            <section class="home-card" id="homeChecklist" hidden></section>
+
+            <section class="home-card" id="homePeopleCard" hidden>
+                <div class="home-card-head">
+                    <h3><%- icon('sparkles', 'icon-sm') %> Personas que quizá conozcas</h3>
+                    <button class="link-btn" data-open="modal-new-chat">Ver todas</button>
+                </div>
+                <div class="people-grid" id="homePeople"></div>
+            </section>
+
+            <p class="home-foot muted"><%- icon('lock', 'icon-sm') %> Tus mensajes y llamadas son privados entre los participantes.</p>
+        </div>
     </div>
 
     <header class="chat-head">
