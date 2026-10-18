@@ -29,6 +29,8 @@ router.post("/users/:id/block", h(users.toggleBlock));
 // Conversaciones
 router.post("/conversations", upload.image.single("avatar"), h(conversations.create));
 router.use("/conversations/:id", h(conversations.loadMembership));
+router.get("/conversations/:id", h(conversations.show));
+router.delete("/conversations/:id", h(conversations.remove));
 router.get("/conversations/:id/messages", h(conversations.messages));
 router.post("/conversations/:id/messages", upload.file.single("file"), h(conversations.send));
 router.get("/conversations/:id/media", h(conversations.media));

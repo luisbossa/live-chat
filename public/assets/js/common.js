@@ -53,18 +53,45 @@ const Yabla = (() => {
   }
 
   // --- Toast ---
+  // Icono por defecto de cada tipo de aviso
+  const TOAST_ICONS = { success: "check", error: "alert", info: "info" };
   let toastTimer;
-  function toast(message) {
+
+  /**
+   * Aviso en la parte inferior, con icono SVG (sin emojis).
+   * toast("Perfil actualizado", { tone: "success" })
+   * toast("Saldo insuficiente", { tone: "error" })
+   * toast("Chat fijado", { icon: "pin" })
+   * toast("Karla: hola", { avatar: "/foto.jpg", title: "Karla" })  // mensaje nuevo
+   */
+  function toast(message, { tone = "info", icon: iconName, avatar, title, duration = 2800 } = {}) {
     let el = document.querySelector(".toast");
     if (!el) {
       el = Object.assign(document.createElement("div"), { className: "toast" });
       el.setAttribute("role", "status");
+      el.setAttribute("aria-live", "polite");
       document.body.append(el);
     }
-    el.textContent = message;
-    el.classList.add("is-visible");
+    el.className = `toast is-${tone}${avatar ? " has-avatar" : ""}`;
+    el.replaceChildren();
+
+    if (avatar) {
+      const img = Object.assign(document.createElement("img"), { className: "toast-avatar", src: avatar, alt: "" });
+      el.append(img);
+    } else {
+      const badge = Object.assign(document.createElement("span"), { className: "toast-icon" });
+      badge.innerHTML = icon(iconName || TOAST_ICONS[tone] || "info");
+      el.append(badge);
+    }
+
+    const body = Object.assign(document.createElement("span"), { className: "toast-body" });
+    if (title) body.append(Object.assign(document.createElement("strong"), { textContent: title }));
+    body.append(Object.assign(document.createElement("span"), { textContent: message }));
+    el.append(body);
+
+    requestAnimationFrame(() => el.classList.add("is-visible"));
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove("is-visible"), 2600);
+    toastTimer = setTimeout(() => el.classList.remove("is-visible"), duration);
   }
 
   /** Icono del sprite como HTML. */

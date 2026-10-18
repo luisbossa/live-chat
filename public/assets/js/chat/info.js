@@ -1,9 +1,9 @@
 // Panel de información del chat activo.
-import { $, $$, icon, escapeHTML, toast, lastSeenLabel, isWide, isMobile } from "./utils.js";
+import { $, $$, icon, escapeHTML, toast, lastSeenLabel, isWide, isMobile, toastError } from "./utils.js";
 import { state, emit, on, activeConv, isGroup, peerOf, convTitle, convAvatar, upsertConversation, isBlockedConv } from "./state.js";
 import { api } from "./api.js";
 import { registerAction, confirmDialog, openLightbox, onModalOpen, renderPicker, closeModal } from "./ui.js";
-import { rerenderActive, resetMessages, closeChat } from "./conversation.js";
+import { togglePin, toggleMute, clearChat, deleteChat } from "./conv-actions.js";
 
 const app = $("#app");
 
@@ -69,48 +69,20 @@ export function renderInfo(conv = activeConv()) {
       .join("");
   }
 
-  $("#blockBtn").hidden = group;
+  $("#blockBtn").hidden = group || Boolean(peer?.official);
+  $("#deleteChatBtn").hidden = group;
   $("#leaveBtn").hidden = !group;
   $("#blockLabel").textContent = isBlockedConv(conv) ? "Desbloquear" : `Bloquear a ${peer?.name?.split(" ")[0] || ""}`;
   renderMedia(conv);
 }
 
-async function updateSettings(fields, message) {
-  const conv = activeConv();
-  if (!conv) return;
-  try {
-    const { conversation } = await api.convSettings(conv.id, fields);
-    upsertConversation(conversation);
-    emit("conversations");
-    renderInfo();
-    toast(message(conversation));
-  } catch (err) {
-    toast(err.message);
-  }
-}
-
 export function initInfo() {
   registerAction("toggle-info", () => toggleInfo());
-  registerAction("mute", () => updateSettings({ muted: !activeConv().muted }, (c) => (c.muted ? "Notificaciones silenciadas 🔕" : "Notificaciones activadas 🔔")));
-  registerAction("pin", () => updateSettings({ pinned: !activeConv().pinned }, (c) => (c.pinned ? "Chat fijado 📌" : "Chat desfijado")));
-
-  registerAction("clear-chat", async () => {
-    const conv = activeConv();
-    if (!conv || !(await confirmDialog({ title: "¿Vaciar este chat?", text: "Los mensajes se borrarán solo para ti.", okText: "Vaciar" }))) return;
-    try {
-      const { conversation } = await api.clear(conv.id);
-      upsertConversation(conversation);
-      resetMessages(conv.id);
-      const store = state.messages.get(conv.id) || { items: [], hasMore: false, loaded: true };
-      state.messages.set(conv.id, { ...store, items: [], hasMore: false, loaded: true });
-      rerenderActive();
-      emit("conversations");
-      renderInfo();
-      toast("Chat vaciado");
-    } catch (err) {
-      toast(err.message);
-    }
-  });
+  const withActive = (fn) => () => activeConv() && fn(activeConv());
+  registerAction("mute", withActive(toggleMute));
+  registerAction("pin", withActive(togglePin));
+  registerAction("clear-chat", withActive(clearChat));
+  registerAction("delete-chat", withActive(deleteChat));
 
   registerAction("block", async () => {
     const conv = activeConv();
@@ -123,25 +95,13 @@ export function initInfo() {
       state.blockedIds = new Set(blockedIds);
       emit("blocked");
       renderInfo();
-      toast(blocking ? `Bloqueaste a ${peer.name}` : `Desbloqueaste a ${peer.name}`);
+      toast(blocking ? `Bloqueaste a ${peer.name}` : `Desbloqueaste a ${peer.name}`, { icon: "ban" });
     } catch (err) {
-      toast(err.message);
+      toastError(err.message);
     }
   });
 
-  registerAction("leave-group", async () => {
-    const conv = activeConv();
-    if (!conv || !(await confirmDialog({ title: `¿Salir de «${conv.name}»?`, text: "Dejarás de recibir los mensajes de este grupo.", okText: "Salir" }))) return;
-    try {
-      await api.leave(conv.id);
-      state.conversations.delete(conv.id);
-      closeChat();
-      emit("conversations");
-      toast("Saliste del grupo");
-    } catch (err) {
-      toast(err.message);
-    }
-  });
+  registerAction("leave-group", withActive(deleteChat));
 
   // Añadir participantes (solo admins)
   let getSelected = () => [];
@@ -157,16 +117,16 @@ export function initInfo() {
   $("#addMembersForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const ids = getSelected();
-    if (!ids.length) return toast("Elige al menos una persona");
+    if (!ids.length) return toast("Elige al menos una persona", { tone: "error" });
     try {
       const { conversation } = await api.addMembers(activeConv().id, ids);
       upsertConversation(conversation);
       closeModal("modal-add-members");
       emit("conversations");
       renderInfo();
-      toast("Participantes añadidos");
+      toast("Participantes añadidos", { tone: "success", icon: "user-plus" });
     } catch (err) {
-      toast(err.message);
+      toastError(err.message);
     }
   });
 

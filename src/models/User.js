@@ -8,8 +8,8 @@ const OFFICIAL_USERNAME = "yabla"; // cuenta oficial que da la bienvenida (servi
 
 const SQL = {
   insert: `
-    INSERT INTO users (name, username, email, password_hash, avatar, phone, bio, balance_cents, created_at)
-    VALUES (@name, @username, @email, @passwordHash, @avatar, @phone, COALESCE(@bio, 'Hola, estoy usando Yabla 👋'), @balance, @now)`,
+    INSERT INTO users (name, username, email, password_hash, avatar, phone, bio, balance_cents, balance_crc_cents, created_at)
+    VALUES (@name, @username, @email, @passwordHash, @avatar, @phone, COALESCE(@bio, 'Hola, estoy usando Yabla 👋'), @balance, @balanceCrc, @now)`,
   byId: "SELECT * FROM users WHERE id = ?",
   byEmail: "SELECT * FROM users WHERE email = ?",
   byUsername: "SELECT * FROM users WHERE username = ?",
@@ -52,6 +52,7 @@ const User = {
       phone,
       bio,
       balance: config.initialBalanceCents,
+      balanceCrc: config.initialBalanceCrcCents,
       now: Date.now(),
     });
     return executor.get(SQL.byId, [lastInsertRowid]);
@@ -135,12 +136,17 @@ const User = {
     };
   },
 
+  /** Saldos de la billetera por moneda (en centavos/céntimos). */
+  balancesOf(user) {
+    return { USD: user.balance_cents, CRC: user.balance_crc_cents ?? 0 };
+  },
+
   /** Datos completos del usuario conectado. */
   toSelf(user) {
     return {
       ...User.toPublic(user),
       email: user.email,
-      balanceCents: user.balance_cents,
+      balances: User.balancesOf(user),
       settings: { readReceipts: Boolean(user.read_receipts), showLastSeen: Boolean(user.show_last_seen) },
     };
   },

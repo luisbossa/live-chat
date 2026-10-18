@@ -190,24 +190,6 @@
 .strength[data-level="1"] span { width: 33%; }
 .strength[data-level="3"] span { width: 100%; background: var(--online); }
 
-/* Campo con prefijo "@" */
-.input-prefix {
-  position: relative;
-}
-
-.input-prefix span {
-  position: absolute;
-  left: 18px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--muted);
-  font-weight: 500;
-}
-
-.input-prefix .input {
-  padding-left: 36px;
-}
-
 /* --- Columna decorativa --------------------------------------------------- */
 .auth-showcase {
   position: relative;

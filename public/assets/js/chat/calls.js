@@ -1,6 +1,6 @@
 // Llamadas 1 a 1 con WebRTC. Socket.IO solo transporta la señalización;
 // el audio y el video viajan directamente entre los navegadores.
-import { $, toast, duration } from "./utils.js";
+import { $, toast, duration, toastError } from "./utils.js";
 import { state, activeConv, isGroup, peerOf, convTitle, convAvatar, isBlockedConv } from "./state.js";
 import { socket } from "./socket.js";
 import { registerAction, openModal, closeModal } from "./ui.js";
@@ -64,7 +64,7 @@ async function getMedia(type) {
   } catch (err) {
     if (type === "video") {
       // Sin cámara: se sigue solo con audio
-      toast("No se pudo usar la cámara; la llamada será solo de voz.");
+      toast("No se pudo usar la cámara; la llamada será solo de voz.", { tone: "error", icon: "video-off" });
       return navigator.mediaDevices.getUserMedia({ audio: true });
     }
     throw new Error(err.name === "NotAllowedError" ? "Necesitamos permiso para usar el micrófono." : "No se encontró un micrófono.");
@@ -88,7 +88,7 @@ function createPeer() {
   pc.onconnectionstatechange = () => {
     if (pc.connectionState === "connected") onConnected();
     if (pc.connectionState === "failed") {
-      toast("Se perdió la conexión de la llamada.");
+      toast("Se perdió la conexión de la llamada.", { tone: "error", icon: "phone-off" });
       hangUp();
     }
   };
@@ -146,15 +146,15 @@ export const inCall = () => Boolean(call.id || call.incoming);
 // Llamar
 // ==========================================================================
 export async function startCall(type, conv = activeConv()) {
-  if (!conv || isGroup(conv)) return toast("Las llamadas están disponibles en chats individuales.");
-  if (isBlockedConv(conv)) return toast("Desbloquea al contacto para llamarle.");
-  if (inCall()) return toast("Ya tienes una llamada en curso.");
+  if (!conv || isGroup(conv)) return toast("Las llamadas están disponibles en chats individuales.", { icon: "phone" });
+  if (isBlockedConv(conv)) return toast("Desbloquea al contacto para llamarle.", { tone: "error", icon: "ban" });
+  if (inCall()) return toast("Ya tienes una llamada en curso.", { icon: "phone" });
 
   const peer = peerOf(conv);
   try {
     call.local = await getMedia(type);
   } catch (err) {
-    return toast(err.message);
+    return toastError(err.message);
   }
   call.type = call.local.getVideoTracks().length ? "video" : "audio";
   call.role = "caller";
@@ -166,7 +166,7 @@ export async function startCall(type, conv = activeConv()) {
 
   socket.emit("call:invite", { conversationId: conv.id, type: call.type }, (res) => {
     if (res?.error) {
-      toast(res.error);
+      toastError(res.error);
       return cleanup();
     }
     call.id = res.callId;
@@ -216,7 +216,7 @@ async function accept() {
   try {
     call.local = await getMedia(incoming.type);
   } catch (err) {
-    toast(err.message);
+    toastError(err.message);
     socket.emit("call:reject", { callId: incoming.callId });
     return cleanup();
   }
@@ -267,14 +267,14 @@ socket.on("call:ended", ({ callId, reason }) => {
   const matches = callId === call.id || callId === call.incoming?.callId;
   if (!matches) return;
   const talked = call.startedAt ? ` · ${duration((Date.now() - call.startedAt) / 1000)}` : "";
-  if (reason !== "answered-elsewhere") toast(`${END_REASONS[reason] || "Llamada finalizada"}${talked}`);
+  if (reason !== "answered-elsewhere") toast(`${END_REASONS[reason] || "Llamada finalizada"}${talked}`, { icon: "phone-off", tone: ["declined", "disconnected", "timeout"].includes(reason) ? "error" : "info" });
   cleanup();
 });
 
 function hangUp() {
   if (call.id && call.id !== "pending") socket.emit("call:end", { callId: call.id });
   const talked = call.startedAt ? `Llamada finalizada · ${duration((Date.now() - call.startedAt) / 1000)}` : "Llamada cancelada";
-  toast(talked);
+  toast(talked, { icon: "phone-off" });
   cleanup();
 }
 

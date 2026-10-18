@@ -2,7 +2,8 @@
 export const $ = (sel, root = document) => root.querySelector(sel);
 export const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 export const icon = (name, extra) => Yabla.icon(name, extra);
-export const toast = (msg) => Yabla.toast(msg);
+export const toast = (msg, opts) => Yabla.toast(msg, opts);
+export const toastError = (msg) => Yabla.toast(msg, { tone: "error" });
 
 export function escapeHTML(text = "") {
   return String(text).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -59,7 +60,20 @@ export function relativeTime(ms) {
   return listTime(ms);
 }
 
-export const money = (cents) => (cents / 100).toLocaleString("en-US", { style: "currency", currency: "USD" });
+/** Dinero en centavos/céntimos: $12.50 (dólares) o ₡8 500 (colones, sin céntimos si son enteros). */
+export function money(cents = 0, currency = "USD") {
+  const amount = cents / 100;
+  if (currency === "CRC") {
+    const whole = Number.isInteger(amount);
+    return amount.toLocaleString("es-CR", { style: "currency", currency: "CRC", minimumFractionDigits: whole ? 0 : 2, maximumFractionDigits: 2 });
+  }
+  return amount.toLocaleString("en-US", { style: "currency", currency: "USD" });
+}
+
+export const CURRENCIES = {
+  USD: { symbol: "$", label: "Dólares", code: "USD", max: 100000, step: "0.01", min: "0.01" },
+  CRC: { symbol: "₡", label: "Colones", code: "CRC", max: 50000000, step: "1", min: "1" },
+};
 
 export function duration(seconds = 0) {
   const s = Math.max(0, Math.round(seconds));

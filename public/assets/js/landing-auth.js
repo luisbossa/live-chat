@@ -16,12 +16,18 @@
       box.setAttribute("role", "alert");
       Object.assign(box.style, {
         position: "fixed", left: "50%", bottom: "24px", transform: "translateX(-50%)", zIndex: 1000,
-        margin: 0, padding: "12px 20px", borderRadius: "999px", background: "#262424", color: "#fff",
+        display: "flex", alignItems: "center", gap: "10px",
+        margin: 0, padding: "8px 18px 8px 8px", borderRadius: "999px", background: "#262424", color: "#fff",
         font: "500 14px Inter, system-ui, sans-serif", boxShadow: "0 12px 32px rgba(0,0,0,.2)", maxWidth: "calc(100% - 32px)",
       });
       document.body.append(box);
     }
-    box.textContent = message;
+    // Icono SVG de alerta (mismo estilo que los avisos del chat)
+    box.innerHTML =
+      '<span style="display:grid;place-items:center;flex:none;width:30px;height:30px;border-radius:50%;background:#ef4444">' +
+      '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">' +
+      '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg></span>';
+    box.append(Object.assign(document.createElement("span"), { textContent: message }));
     box.hidden = false;
     clearTimeout(showError.timer);
     showError.timer = setTimeout(() => (box.hidden = true), 3500);

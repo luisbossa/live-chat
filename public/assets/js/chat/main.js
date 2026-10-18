@@ -1,5 +1,5 @@
 // Punto de entrada del chat.
-import { $, $$, toast, isMobile, isWide } from "./utils.js";
+import { $, $$, toast, isMobile, isWide, toastError } from "./utils.js";
 import { state, emit, upsertConversation, rememberUser, getConv } from "./state.js";
 import { api } from "./api.js";
 import { socket } from "./socket.js";
@@ -15,6 +15,7 @@ import { initStories, openStories, step as storyStep, closeStories, storyViewerO
 import { initCalls, startCall } from "./calls.js";
 import { initAccount, renderMe, onWalletUpdate } from "./account.js";
 import { initHome } from "./home.js";
+import { initAttach } from "./attach.js";
 
 const app = $("#app");
 
@@ -42,7 +43,7 @@ function bindSocket() {
     const isNew = !state.conversations.has(conv.id);
     upsertConversation(conv);
     emit("conversations");
-    if (isNew && conv.createdBy !== state.me.id && conv.type === "group") toast(`Te añadieron a «${conv.name}»`);
+    if (isNew && conv.createdBy !== state.me.id && conv.type === "group") toast(`Te añadieron a «${conv.name}»`, { icon: "users" });
   });
 
   socket.on("conversation:update", (conv) => {
@@ -152,7 +153,7 @@ async function start() {
   try {
     await loadState();
   } catch (err) {
-    toast(err.message);
+    toastError(err.message);
     return;
   }
 
@@ -163,6 +164,7 @@ async function start() {
   initCalls();
   initAccount();
   initHome();
+  initAttach();
   bindSocket();
   bindClicks();
   bindKeys();

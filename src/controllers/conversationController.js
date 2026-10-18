@@ -44,6 +44,7 @@ exports.create = async (req, res) => {
     if (!userId || userId === me.id || !(await User.findById(userId))) throw httpError(404, "Usuario no encontrado.");
     const { id, created } = await Conversation.getOrCreateDirect(me.id, userId);
     if (created) await realtime.conversation(id, [userId]);
+    else await Conversation.updateMember(id, me.id, { hidden: 0 }); // si lo habías eliminado, vuelve a tu lista
     return res.status(created ? 201 : 200).json({ conversation: await Conversation.getForUser(id, me) });
   }
 
@@ -65,6 +66,13 @@ exports.create = async (req, res) => {
   await Message.create({ conversationId: id, senderId: me.id, type: "system", meta: { action: "created", name } });
   await realtime.conversation(id);
   res.status(201).json({ conversation: await Conversation.getForUser(id, me) });
+};
+
+/** Una conversación (p. ej. un chat eliminado que reaparece al recibir un mensaje). */
+exports.show = async (req, res) => {
+  const conversation = await Conversation.getForUser(req.conversation.id, req.user);
+  if (!conversation) throw httpError(404, "Conversación no encontrada.");
+  res.json({ conversation });
 };
 
 exports.messages = async (req, res) => {
@@ -91,7 +99,11 @@ exports.send = async (req, res) => {
 
   if (file) {
     data.mediaUrl = await upload.save(file);
-    data.type = file.mimetype.startsWith("image/") ? "image" : file.mimetype.startsWith("audio/") || req.body.kind === "audio" ? "audio" : "file";
+    // kind=file: enviado como documento (p. ej. una foto con su calidad original)
+    if (req.body.kind === "file") data.type = "file";
+    else if (file.mimetype.startsWith("image/")) data.type = "image";
+    else if (file.mimetype.startsWith("audio/") || req.body.kind === "audio") data.type = "audio";
+    else data.type = "file";
     data.meta = { name: file.originalname.slice(0, 120), size: file.size, mime: file.mimetype };
     if (data.type === "audio") data.meta.duration = Math.min(Number(req.body.duration) || 0, 60 * 30);
   } else if (sticker) {
@@ -178,6 +190,26 @@ exports.addMembers = async (req, res) => {
 
 exports.leave = async (req, res) => {
   if (req.conversation.type !== "group") throw httpError(400, "Solo puedes salir de grupos.");
+  await leaveGroup(req);
+  res.json({ ok: true });
+};
+
+/**
+ * "Eliminar chat", como en WhatsApp:
+ * - chat individual: se oculta solo para ti con su historial; reaparece si te vuelven a escribir.
+ * - grupo: sales del grupo y desaparece de tu lista.
+ */
+exports.remove = async (req, res) => {
+  if (req.conversation.type === "group") {
+    await leaveGroup(req);
+  } else {
+    await Conversation.hide(req.conversation.id, req.user.id, req.conversation.last_message_id || 0);
+    realtime.toUsers([req.user.id], "conversation:removed", { conversationId: req.conversation.id });
+  }
+  res.json({ ok: true });
+};
+
+async function leaveGroup(req) {
   const conversationId = req.conversation.id;
   await systemMessage(conversationId, req.user.id, "left");
   await Conversation.removeMember(conversationId, req.user.id);
@@ -189,5 +221,4 @@ exports.leave = async (req, res) => {
   }
   realtime.toUsers([req.user.id], "conversation:removed", { conversationId });
   await realtime.conversation(conversationId, undefined, "conversation:update");
-  res.json({ ok: true });
-};
+}

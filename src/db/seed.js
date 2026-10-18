@@ -83,6 +83,10 @@ async function seed({ reset = false } = {}) {
     meta: { duration: 192, name: "cancion.mp3" },
   });
   await say(c, u.karla, at(0, "09:21"), { type: "sticker", mediaUrl: "/assets/images/stickers/sticker12.gif" });
+  // Pago en colones
+  const { send: sendMoney } = require("../models/Transaction");
+  const crcId = await sendMoney(u.karla.id, u.alex.id, 850000, "Almuerzo 🍽️", { currency: "CRC", createdAt: at(0, "09:30") });
+  await say(c, u.karla, at(0, "09:30"), { type: "payment", body: "Almuerzo 🍽️", meta: { amountCents: 850000, currency: "CRC", transactionId: crcId, toUserId: u.alex.id } });
   await readUpTo(c, u.alex);
   await readUpTo(c, u.karla);
 
@@ -114,8 +118,8 @@ async function seed({ reset = false } = {}) {
   await say(c, u.alex, at(2, "15:40"), "¿Me devuelves lo del viernes? 😅");
   await say(c, u.lucie, at(2, "15:43"), "¿Mi dinero? 💰 Jajaja te lo paso ahora");
   const { send } = require("../models/Transaction");
-  const transactionId = await send(u.lucie.id, u.alex.id, 2500, "Cena del viernes 🍕", at(2, "15:45"));
-  await say(c, u.lucie, at(2, "15:45"), { type: "payment", body: "Cena del viernes 🍕", meta: { amountCents: 2500, transactionId, toUserId: u.alex.id } });
+  const transactionId = await send(u.lucie.id, u.alex.id, 2500, "Cena del viernes 🍕", { createdAt: at(2, "15:45") });
+  await say(c, u.lucie, at(2, "15:45"), { type: "payment", body: "Cena del viernes 🍕", meta: { amountCents: 2500, currency: "USD", transactionId, toUserId: u.alex.id } });
   await readUpTo(c, u.alex);
   await readUpTo(c, u.lucie);
 

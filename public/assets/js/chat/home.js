@@ -1,9 +1,9 @@
 // Pantalla de inicio y ayudas para usuarios nuevos: saludo, primeros pasos y sugerencias.
-import { $, $$, icon, escapeHTML, toast, firstName, prefs, debounce } from "./utils.js";
+import { $, $$, icon, escapeHTML, toast, firstName, prefs, debounce, toastError } from "./utils.js";
 import { state, on, emit, isGroup, peerOf, upsertConversation, rememberUser } from "./state.js";
 import { api } from "./api.js";
 import { registerAction } from "./ui.js";
-import { openChat } from "./conversation.js";
+import { openChat, onIncomingMessage } from "./conversation.js";
 
 const DEFAULT_AVATAR = "/assets/images/ui/avatar-default.svg";
 const DEFAULT_BIO = "Hola, estoy usando Yabla 👋";
@@ -32,7 +32,7 @@ function checklistHTML(compact) {
 
   return `
     <div class="home-card-head">
-      <h3>${complete ? "¡Todo listo! 🎉" : "Primeros pasos"}</h3>
+      <h3>${complete ? `${icon("party", "icon-sm")} ¡Todo listo!` : "Primeros pasos"}</h3>
       <button class="link-btn" data-action="dismiss-onboarding">${complete ? "Cerrar" : "Ocultar"}</button>
     </div>
     <div class="progress" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100">
@@ -59,7 +59,8 @@ function checklistHTML(compact) {
 }
 
 function renderChecklist() {
-  const hidden = prefs.get("onboardingDismissed", false);
+  // Se oculta si el usuario la cerró o si ya completó todos los pasos
+  const hidden = prefs.get("onboardingDismissed", false) || steps().every((s) => s.done);
   ["homeChecklist", "sideChecklist"].forEach((id) => {
     const el = document.getElementById(id);
     el.hidden = hidden;
@@ -133,10 +134,11 @@ async function sayHi(userId, btn) {
     upsertConversation(conversation);
     emit("conversations");
     await openChat(conversation.id);
-    await api.send(conversation.id, { text: "👋 ¡Hola!" });
-    toast("¡Saludo enviado! 👋");
+    const { message } = await api.send(conversation.id, { text: "👋 ¡Hola!" });
+    onIncomingMessage(message); // por si el evento del socket aún no llegó (se ignora si ya está)
+    toast("¡Saludo enviado!", { tone: "success", icon: "hand" });
   } catch (err) {
-    toast(err.message);
+    toastError(err.message);
     btn.disabled = false;
   }
 }

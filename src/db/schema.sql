@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS users (
   avatar          TEXT,
   bio             TEXT    NOT NULL DEFAULT 'Hola, estoy usando Yabla 👋',
   phone           TEXT,
-  balance_cents   INTEGER NOT NULL DEFAULT 0,
+  balance_cents   INTEGER NOT NULL DEFAULT 0,      -- saldo en dólares (centavos)
+  balance_crc_cents INTEGER NOT NULL DEFAULT 0,    -- saldo en colones (céntimos)
   read_receipts   INTEGER NOT NULL DEFAULT 1,
   show_last_seen  INTEGER NOT NULL DEFAULT 1,
   last_seen       INTEGER,
@@ -36,6 +37,7 @@ CREATE TABLE IF NOT EXISTS conversation_members (
   cleared_id        INTEGER NOT NULL DEFAULT 0,
   muted             INTEGER NOT NULL DEFAULT 0,
   pinned            INTEGER NOT NULL DEFAULT 0,
+  hidden            INTEGER NOT NULL DEFAULT 0, -- "eliminar chat": oculto hasta que llegue un mensaje nuevo
   joined_at         INTEGER NOT NULL,
   PRIMARY KEY (conversation_id, user_id)
 );
@@ -97,6 +99,7 @@ CREATE TABLE IF NOT EXISTS transactions (
   from_user_id  INTEGER REFERENCES users(id) ON DELETE SET NULL,
   to_user_id    INTEGER REFERENCES users(id) ON DELETE SET NULL,
   amount_cents  INTEGER NOT NULL CHECK (amount_cents > 0),
+  currency      TEXT    NOT NULL DEFAULT 'USD' CHECK (currency IN ('USD', 'CRC')),
   note          TEXT,
   created_at    INTEGER NOT NULL
 );

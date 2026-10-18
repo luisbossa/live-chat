@@ -43,4 +43,5 @@ module.exports = {
   storyTtl: 1000 * 60 * 60 * 24, // 24 horas
   uploadLimit: 5 * 1024 * 1024, // 5 MB: los archivos se guardan en la base de datos
   initialBalanceCents: 50000, // $500 de saldo de demostración
+  initialBalanceCrcCents: 25000000, // ₡250.000 de saldo de demostración
 };

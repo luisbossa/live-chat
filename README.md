@@ -12,7 +12,8 @@ App de **chat y videollamadas en tiempo real** hecha con Node.js, Express, EJS, 
 
 **Mensajería en tiempo real**
 - Chats individuales y grupos (crear, añadir participantes, salir, administradores)
-- Texto con enlaces, emojis, stickers, fotos, documentos y **notas de voz**
+- Texto con enlaces, **más de 1.100 emojis por categorías** (con buscador y recientes, como WhatsApp), stickers, fotos, documentos y **notas de voz**
+- **Vista previa antes de enviar**: varios archivos a la vez (máx. 10), quitar o añadir, comentario por archivo y previsualización de PDF; las fotos pueden enviarse como documento (calidad original)
 - Confirmaciones de lectura con tres estados: enviando, enviado ✓, entregado ✓✓ y leído (✓✓ en color)
 - "Escribiendo…", "en línea" y "últ. vez…"
 - Responder citando un mensaje, **reacciones**, editar (15 min) y eliminar para todos
@@ -30,8 +31,9 @@ App de **chat y videollamadas en tiempo real** hecha con Node.js, Express, EJS, 
 - Ver quién vio tu estado, responder a un estado por chat y eliminarlo
 
 **Billetera**
-- Saldo de demostración, envío de dinero entre contactos con concepto y historial
-- Cada pago aparece como mensaje en el chat y el saldo se actualiza en vivo
+- Dos saldos de demostración: **dólares ($500) y colones costarricenses (₡250.000)**
+- Envío de dinero entre contactos eligiendo la moneda, con concepto, saldo disponible y límite por envío ($1.000 / ₡500.000)
+- Cada pago aparece como mensaje en el chat y los saldos se actualizan en vivo; historial con la moneda de cada movimiento
 
 **Interfaz**
 - Modo claro y oscuro, diseño responsive (escritorio, tablet y móvil con botón "atrás")

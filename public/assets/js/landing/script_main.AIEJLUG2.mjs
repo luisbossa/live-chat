@@ -412,7 +412,7 @@ var Jt = { bounce: 0.2, delay: 0, duration: 0.4, type: "spring" },
                         rendersWithMotion: !0,
                         scopeId: "DpoiTrBZF",
                         children: e(me, {
-                          F2jMG9YJu: "By BStudio",
+                          F2jMG9YJu: "Por BStudio",
                           height: "100%",
                           id: "BUGSxZ3MF",
                           layoutId: "BUGSxZ3MF",

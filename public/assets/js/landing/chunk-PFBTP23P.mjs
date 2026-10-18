@@ -1450,7 +1450,7 @@ var Qt = { delay: 0, duration: 0.2, ease: [0.44, 0, 0.56, 1], type: "tween" },
                         "--framer-text-color":
                           "var(--extracted-r6o4lv, var(--token-6c1f4f47-c6b8-42b3-8425-b084bfb6b014, rgb(255, 255, 255)))",
                       },
-                      children: "Login",
+                      children: "Entrar",
                     }),
                   }),
                   className: "framer-b2tsul",

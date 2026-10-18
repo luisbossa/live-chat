@@ -40,7 +40,7 @@ async function sendWelcome(user) {
         "👥 Crea grupos con tus amigos",
         "📹 Haz llamadas y videollamadas gratis",
         "✨ Comparte estados que duran 24 horas",
-        "💸 Envía dinero desde la Billetera (tienes $500 de prueba)",
+        "💸 Envía dólares o colones desde la Billetera (tienes $500 y ₡250.000 de prueba)",
       ].join("\n"),
     },
     1

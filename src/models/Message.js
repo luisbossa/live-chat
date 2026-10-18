@@ -7,6 +7,8 @@ const SQL = {
     INSERT INTO messages (conversation_id, sender_id, type, body, media_url, meta, reply_to_id, created_at)
     VALUES (@conversationId, @senderId, @type, @body, @mediaUrl, @meta, @replyToId, @now)`,
   setLastInserted: "UPDATE conversations SET last_message_id = last_insert_rowid() WHERE id = ?",
+  // Un mensaje nuevo hace reaparecer el chat a quien lo había eliminado
+  unhide: "UPDATE conversation_members SET hidden = 0 WHERE conversation_id = ? AND hidden = 1",
   byId: "SELECT * FROM messages WHERE id = ?",
   page: `
     SELECT * FROM messages
@@ -95,6 +97,7 @@ const Message = {
     const [{ lastInsertRowid: id }] = await db.batch([
       [SQL.insert, { conversationId, senderId, type, body, mediaUrl, meta: meta ? JSON.stringify(meta) : null, replyToId, now: createdAt }],
       [SQL.setLastInserted, [conversationId]],
+      [SQL.unhide, [conversationId]],
     ]);
     return Message.findById(id);
   },

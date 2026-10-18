@@ -25,6 +25,7 @@ exports.profileLink = async (req, res) => {
 
   const { id, created } = await Conversation.getOrCreateDirect(req.user.id, target.id);
   if (created) await realtime.conversation(id, [target.id]);
+  else await Conversation.updateMember(id, req.user.id, { hidden: 0 });
   res.redirect(`/chat?c=${id}`);
 };
 

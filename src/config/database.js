@@ -38,6 +38,27 @@ function wrap(executor) {
   };
 }
 
+/**
+ * Columnas añadidas después de la primera versión. CREATE TABLE IF NOT EXISTS no
+ * modifica tablas existentes, así que se añaden aquí (bases de datos ya desplegadas).
+ */
+const COLUMN_MIGRATIONS = [
+  ["conversation_members", "hidden", "INTEGER NOT NULL DEFAULT 0"],
+  // Billetera en colones: los usuarios existentes reciben ₡250.000 de prueba
+  ["users", "balance_crc_cents", "INTEGER NOT NULL DEFAULT 25000000"],
+  ["transactions", "currency", "TEXT NOT NULL DEFAULT 'USD'"],
+];
+
+async function migrate() {
+  for (const [table, column, definition] of COLUMN_MIGRATIONS) {
+    const columns = rowsOf(await client.execute(`PRAGMA table_info(${table})`)).map((c) => c.name);
+    if (!columns.includes(column)) {
+      await client.execute(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+      console.log(`Migración: columna ${table}.${column} añadida`);
+    }
+  }
+}
+
 const db = {
   ...wrap(client),
   isLocal,
@@ -66,11 +87,12 @@ const db = {
     return results.map((r) => ({ changes: r.rowsAffected, lastInsertRowid: Number(r.lastInsertRowid ?? 0) }));
   },
 
-  /** Crea las tablas si no existen. Se llama una vez al arrancar. */
+  /** Crea las tablas si no existen y aplica las migraciones pendientes. Se llama una vez al arrancar. */
   async init() {
     if (isLocal) await client.execute("PRAGMA journal_mode = WAL");
     await client.execute("PRAGMA foreign_keys = ON");
     await client.executeMultiple(fs.readFileSync(path.join(__dirname, "../db/schema.sql"), "utf8"));
+    await migrate();
   },
 
   close() {

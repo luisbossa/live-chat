@@ -1,5 +1,5 @@
 // Conversación activa: mensajes, barra de escritura, notas de voz, respuestas, reacciones y lectura.
-import { $, $$, icon, escapeHTML, linkify, toast, timeLabel, dayLabel, lastSeenLabel, duration, fileSize, isMobile, isWide, prefs, firstName } from "./utils.js";
+import { $, $$, icon, escapeHTML, linkify, toast, timeLabel, dayLabel, lastSeenLabel, duration, fileSize, isMobile, isWide, prefs, firstName, toastError } from "./utils.js";
 import {
   state, emit, on, getConv, activeConv, isGroup, peerOf, convTitle, convAvatar, userName, messagesOf, receiptOf, isBlockedConv, upsertConversation,
 } from "./state.js";
@@ -7,6 +7,8 @@ import { api } from "./api.js";
 import { socket } from "./socket.js";
 import { systemText, callText, paymentText, typingText, previewOf } from "./format.js";
 import { registerAction, closePopovers, openLightbox, confirmDialog, openModal } from "./ui.js";
+import { openAttachPreview } from "./attach.js";
+import { initEmojiPicker } from "./emoji-picker.js";
 
 const app = $("#app");
 const messagesEl = $("#messages");
@@ -37,12 +39,14 @@ function highlight(html) {
 function replyQuote(msg) {
   const r = msg.replyTo;
   if (!r) return "";
-  const labels = { image: "📷 Foto", audio: "🎤 Nota de voz", file: "📄 Documento", sticker: "😊 Sticker" };
+  const labels = { image: "Foto", audio: "Nota de voz", file: "Documento", sticker: "Sticker" };
+  const icons = { image: "image", audio: "mic", file: "file", sticker: "sticker" };
   const text = r.deleted ? "Mensaje eliminado" : r.body || labels[r.type] || "";
+  const kindIcon = !r.deleted && icons[r.type] ? icon(icons[r.type], "icon-sm") : "";
   return `
     <button class="quote" data-jump="${r.id}">
       ${r.mediaUrl ? `<img src="${r.mediaUrl}" alt="">` : ""}
-      <span><strong>${escapeHTML(userName(r.senderId))}</strong><span>${escapeHTML(text)}</span></span>
+      <span><strong>${escapeHTML(userName(r.senderId))}</strong><span>${kindIcon}${escapeHTML(text)}</span></span>
     </button>`;
 }
 
@@ -154,7 +158,7 @@ function renderMessages(conv, { keepScroll = false } = {}) {
   const prevTop = messagesEl.scrollTop;
 
   const top = hasMore ? `<div class="load-more" id="loadMore"><span class="spinner"></span></div>` : `<div class="chat-intro">${icon("lock", "icon-sm")} Los mensajes de este chat son privados entre los participantes.</div>`;
-  messagesEl.innerHTML = top + (items.length ? items.map((m, i) => messageHTML(conv, m, items[i - 1])).join("") : `<div class="date-chip chat-placeholder">Aún no hay mensajes. ¡Saluda! 👋</div>`);
+  messagesEl.innerHTML = top + (items.length ? items.map((m, i) => messageHTML(conv, m, items[i - 1])).join("") : `<div class="date-chip chat-placeholder">${icon("hand", "icon-sm")} Aún no hay mensajes. ¡Saluda!</div>`);
   renderTyping(conv);
 
   if (keepScroll) messagesEl.scrollTop = messagesEl.scrollHeight - prevHeight + prevTop;
@@ -312,7 +316,7 @@ export async function openChat(id) {
   try {
     await loadMessages(conv);
   } catch (err) {
-    toast(err.message);
+    toastError(err.message);
   }
   if (state.activeId !== conv.id) return; // cambió de chat mientras cargaba
   renderMessages(conv);
@@ -339,9 +343,21 @@ export function closeChat() {
 // ==========================================================================
 // Eventos en tiempo real
 // ==========================================================================
-export function onIncomingMessage(msg) {
-  const conv = getConv(msg.conversationId);
-  if (!conv) return;
+export async function onIncomingMessage(msg) {
+  let conv = getConv(msg.conversationId);
+  if (!conv) {
+    // Chat que habías eliminado (o nuevo): reaparece con este mensaje
+    try {
+      const { conversation } = await api.conversation(msg.conversationId);
+      conv = upsertConversation(conversation);
+      conv.unread = Math.max(conv.unread || 0, 0);
+    } catch {
+      return;
+    }
+    if (msg.senderId !== state.me.id) notify(conv, msg);
+    emit("conversations");
+    return;
+  }
   const store = messagesOf(conv.id);
   const mine = msg.senderId === state.me.id;
 
@@ -450,7 +466,7 @@ function beep() {
 function notify(conv, msg) {
   if (conv.muted) return;
   beep();
-  if (document.visibilityState === "visible") toast(`💬 ${convTitle(conv)}: ${previewOf(conv, msg)}`);
+  if (document.visibilityState === "visible") toast(previewOf(conv, msg), { avatar: convAvatar(conv), title: convTitle(conv), duration: 3500 });
   else if ("Notification" in window && Notification.permission === "granted") {
     const n = new Notification(convTitle(conv), { body: previewOf(conv, msg), icon: convAvatar(conv), tag: `conv-${conv.id}` });
     n.onclick = () => {
@@ -496,7 +512,7 @@ async function send(data, preview) {
   } catch (err) {
     store.items = store.items.filter((m) => m.id !== temp.id);
     messagesEl.querySelector(`[data-id="${temp.id}"]`)?.remove();
-    toast(err.message);
+    toastError(err.message);
   }
 }
 
@@ -512,7 +528,7 @@ function submitText() {
     const msg = composeState.message;
     cancelContext();
     if (text !== msg.body) {
-      api.editMessage(msg.id, text).catch((err) => toast(err.message));
+      api.editMessage(msg.id, text).catch((err) => toastError(err.message));
     }
   } else {
     const replyToId = composeState.mode === "reply" ? composeState.message.id : undefined;
@@ -527,16 +543,20 @@ function submitText() {
   input.focus();
 }
 
-function sendFile(file, kind) {
-  if (!file) return;
-  if (file.size > 5 * 1024 * 1024) return toast("El archivo supera el límite de 5 MB.");
+/** Envía un archivo con su comentario (lo llama la vista previa de adjuntos). */
+export function sendAttachment(file, caption = "", kind = "image") {
+  if (!file) return Promise.resolve();
+  if (file.size > 5 * 1024 * 1024) {
+    toast("El archivo supera el límite de 5 MB.", { tone: "error", icon: "file" });
+    return Promise.resolve();
+  }
   const isImage = file.type.startsWith("image/") && kind !== "file";
   const preview = isImage
-    ? { type: "image", mediaUrl: URL.createObjectURL(file) }
-    : { type: "file", meta: { name: file.name, size: file.size } };
+    ? { type: "image", mediaUrl: URL.createObjectURL(file), body: caption || null }
+    : { type: "file", meta: { name: file.name, size: file.size }, body: caption || null };
   const replyToId = composeState.mode === "reply" ? composeState.message.id : undefined;
   cancelContext();
-  send({ file, replyToId }, preview);
+  return send({ file, text: caption || undefined, replyToId, kind: isImage ? undefined : "file" }, preview);
 }
 
 // --- Escribiendo… ---
@@ -631,7 +651,7 @@ async function react(msg, emoji) {
   try {
     await api.react(msg.id, emoji);
   } catch (err) {
-    toast(err.message);
+    toastError(err.message);
   }
 }
 
@@ -647,10 +667,10 @@ menu.addEventListener("click", async (e) => {
   if (action === "edit") setContext("edit", msg);
   if (action === "copy") {
     await navigator.clipboard?.writeText(msg.body || "");
-    toast("Mensaje copiado");
+    toast("Mensaje copiado", { tone: "success", icon: "copy" });
   }
   if (action === "delete" && (await confirmDialog({ title: "¿Eliminar para todos?", text: "El mensaje se eliminará para todos los participantes.", okText: "Eliminar" }))) {
-    api.deleteMessage(msg.id).catch((err) => toast(err.message));
+    api.deleteMessage(msg.id).catch((err) => toastError(err.message));
   }
 });
 
@@ -696,7 +716,7 @@ messagesEl.addEventListener("click", (e) => {
   const jump = t.closest("[data-jump]");
   if (jump) {
     const target = messagesEl.querySelector(`[data-id="${jump.dataset.jump}"]`);
-    if (!target) return toast("El mensaje original está más arriba en el historial.");
+    if (!target) return toast("El mensaje original está más arriba en el historial.", { icon: "reply" });
     target.scrollIntoView({ behavior: "smooth", block: "center" });
     target.classList.add("is-flash");
     setTimeout(() => target.classList.remove("is-flash"), 1400);
@@ -747,7 +767,7 @@ function toggleAudio(el) {
   playingEl = el;
   player.src = el.dataset.src;
   player.play().then(() => setPlayIcon(el, true), () => {
-    toast("No se pudo reproducir el audio");
+    toast("No se pudo reproducir el audio", { tone: "error", icon: "mic-off" });
     stopAudio();
   });
 }
@@ -774,11 +794,11 @@ player.addEventListener("ended", stopAudio);
 const recorder = { media: null, chunks: [], stream: null, started: 0, timer: null, cancelled: false };
 
 async function startRecording() {
-  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) return toast("Tu navegador no permite grabar audio.");
+  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) return toast("Tu navegador no permite grabar audio.", { tone: "error", icon: "mic-off" });
   try {
     recorder.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   } catch {
-    return toast("Necesitamos permiso para usar el micrófono.");
+    return toast("Necesitamos permiso para usar el micrófono.", { tone: "error", icon: "mic-off" });
   }
   recorder.chunks = [];
   recorder.cancelled = false;
@@ -868,11 +888,12 @@ export function initConversation() {
     }
   });
 
+  // Pegar imágenes o archivos (Ctrl+V) abre la vista previa
   input.addEventListener("paste", (e) => {
-    const file = [...(e.clipboardData?.files || [])][0];
-    if (file?.type.startsWith("image/")) {
+    const files = [...(e.clipboardData?.files || [])];
+    if (files.length) {
       e.preventDefault();
-      sendFile(file, "image");
+      openAttachPreview(files, "auto");
     }
   });
 
@@ -895,18 +916,15 @@ export function initConversation() {
     $("#chat").classList.remove("is-dragging");
     if (!e.dataTransfer?.files.length || !state.activeId) return;
     e.preventDefault();
-    sendFile(e.dataTransfer.files[0]);
+    openAttachPreview([...e.dataTransfer.files], "auto");
   });
 
-  // Emojis y stickers
-  const emojis = "😀 😃 😄 😁 😆 😅 😂 🤣 😊 😇 🙂 😉 😍 🥰 😘 😋 😛 😜 🤪 😎 🤩 🥳 😏 😒 😔 😢 😭 😤 😡 🤯 😳 🥺 😱 🤔 🤫 🙄 😴 🤤 😷 🤗 👍 👎 👏 🙌 🙏 💪 👋 ✌️ 🤞 👌 ❤️ 🧡 💛 💚 💙 💜 🖤 💔 ✨ 🔥 🎉 🎶 ☕ 🍕 🍿 ⚽ 🎮 📷 ✈️ 🌙".split(" ");
-  $("#emojiPanel").innerHTML = emojis.map((em) => `<button type="button" data-emoji="${em}">${em}</button>`).join("");
-  $("#emojiPanel").addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-emoji]");
-    if (!btn) return;
-    input.setRangeText(btn.dataset.emoji, input.selectionStart, input.selectionEnd, "end");
-    input.focus();
+  // Emojis (por categorías, con buscador y recientes) y stickers
+  initEmojiPicker($("#emojiPanel"), (emoji) => {
+    input.setRangeText(emoji, input.selectionStart, input.selectionEnd, "end");
     autosize();
+    // En móvil no se enfoca el campo para no abrir el teclado encima del panel
+    if (!isMobile()) input.focus();
   });
 
   $("#stickerPanel").addEventListener("popover:open", () => {
@@ -931,15 +949,19 @@ export function initConversation() {
       return openModal("modal-wallet", peer?.id);
     }
     fileInput.dataset.kind = type;
+    fileInput.multiple = type !== "camera";
     fileInput.accept = type === "file" ? "" : "image/*";
     if (type === "camera") fileInput.setAttribute("capture", "environment");
     else fileInput.removeAttribute("capture");
     fileInput.click();
   });
 
+  // Los archivos elegidos pasan por la vista previa (o se añaden si ya está abierta)
   fileInput.addEventListener("change", () => {
-    sendFile(fileInput.files[0], fileInput.dataset.kind);
+    // "Documento" envía todo como archivo; foto, cámara y añadir detectan cada archivo
+    openAttachPreview(fileInput.files, fileInput.dataset.kind === "file" ? "file" : "auto");
     fileInput.value = "";
+    delete fileInput.dataset.adding;
   });
 
   document.addEventListener("visibilitychange", () => markRead());

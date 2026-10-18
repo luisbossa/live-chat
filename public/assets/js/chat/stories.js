@@ -1,5 +1,5 @@
 // Estados de 24 h: lista, visor, publicación, vistas y respuestas.
-import { $, escapeHTML, firstName, relativeTime, toast, icon } from "./utils.js";
+import { $, escapeHTML, firstName, relativeTime, toast, icon, toastError } from "./utils.js";
 import { state, emit, upsertConversation } from "./state.js";
 import { api } from "./api.js";
 import { registerAction, openModal, closeModal, onModalOpen, confirmDialog } from "./ui.js";
@@ -188,9 +188,9 @@ export function initStories() {
       const { conversation } = await api.openDirect(viewer.group.user.id);
       upsertConversation(conversation);
       await api.send(conversation.id, { text, storyId: story.id });
-      toast("Respuesta enviada ✉️");
+      toast("Respuesta enviada", { tone: "success", icon: "send" });
     } catch (err) {
-      toast(err.message);
+      toastError(err.message);
     }
   });
 
@@ -225,9 +225,9 @@ export function initStories() {
       await api.deleteStory(story.id);
       closeStories();
       await refreshStories();
-      toast("Estado eliminado");
+      toast("Estado eliminado", { icon: "trash" });
     } catch (err) {
-      toast(err.message);
+      toastError(err.message);
     }
   });
 
@@ -247,16 +247,16 @@ export function initStories() {
   });
   $("#storyForm").addEventListener("submit", async (e) => {
     e.preventDefault();
-    if (!fileField.files[0]) return toast("Elige una foto para tu estado");
+    if (!fileField.files[0]) return toast("Elige una foto para tu estado", { tone: "error", icon: "image" });
     const btn = $("button[type=submit]", e.target);
     btn.disabled = true;
     try {
       await api.createStory(new FormData(e.target));
       closeModal("modal-story");
       await refreshStories();
-      toast("Estado publicado ✨");
+      toast("Estado publicado", { tone: "success", icon: "sparkles" });
     } catch (err) {
-      toast(err.message);
+      toastError(err.message);
     } finally {
       btn.disabled = false;
     }

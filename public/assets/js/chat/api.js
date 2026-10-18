@@ -18,6 +18,8 @@ export const api = {
   qr: () => req("/api/me/qr"),
 
   openDirect: (userId) => req("/api/conversations", { method: "POST", body: { userId } }),
+  conversation: (id) => req(`/api/conversations/${id}`),
+  deleteConversation: (id) => req(`/api/conversations/${id}`, { method: "DELETE" }),
   createGroup: (formData) => req("/api/conversations", { method: "POST", body: formData }),
   messages: (id, before) => req(`/api/conversations/${id}/messages${before ? `?before=${before}` : ""}`),
   media: (id) => req(`/api/conversations/${id}/media`),

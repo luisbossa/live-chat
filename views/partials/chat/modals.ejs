@@ -8,6 +8,22 @@
     <img src="" alt="" id="lightboxImg">
 </div>
 
+<!-- Vista previa de adjuntos antes de enviar -->
+<div class="modal attach-modal" id="modal-attach">
+    <div class="modal-dialog is-wide attach-dialog">
+        <div class="modal-head">
+            <h2 id="attachTitle">Enviar archivos</h2>
+            <button class="icon-btn" data-close aria-label="Cerrar"><%- icon('x') %></button>
+        </div>
+        <div class="attach-stage" id="attachStage"></div>
+        <div class="attach-strip" id="attachStrip"></div>
+        <form class="attach-compose" id="attachForm">
+            <input class="input" id="attachCaption" placeholder="Añade un comentario…" maxlength="1000" autocomplete="off">
+            <button class="send-btn" type="submit" aria-label="Enviar"><%- icon('send') %><b class="attach-count" id="attachCount"></b></button>
+        </form>
+    </div>
+</div>
+
 <!-- Perfil -->
 <div class="modal" id="modal-profile">
     <div class="modal-dialog">
@@ -99,7 +115,7 @@
             </div>
             <div class="field">
                 <label class="label" for="groupName">Nombre del grupo</label>
-                <input class="input" id="groupName" name="name" placeholder="Ej. Viaje a la playa 🏖️" maxlength="60" required>
+                <input class="input" id="groupName" name="name" placeholder="Ej. Viaje a la playa" maxlength="60" required>
             </div>
             <div class="field">
                 <span class="label">Participantes <span class="muted" data-member-count></span></span>
@@ -142,10 +158,18 @@
 <div class="modal" id="modal-wallet">
     <div class="modal-dialog">
         <%- head('Billetera') %>
-        <div class="wallet-card">
-            <small>Saldo disponible</small>
-            <strong id="walletBalance"></strong>
-            <span>Yabla Pay · <span data-me="name"><%= user.name %></span></span>
+        <!-- Un saldo por moneda: tocar una tarjeta la elige para enviar -->
+        <div class="wallet-cards">
+            <button type="button" class="wallet-card" data-wallet-currency="USD">
+                <small>Dólares</small>
+                <strong data-balance="USD"></strong>
+                <span>USD · Yabla Pay</span>
+            </button>
+            <button type="button" class="wallet-card is-crc" data-wallet-currency="CRC">
+                <small>Colones</small>
+                <strong data-balance="CRC"></strong>
+                <span>CRC · Yabla Pay</span>
+            </button>
         </div>
         <form class="wallet-send stack" id="walletForm">
             <h4 class="list-title">Enviar dinero</h4>
@@ -153,17 +177,28 @@
                 <label class="label" for="walletTo">Para</label>
                 <select class="input" id="walletTo" name="toUserId" required></select>
             </div>
+            <div class="field">
+                <span class="label">Moneda</span>
+                <div class="currency-toggle" role="radiogroup" aria-label="Moneda">
+                    <label><input type="radio" name="currency" value="USD" checked><span><b>$</b> Dólares</span></label>
+                    <label><input type="radio" name="currency" value="CRC"><span><b>₡</b> Colones</span></label>
+                </div>
+            </div>
             <div class="wallet-row">
                 <div class="field">
-                    <label class="label" for="walletAmount">Monto ($)</label>
-                    <input class="input" id="walletAmount" name="amount" type="number" min="0.01" max="1000" step="0.01" placeholder="0.00" required>
+                    <label class="label" for="walletAmount">Monto</label>
+                    <div class="input-prefix">
+                        <span id="walletSymbol">$</span>
+                        <input class="input" id="walletAmount" name="amount" type="number" min="0.01" step="0.01" placeholder="0.00" inputmode="decimal" required>
+                    </div>
                 </div>
                 <div class="field">
                     <label class="label" for="walletNote">Concepto</label>
                     <input class="input" id="walletNote" name="note" maxlength="80" placeholder="Opcional">
                 </div>
             </div>
-            <button class="btn btn-brand btn-block" type="submit"><%- icon('transfer') %>Enviar</button>
+            <p class="wallet-hint muted" id="walletHint"></p>
+            <button class="btn btn-brand btn-block" type="submit"><%- icon('transfer') %><span id="walletSubmitLabel">Enviar</span></button>
         </form>
         <h4 class="list-title">Actividad reciente</h4>
         <ul class="wallet-activity" id="walletActivity"></ul>

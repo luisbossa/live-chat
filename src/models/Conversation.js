@@ -12,7 +12,7 @@ const LIST_SQL = `
         AND (x.sender_id IS NULL OR x.sender_id <> m.user_id)) AS unread
   FROM conversation_members m
   JOIN conversations c ON c.id = m.conversation_id
-  WHERE m.user_id = ?`;
+  WHERE m.user_id = ? AND m.hidden = 0`;
 
 const SQL = {
   findDirect: `
@@ -43,10 +43,15 @@ const SQL = {
     WHERE user_id = ? AND last_delivered_id < (SELECT COALESCE(last_message_id, 0) FROM conversations WHERE id = conversation_id)
     RETURNING conversation_id, last_delivered_id`,
   removeMember: "DELETE FROM conversation_members WHERE conversation_id = ? AND user_id = ?",
+  // "Eliminar chat": oculta la conversación y su historial solo para ese usuario
+  hide: `
+    UPDATE conversation_members
+    SET hidden = 1, pinned = 0, cleared_id = @lastId, last_read_id = MAX(last_read_id, @lastId), last_delivered_id = MAX(last_delivered_id, @lastId)
+    WHERE conversation_id = @conversationId AND user_id = @userId`,
   update: "UPDATE conversations SET name = COALESCE(@name, name), avatar = COALESCE(@avatar, avatar), description = COALESCE(@description, description) WHERE id = @id",
 };
 
-const MEMBER_FIELDS = ["muted", "pinned", "cleared_id", "role"];
+const MEMBER_FIELDS = ["muted", "pinned", "cleared_id", "role", "hidden"];
 const placeholders = (n) => Array(n).fill("?").join(",");
 
 /** Miembro tal como lo ve `viewer`: oculta las lecturas si alguno desactivó las confirmaciones. */
@@ -151,6 +156,10 @@ const Conversation = {
       }
       return added;
     });
+  },
+
+  hide(conversationId, userId, lastId) {
+    return db.run(SQL.hide, { conversationId, userId, lastId });
   },
 
   removeMember(conversationId, userId) {

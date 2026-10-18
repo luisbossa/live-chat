@@ -2,7 +2,7 @@
 <aside class="sidebar" aria-label="Conversaciones">
     <header class="sidebar-head">
         <div>
-            <p class="muted greeting">Hola, <span data-me="firstName"><%= user.name.split(' ')[0] %></span> 👋</p>
+            <p class="muted greeting">Hola, <span data-me="firstName"><%= user.name.split(' ')[0] %></span> <%- icon('hand', 'greet-icon') %></p>
             <h1 id="sidebarTitle">Chats</h1>
         </div>
         <div class="head-actions">
@@ -28,6 +28,12 @@
 
     <div class="panel is-active" data-panel="chats">
         <div class="stories-strip" id="storiesStrip"></div>
+        <!-- Filtros rápidos, como en WhatsApp -->
+        <div class="chips" id="chatFilters" role="tablist" aria-label="Filtrar chats">
+            <button class="chip is-active" role="tab" data-filter="all">Todos</button>
+            <button class="chip" role="tab" data-filter="unread">No leídos<b data-filter-count="unread" hidden></b></button>
+            <button class="chip" role="tab" data-filter="pinned">Fijados</button>
+        </div>
         <!-- Primeros pasos (solo en móvil; en escritorio está en la pantalla de inicio) -->
         <section class="side-checklist" id="sideChecklist" hidden></section>
         <ul class="conv-list" id="chatList"></ul>
