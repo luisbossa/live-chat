@@ -120,11 +120,95 @@
 
   // Clic en el botón "Login" (es un enlace dentro del botón de Framer)
   document.addEventListener("click", (e) => {
+    // El ojito de la contraseña también es un botón del formulario, pero no envía
+    if (e.target.closest(".yl-eye")) return;
     if (e.target.closest('form a[href="/chat"], form button')) login(e);
   }, true);
 
-  // Enter dentro de los campos
+  // Enter dentro de los campos: Framer lo maneja por su cuenta (y lleva a /thanks),
+  // así que se intercepta antes en la tecla y también en el envío del formulario
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.isComposing && e.target.closest('form input[name="Email"], form input[name="Password"]')) login(e);
+  }, true);
   document.addEventListener("submit", (e) => {
     if (e.target.closest("form")) login(e);
   }, true);
+})();
+
+// Ojito para ver u ocultar la contraseña del formulario de la landing.
+// Framer genera (y a veces vuelve a pintar) el formulario, así que el botón se añade
+// cuando aparece el campo y se recoloca si cambia el tamaño de la ventana.
+(() => {
+  const ICON = (name) => `<svg aria-hidden="true"><use href="/assets/images/icons.svg#i-${name}"></use></svg>`;
+
+  // A la derecha del campo; si el botón «Entrar» está dentro del campo (escritorio), justo a su izquierda
+  function place(input, eye) {
+    const r = input.getBoundingClientRect();
+    const submit = [...input.form?.querySelectorAll('button, [type="submit"]') || []].find((b) => {
+      if (b === eye || !b.offsetParent) return false;
+      const br = b.getBoundingClientRect();
+      return br.left > r.left && br.left < r.right && br.top < r.bottom && br.bottom > r.top;
+    });
+    // Junto a «Entrar»: solo el icono, con aire antes del botón
+    const sb = submit?.getBoundingClientRect();
+    const size = 34;
+    const right = sb ? r.right - sb.left + 16 : 10; // deja sitio para la línea divisoria
+    eye.classList.toggle("is-paired", Boolean(sb));
+    eye.style.width = eye.style.height = `${size}px`;
+    eye.style.right = `${Math.round(right)}px`;
+    input.style.paddingRight = `${Math.round(right + size + 8)}px`;
+  }
+
+  function toggle(input, eye) {
+    const show = input.type === "password";
+    const { selectionStart: start, selectionEnd: end } = input;
+    input.type = show ? "text" : "password";
+    eye.innerHTML = ICON(show ? "eye-off" : "eye");
+    eye.classList.remove("is-swap");
+    void eye.offsetWidth; // reinicia la animación del icono
+    eye.classList.add("is-swap");
+    eye.setAttribute("aria-label", show ? "Ocultar contraseña" : "Mostrar contraseña");
+    eye.setAttribute("aria-pressed", String(show));
+    eye.title = eye.getAttribute("aria-label");
+    // Se mantiene el foco y la posición del cursor para seguir escribiendo
+    input.focus();
+    try { input.setSelectionRange(start, end); } catch { /* algunos tipos no lo admiten */ }
+  }
+
+  function enhance() {
+    document.querySelectorAll('input[name="Password"]').forEach((input) => {
+      const wrap = input.parentElement;
+      let eye = wrap.querySelector(".yl-eye");
+      if (!eye) {
+        eye = document.createElement("button");
+        eye.type = "button";
+        eye.className = "yl-eye";
+        eye.innerHTML = ICON("eye");
+        eye.setAttribute("aria-label", "Mostrar contraseña");
+        eye.setAttribute("aria-pressed", "false");
+        eye.title = "Mostrar contraseña";
+        // Sin esto, el clic quitaría el foco del campo antes de cambiar el tipo
+        eye.addEventListener("mousedown", (e) => e.preventDefault());
+        eye.addEventListener("click", () => toggle(input, eye));
+        wrap.style.position = "relative";
+        wrap.appendChild(eye);
+      }
+      if (input.offsetParent) place(input, eye);
+    });
+  }
+
+  let queued = false;
+  const schedule = () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => {
+      queued = false;
+      enhance();
+    });
+  };
+
+  new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
+  addEventListener("resize", schedule);
+  addEventListener("load", schedule);
+  schedule();
 })();

@@ -1246,3 +1246,77 @@ html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+/* --- Ojito de la contraseña (lo añade landing-auth.js) --------------------- */
+.yl-eye {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #8b8d90;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: background-color 0.2s, color 0.2s, transform 0.15s;
+}
+
+.yl-eye svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.yl-eye:hover { background: rgba(38, 36, 36, 0.07); color: #262424; }
+.yl-eye:active { transform: translateY(-50%) scale(0.9); }
+.yl-eye[aria-pressed="true"] { color: #3a6fd8; }
+.yl-eye:focus-visible { outline: 2px solid #3a6fd8; outline-offset: 2px; }
+
+/* Ojito sutil: solo el icono, sin fondo ni borde. Gris suave, más oscuro al pasar
+   el ratón y azul mientras la contraseña está visible. */
+.yl-eye,
+.yl-eye:hover,
+.yl-eye:active { background: transparent; box-shadow: none; }
+
+.yl-eye { color: #a3a5a8; }
+.yl-eye:hover { color: #262424; }
+.yl-eye:active { transform: translateY(-50%) scale(0.88); }
+.yl-eye[aria-pressed="true"] { color: #3a6fd8; }
+.yl-eye[aria-pressed="true"]:hover { color: #2f5fc4; }
+.yl-eye svg { width: 19px; height: 19px; stroke-width: 1.9; }
+
+/* El icono cambia con un pequeño giro y escala */
+.yl-eye.is-swap svg { animation: yl-eye-swap 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.4); }
+
+@keyframes yl-eye-swap {
+  from { opacity: 0; transform: scale(0.5) rotate(-30deg); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yl-eye.is-swap svg { animation: none; }
+}
+
+/* Línea divisoria fina entre el ojito y «Entrar» (solo cuando van juntos) */
+.yl-eye.is-paired::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -8px;
+  width: 1px;
+  height: 22px;
+  border-radius: 1px;
+  background: linear-gradient(transparent, #d4d6d8 20%, #d4d6d8 80%, transparent);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
