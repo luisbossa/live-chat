@@ -143,6 +143,7 @@ async function serializeAll(rows, viewer) {
     unread: row.unread || 0,
     mentions: row.mentions || 0,
     disappearAfter: row.disappear_after || 0,
+    origin: row.origin || "chat",
     pinnedMessages: pinned.get(row.id),
     scheduledCount: scheduled.get(row.id) || 0,
     clearedId: row.cleared_id || 0,
@@ -246,6 +247,10 @@ const Conversation = {
     const now = Date.now();
     if (rows.length) await db.batch(rows.map((r) => [SQL.receiptEvent, [r.conversation_id, userId, "delivered", r.last_delivered_id, now]]));
     return rows.map((r) => ({ conversationId: r.conversation_id, deliveredId: r.last_delivered_id }));
+  },
+
+  setOrigin(conversationId, origin) {
+    return db.run("UPDATE conversations SET origin = ? WHERE id = ?", [origin, conversationId]);
   },
 
   setDisappearing(conversationId, seconds) {

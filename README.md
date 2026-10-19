@@ -7,6 +7,7 @@ App de **chat y videollamadas en tiempo real** hecha con Node.js, Express, EJS, 
 **Cuenta**
 - **Sin correo electrónico**: registro en un solo paso (nombre, usuario y contraseña de 6+ caracteres) con vista previa en vivo, comprobación del usuario mientras escribes, sugerencias si está ocupado, indicador de seguridad y foto opcional
 - Inicio de sesión con **@usuario** y contraseña (desde la landing o `/login`)
+- **Cambiar contraseña** desde tu perfil, Ajustes o Ctrl+K: pide la actual, muestra la seguridad de la nueva y puede cerrar la sesión en tus otros dispositivos
 - Inicio de sesión desde la landing o desde `/login`, con sesiones guardadas en SQLite
 - **Mi perfil** con portada, vista previa y estadísticas: foto (o quitarla), nombre, usuario con comprobación en vivo, info con frases rápidas, teléfono, **cumpleaños** (tus contactos ven el aviso ese día) y **color de perfil** (portada y tu nombre en los grupos)
 - **Estado de disponibilidad**: Disponible, Ocupado, Ausente o **No molestar** (silencia los avisos); tus contactos lo ven en tu foto y en tu info
@@ -50,6 +51,16 @@ App de **chat y videollamadas en tiempo real** hecha con Node.js, Express, EJS, 
 - Envío de dinero entre contactos eligiendo la moneda, con concepto, saldo disponible y límite por envío ($1.000 / ₡500.000)
 - Cada pago aparece como mensaje en el chat y los saldos se actualizan en vivo; historial con la moneda de cada movimiento
 
+**Conocer (citas, opcional)**
+- Pestaña **Conocer**: solo participas si activas tu perfil de citas; al hacer **match** mutuo se abre un chat normal de Yabla (marcado con ♥)
+- Perfil de citas en 4 pasos: hasta 6 fotos, fecha de nacimiento (**solo mayores de 18**), género, a quién quieres conocer, qué buscas, provincia, intereses (3–8) y hasta 3 preguntas
+- Pila de tarjetas estilo Tinder: arrastrar o botones (✕ paso · ★ súper like · ♥ me gusta · ↺ deshacer el último paso) y teclado (← → ↑, `Ctrl + Z`); toca la foto para ver las demás
+- Sellos al arrastrar, pantalla **«¡Es un match!»** en tiempo real para los dos, insignia de likes recibidos y 3 súper likes al día
+- **Afinidad** por intereses comunes, distancia aproximada por provincia (nunca la ubicación exacta) y filtros de edad, distancia, solo verificados y solo con intereses en común
+- **Rompehielos** en el chat de un match: ideas de primer mensaje, juego **«Esto o aquello»** y **propuesta de cita** (videollamada o lugar) que se acepta en el chat y ofrece programar un recordatorio
+- **Seguridad**: normas al activar el perfil, pausar el perfil, deshacer un match (el chat desaparece y nadie puede volver a escribir) y **reportar** (bloquea y deshace el match)
+- Verificación con selfie: **es de demostración** (se aprueba automáticamente). En producción hay que conectar un servicio real de verificación facial
+
 **Interfaz**
 - Diseño responsive (escritorio, tablet y móvil con botón "atrás")
 - **Temas**: Sistema (automático), Claro, Sepia, Oscuro, Atenuado, Océano y Medianoche (negro puro para OLED), desde el botón "Tema" de la barra lateral o en Ajustes
@@ -91,6 +102,8 @@ Tras `npm run seed`, todas usan la contraseña **`demo1234`**:
 | Daniela Mora | `daniela` |
 
 (También `esteban`, `valeria`, `fernanda`, `mariana`, `diego`, `josepablo`, `sofia` y `kevin`.) Son personas ficticias con nombres comunes en Costa Rica.
+
+Diez de ellas tienen perfil de citas en **Conocer**. Con `andres` verás que Daniela, Valeria y Mariana (súper like) ya le dieron like, y tiene un match con Sofía; `esteban` no tiene perfil, para probar el asistente desde cero.
 
 Para probar el tiempo real y las llamadas, abre dos navegadores (o una ventana normal y otra de incógnito) e inicia sesión con dos cuentas distintas.
 
@@ -143,6 +156,8 @@ Para probar el tiempo real y las llamadas, abre dos navegadores (o una ventana n
 | `chat-actions.js` | Reacciones, deslizar para responder, selección, eliminar, info del mensaje y fijados |
 | `mentions.js` | @menciones en grupos |
 | `timed.js` | Mensajes temporales y programados |
+| `discover.js` | «Conocer»: pila de tarjetas, match, filtros, panel de matches, rompehielos y reportes |
+| `dating-profile.js` | Asistente del perfil de citas |
 
 ## API REST
 
@@ -152,6 +167,7 @@ Todas las rutas `/api/*` (salvo la de disponibilidad) requieren sesión y respon
 |---|---|
 | `GET /api/bootstrap` | Usuario, conversaciones, estados, bloqueados y mensajes destacados |
 | `PATCH /api/me` · `PATCH /api/me/settings` · `GET /api/me/qr` | Perfil, privacidad y QR |
+| `PATCH /api/me/password` | Cambiar contraseña (`current`, `next`, `logoutOthers`) |
 | `GET /api/users?q=` · `POST /api/users/:id/block` | Buscar y bloquear usuarios |
 | `POST /api/conversations` | Abrir chat 1 a 1 (`userId`) o crear grupo (`type=group`) |
 | `GET/POST /api/conversations/:id/messages` | Historial paginado y envío (texto, archivo, sticker) |
@@ -167,6 +183,14 @@ Todas las rutas `/api/*` (salvo la de disponibilidad) requieren sesión y respon
 | `GET/POST /api/conversations/:id/scheduled` · `DELETE /api/scheduled/:id` · `POST /api/scheduled/:id/send` | Mensajes programados |
 | `GET/POST /api/stories` · `POST …/:id/view` · `GET …/:id/viewers` | Estados |
 | `GET /api/wallet` · `POST /api/wallet/send` | Billetera |
+| `GET /api/dating/options` | Provincias, intereses, preguntas y motivos de reporte |
+| `GET/PUT /api/dating/profile` · `PATCH /api/dating/profile/pause` | Perfil de citas (valida mayoría de edad) y pausarlo |
+| `POST /api/dating/photos` · `POST /api/dating/verify` | Subir fotos (hasta 6) y verificación con selfie (demostración) |
+| `GET /api/dating/deck?ageMin&ageMax&maxKm&verified&common` | Tarjetas para descubrir (filtros en ambos sentidos) |
+| `POST /api/dating/swipe` · `POST /api/dating/undo` | Like, paso o súper like (`toId`, `action`) y deshacer el último paso |
+| `GET /api/dating/matches` · `GET /api/dating/likes` · `DELETE /api/dating/matches/:id` | Matches, likes recibidos y deshacer un match |
+| `POST /api/dating/report` | Reportar (`userId`, `reason`, `details`): bloquea y deshace el match |
+| `POST /api/conversations/:id/this-or-that` · `POST /api/conversations/:id/date` · `POST /api/messages/:id/answer` | «Esto o aquello», propuesta de cita y responderlos |
 
 ## Eventos en tiempo real (Socket.IO)
 
@@ -177,6 +201,7 @@ Todas las rutas `/api/*` (salvo la de disponibilidad) requieren sesión y respon
 | `conversation:new`, `conversation:update`, `conversation:removed` | `call:invite`, `call:accept`, `call:reject` |
 | `story:new`, `story:viewed`, `story:deleted`, `wallet:update`, `user:update`, `star:update`, `message:expired`, `message:hidden` | `call:signal` (SDP e ICE), `call:end` |
 | `call:incoming`, `call:accepted`, `call:signal`, `call:ended` | |
+| `dating:match`, `dating:like`, `dating:unmatch` | |
 
 ## Despliegue gratis (Render + Turso)
 

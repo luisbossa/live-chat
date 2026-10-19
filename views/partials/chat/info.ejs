@@ -29,6 +29,16 @@
             <ul class="info-fields" id="infoFields"></ul>
         </section>
 
+        <!-- Perfil de citas (chats de un match de «Conocer») -->
+        <section class="info-card info-dating" id="infoDating" hidden>
+            <h4><%- icon('heart-fill', 'icon-sm') %> Perfil de citas</h4>
+            <div id="infoDatingBody"></div>
+            <div class="dz-info-actions">
+                <button class="btn btn-ghost btn-sm" data-action="dz-unmatch"><%- icon('x', 'icon-sm') %>Deshacer match</button>
+                <button class="btn btn-ghost btn-sm is-danger" data-action="dz-report"><%- icon('flag', 'icon-sm') %>Reportar</button>
+            </div>
+        </section>
+
         <!-- Participantes del grupo -->
         <section class="info-card" id="infoMembersSection" hidden>
             <h4><span id="infoMembersCount"></span> participantes</h4>

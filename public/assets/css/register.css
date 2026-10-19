@@ -741,3 +741,14 @@
 
 /* Si el campo muestra un error, su pista no lo repite */
 .register .field:has(.field-error:not(:empty)) .field-hint { display: none; }
+
+/* Aviso informativo en el inicio de sesión (p. ej. contraseña cambiada en otro dispositivo) */
+.form-notice {
+  margin: 4px 0 8px;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  background: var(--brand-soft);
+  color: var(--brand-2);
+  font-size: 14px;
+  font-weight: 500;
+}

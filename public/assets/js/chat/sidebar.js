@@ -1,6 +1,6 @@
 // Lista de conversaciones: pestañas, filtros, secciones, menú de cada chat e insignias.
 import { $, $$, escapeHTML, icon, listTime } from "./utils.js";
-import { state, sortedConversations, convTitle, convAvatar, peerOf, isGroup, receiptOf, on, getConv, getDraft } from "./state.js";
+import { state, sortedConversations, convTitle, convAvatar, peerOf, isGroup, receiptOf, on, getConv, getDraft, emit } from "./state.js";
 import { previewOf, previewIcon, typingText } from "./format.js";
 import { renderStoryLists } from "./stories.js";
 import { togglePin, toggleMute, toggleArchive, markAsRead, clearChat, deleteChat } from "./conv-actions.js";
@@ -10,6 +10,7 @@ const TABS = {
   chats: { title: "Chats", placeholder: "Buscar chats…" },
   groups: { title: "Grupos", placeholder: "Buscar grupos…" },
   status: { title: "Estados", placeholder: "Buscar estados…" },
+  discover: { title: "Conocer", placeholder: "Buscar en tus matches…" },
 };
 
 const FILTERS = {
@@ -49,7 +50,7 @@ function convItem(conv) {
         <span class="avatar ${peer?.online ? "is-online" : ""}" data-status="${peer?.status || "available"}"><img src="${convAvatar(conv)}" alt="" loading="lazy"></span>
         <span class="conv-body">
           <span class="conv-row">
-            <span class="conv-name">${escapeHTML(convTitle(conv))}${peer?.official ? icon("verified", "badge-verified") : ""}</span>
+            <span class="conv-name">${escapeHTML(convTitle(conv))}${peer?.official ? icon("verified", "badge-verified") : ""}${conv.origin === "match" ? icon("heart-fill", "dz-heart") : ""}</span>
             <span class="conv-time">${listTime(msg?.createdAt || conv.createdAt)}</span>
           </span>
           <span class="conv-row">
@@ -177,7 +178,9 @@ export function setTab(tab) {
   $("#sidebarTitle").textContent = TABS[tab].title;
   $("#listSearch").placeholder = TABS[tab].placeholder;
   $("#listSearch").value = "";
+  document.getElementById("app").dataset.view = tab;
   renderLists();
+  emit("tab", tab);
 }
 
 function setFilter(name) {

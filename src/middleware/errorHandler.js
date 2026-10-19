@@ -21,7 +21,8 @@ function errorHandler(err, req, res, next) {
   }
 
   if (status >= 500) console.error(err);
-  if (wantsJson(req)) return res.status(status).json({ error: message });
+  // errors: detalle por campo (p. ej. { birthdate: "…" }) para los formularios
+  if (wantsJson(req)) return res.status(status).json({ error: message, ...(err.errors && status < 500 ? { errors: err.errors } : {}) });
   res.status(status).render("pages/error", { styles: ["register"], title: "Error", status, message });
 }
 

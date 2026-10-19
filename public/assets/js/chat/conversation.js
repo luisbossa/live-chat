@@ -15,6 +15,7 @@ import { openForward, toggleStar } from "./message-extras.js";
 import { openReactTray, isSelecting, toggleSelected, isSelected, exitSelect, enterSelect, askDelete, openMessageInfo, togglePinMessage, renderPinnedBar } from "./chat-actions.js";
 import { renderMentions, mentionsMe } from "./mentions.js";
 import { renderScheduledChip, openSchedule } from "./timed.js";
+import { icebreakerHTML, sendThisOrThat, matchForConversation } from "./discover.js";
 
 const app = $("#app");
 const messagesEl = $("#messages");
@@ -115,6 +116,46 @@ function bodyHTML(msg) {
           </button>`,
       };
     }
+    case "game": {
+      // «Esto o aquello»: cada uno toca su opción; se ve la del otro al responder ambos
+      const mine = msg.meta?.answers?.[state.me.id];
+      const both = Object.keys(msg.meta?.answers || {}).length >= 2;
+      return {
+        kind: "is-game",
+        html: `
+          <div class="game-card">
+            <small>${icon("dice", "icon-sm")} Esto o aquello</small>
+            <div class="game-options">${(msg.meta?.options || [])
+              .map((o) => {
+                const picked = Object.values(msg.meta?.answers || {}).filter((a) => a === o).length;
+                return `<button data-game-choice="${escapeHTML(o)}" class="${mine === o ? "is-mine" : ""}" ${mine ? "disabled" : ""}>${escapeHTML(o)}${both ? `<b>${picked}</b>` : ""}</button>`;
+              })
+              .join("")}</div>
+            <small class="game-state">${both ? "¡Ya respondieron los dos!" : mine ? "Esperando la otra respuesta…" : "Toca tu favorita"}</small>
+          </div>`,
+      };
+    }
+    case "date": {
+      const m = msg.meta || {};
+      const whenText = new Date(m.when).toLocaleString("es", { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" });
+      const mine = msg.senderId === state.me.id;
+      const status = { pending: mine ? "Esperando respuesta…" : "", accepted: "✅ ¡Cita confirmada!", declined: "Esta vez no 🙏" }[m.status] || "";
+      return {
+        kind: "is-date",
+        html: `
+          <div class="date-card is-${m.status}">
+            <span class="date-ico">${icon(m.kind === "place" ? "map-pin" : "video")}</span>
+            <div>
+              <small>Propuesta de cita</small>
+              <strong>${m.kind === "place" ? escapeHTML(m.place) : "Videollamada"}</strong>
+              <span>${escapeHTML(whenText)}</span>
+              ${status ? `<em>${status}</em>` : ""}
+              ${!mine && m.status === "pending" ? `<div class="date-actions"><button data-date-answer="1">Aceptar</button><button data-date-answer="0">Ahora no</button></div>` : ""}
+              ${m.status === "accepted" ? `<button class="date-remind" data-date-remind="${m.when}">${icon("calendar-clock", "icon-sm")}Programar recordatorio</button>` : ""}
+            </div>
+          </div>`,
+      };
+    }
     default:
       return { kind: "", html: text };
   }
@@ -186,7 +227,8 @@ function renderMessages(conv, { keepScroll = false } = {}) {
   const prevHeight = messagesEl.scrollHeight;
   const prevTop = messagesEl.scrollTop;
 
-  const top = hasMore ? `<div class="load-more" id="loadMore"><span class="spinner"></span></div>` : `<div class="chat-intro">${icon("lock", "icon-sm")} Los mensajes de este chat son privados entre los participantes.</div>`;
+  let top = hasMore ? `<div class="load-more" id="loadMore"><span class="spinner"></span></div>` : `<div class="chat-intro">${icon("lock", "icon-sm")} Los mensajes de este chat son privados entre los participantes.</div>`;
+  if (conv.origin === "match" && !hasMore && items.filter((m) => m.type !== "system").length < 3) top += icebreakerHTML(conv);
   messagesEl.innerHTML = top + (items.length ? items.map((m, i) => messageHTML(conv, m, items[i - 1])).join("") : `<div class="date-chip chat-placeholder">${icon("hand", "icon-sm")} Aún no hay mensajes. ¡Saluda!</div>`);
   renderTyping(conv);
   hydrateLinks(messagesEl, keepBottom);
@@ -295,6 +337,8 @@ export function renderHeader(conv = activeConv()) {
   $("#peerAvatar img").src = convAvatar(conv);
   $("#peerName").innerHTML = escapeHTML(convTitle(conv)) + (peer?.official ? icon("verified", "badge-verified") : "");
   $("#peerTimer").hidden = !conv.disappearAfter;
+  if (conv.origin === "match") $("#peerName").insertAdjacentHTML("beforeend", icon("heart-fill", "dz-heart"));
+  $("#chat").classList.toggle("is-match", conv.origin === "match" && Boolean(matchForConversation(conv.id)));
 
   const typing = typingText(conv);
   const status = $("#peerStatus");
@@ -840,6 +884,29 @@ messagesEl.addEventListener("click", (e) => {
     const msg = findMessage(quickReply.closest(".msg").dataset.id);
     return msg && setContext("reply", msg);
   }
+  // «Conocer»: rompehielos, «Esto o aquello» y propuestas de cita
+  const ice = t.closest("[data-icebreaker]");
+  if (ice) {
+    input.value = ice.dataset.icebreaker;
+    autosize();
+    return input.focus();
+  }
+  if (t.closest("[data-dz-game]")) return sendThisOrThat();
+  const gameChoice = t.closest("[data-game-choice]");
+  if (gameChoice) {
+    return api.answer(gameChoice.closest(".msg").dataset.id, { choice: gameChoice.dataset.gameChoice }).catch((err) => toastError(err.message));
+  }
+  const dateAnswer = t.closest("[data-date-answer]");
+  if (dateAnswer) {
+    return api.answer(dateAnswer.closest(".msg").dataset.id, { accept: dateAnswer.dataset.dateAnswer === "1" }).catch((err) => toastError(err.message));
+  }
+  const remind = t.closest("[data-date-remind]");
+  if (remind) {
+    const when = Number(remind.dataset.dateRemind);
+    input.value = `⏰ Recordatorio: nuestra cita es ${new Date(when).toLocaleString("es", { weekday: "long", hour: "2-digit", minute: "2-digit" })} 💞`;
+    autosize();
+    return openSchedule();
+  }
   const more = t.closest("[data-msg-menu]");
   if (more) {
     const r = more.getBoundingClientRect();
@@ -1079,6 +1146,8 @@ export function initConversation() {
     if (!type) return;
     closePopovers();
     if (type === "schedule") return openSchedule();
+    if (type === "this-or-that") return sendThisOrThat();
+    if (type === "date") return openModal("modal-propose-date");
     if (type === "payment") {
       const peer = peerOf(activeConv());
       return openModal("modal-wallet", peer?.id);

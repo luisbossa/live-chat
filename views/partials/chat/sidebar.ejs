@@ -56,6 +56,28 @@
         <ul class="conv-list" id="groupList"></ul>
     </div>
 
+    <!-- Conocer: tu perfil de citas, quién te dio like y tus matches -->
+    <div class="panel" data-panel="discover">
+        <button class="dz-me" data-open="modal-dating" id="dzMe">
+            <span class="dz-me-pic"><img src="<%= user.avatar %>" alt="" id="dzMePhoto"></span>
+            <span class="dz-me-text"><strong id="dzMeTitle">Crea tu perfil de citas</strong><small id="dzMeSub">Solo lo verán otras personas de «Conocer»</small></span>
+            <%- icon('chevron-right', 'icon-sm') %>
+        </button>
+        <button class="btn btn-primary btn-block dz-open-deck" data-action="dz-open"><%- icon('flame', 'icon-sm') %>Descubrir personas</button>
+        <div class="dz-quick">
+            <button class="dz-likes" data-action="dz-likes" id="dzLikes">
+                <span class="dz-likes-pics" id="dzLikesPics"></span>
+                <span><strong id="dzLikesCount">0</strong><small>Les gustas</small></span>
+            </button>
+            <button class="dz-filter" data-open="modal-dating-filters"><%- icon('sliders') %><span>Filtros</span></button>
+        </div>
+        <h3 class="list-title">Nuevos matches</h3>
+        <div class="dz-new" id="dzNew"></div>
+        <h3 class="list-title">Mensajes</h3>
+        <ul class="conv-list" id="dzChats"></ul>
+        <p class="dz-safe muted"><%- icon('shield-check', 'icon-sm') %> Solo te pueden escribir tus matches. Puedes reportar o deshacer un match cuando quieras.</p>
+    </div>
+
     <div class="panel" data-panel="status">
         <button class="my-status" data-action="my-status">
             <span class="avatar">

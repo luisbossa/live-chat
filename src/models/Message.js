@@ -164,6 +164,12 @@ const Message = {
     return Message.findById(id);
   },
 
+  /** Reemplaza el meta (juegos y propuestas de cita guardan aquí su estado). */
+  async updateMeta(id, meta) {
+    await db.run("UPDATE messages SET meta = ? WHERE id = ?", [JSON.stringify(meta), id]);
+    return Message.findById(id);
+  },
+
   /** "Eliminar para mí". */
   async hideFor(userId, ids) {
     if (!ids.length) return;

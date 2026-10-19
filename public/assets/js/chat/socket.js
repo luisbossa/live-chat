@@ -2,6 +2,11 @@
 /* global io */
 export const socket = io({ transports: ["websocket", "polling"] });
 
+// La contraseña se cambió en otro dispositivo y se cerraron las demás sesiones
+socket.on("session:revoked", () => {
+  window.location.href = "/login?aviso=contrasena";
+});
+
 socket.on("connect_error", (err) => {
   if (err.message === "unauthorized") window.location.href = "/";
 });

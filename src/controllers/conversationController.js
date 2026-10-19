@@ -2,6 +2,7 @@ const User = require("../models/User");
 const Conversation = require("../models/Conversation");
 const Message = require("../models/Message");
 const Story = require("../models/Story");
+const Dating = require("../models/Dating");
 const upload = require("../middleware/upload");
 const realtime = require("../services/realtime");
 const validate = require("../utils/validate");
@@ -26,6 +27,10 @@ exports.loadMembership = async (req, res, next) => {
 /** Comprueba bloqueos y devuelve el otro participante de un chat 1 a 1 (o null). */
 async function assertCanSend(req) {
   if (req.conversation.type !== "direct") return null;
+  if (req.conversation.origin === "match") {
+    const match = await Dating.matchByConversation(req.conversation.id);
+    if (match?.unmatched_at) throw httpError(403, "Ya no tienen match: no se pueden enviar mensajes.");
+  }
   const peerId = (await Conversation.memberIds(req.conversation.id)).find((id) => id !== req.user.id);
   if (peerId && (await User.isBlocked(req.user.id, peerId))) throw httpError(403, "No puedes enviar mensajes a este contacto.");
   return peerId ? User.findById(peerId) : null;

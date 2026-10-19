@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS conversations (
   created_by      INTEGER REFERENCES users(id) ON DELETE SET NULL,
   last_message_id INTEGER,
   disappear_after INTEGER NOT NULL DEFAULT 0, -- mensajes temporales: segundos (0 = desactivados)
+  origin          TEXT    NOT NULL DEFAULT 'chat', -- 'match' si nació de un match de «Conocer»
   created_at      INTEGER NOT NULL
 );
 
@@ -115,6 +116,60 @@ CREATE TABLE IF NOT EXISTS scheduled_messages (
 );
 
 CREATE INDEX IF NOT EXISTS idx_scheduled_send_at ON scheduled_messages(send_at);
+
+-- «Conocer»: perfiles de citas (opcionales), deslizamientos, matches y reportes
+CREATE TABLE IF NOT EXISTS dating_profiles (
+  user_id       INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  active        INTEGER NOT NULL DEFAULT 1,
+  paused        INTEGER NOT NULL DEFAULT 0,
+  birthdate     TEXT    NOT NULL,              -- YYYY-MM-DD (solo mayores de 18)
+  gender        TEXT    NOT NULL,              -- woman | man | nonbinary
+  interested_in TEXT    NOT NULL,              -- women | men | everyone
+  looking_for   TEXT    NOT NULL DEFAULT 'no_se', -- pareja | algo_casual | amistad | no_se
+  province      TEXT    NOT NULL,              -- provincia de Costa Rica (distancia aproximada)
+  about         TEXT,
+  interests     TEXT    NOT NULL DEFAULT '[]', -- JSON
+  prompts       TEXT    NOT NULL DEFAULT '[]', -- JSON [{q, a}]
+  photos        TEXT    NOT NULL DEFAULT '[]', -- JSON [url]
+  age_min       INTEGER NOT NULL DEFAULT 18,
+  age_max       INTEGER NOT NULL DEFAULT 45,
+  max_km        INTEGER NOT NULL DEFAULT 200,
+  verified      INTEGER NOT NULL DEFAULT 0,
+  verified_at   INTEGER,
+  created_at    INTEGER NOT NULL,
+  updated_at    INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS dating_swipes (
+  from_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  to_id       INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  action      TEXT    NOT NULL CHECK (action IN ('like', 'pass', 'superlike')),
+  created_at  INTEGER NOT NULL,
+  PRIMARY KEY (from_id, to_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_swipes_to ON dating_swipes(to_id, action);
+
+CREATE TABLE IF NOT EXISTS dating_matches (
+  id              INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_a          INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE, -- el menor id
+  user_b          INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  conversation_id INTEGER REFERENCES conversations(id) ON DELETE SET NULL,
+  created_at      INTEGER NOT NULL,
+  unmatched_by    INTEGER,
+  unmatched_at    INTEGER
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_matches_pair ON dating_matches(user_a, user_b);
+
+CREATE TABLE IF NOT EXISTS dating_reports (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  reporter_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  reported_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  reason      TEXT    NOT NULL,
+  details     TEXT,
+  created_at  INTEGER NOT NULL
+);
 
 -- Mensajes destacados (con estrella) por cada usuario
 CREATE TABLE IF NOT EXISTS stars (

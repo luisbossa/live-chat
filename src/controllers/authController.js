@@ -23,8 +23,12 @@ exports.showRegister = (req, res) => {
   res.render("pages/register", { title: "Crear cuenta", styles: ["register"] });
 };
 
+const NOTICES = {
+  contrasena: "Tu contraseña se cambió desde otro dispositivo. Inicia sesión con la nueva.",
+};
+
 exports.showLogin = (req, res) => {
-  res.render("pages/login", { title: "Iniciar sesión", styles: ["register"], next: safeNext(req.query.next) });
+  res.render("pages/login", { title: "Iniciar sesión", styles: ["register"], next: safeNext(req.query.next), notice: NOTICES[req.query.aviso] });
 };
 
 /** Propuestas parecidas cuando el nombre de usuario ya está ocupado. */

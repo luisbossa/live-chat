@@ -88,6 +88,16 @@ const User = {
     return new Map(rows.map((u) => [u.id, u]));
   },
 
+  async updatePassword(id, password) {
+    await db.run("UPDATE users SET password_hash = ? WHERE id = ?", [bcrypt.hashSync(password, 10), id]);
+  },
+
+  /** Cierra las demás sesiones del usuario (otros dispositivos). Devuelve cuántas. */
+  async destroyOtherSessions(id, keepSid) {
+    const { changes } = await db.run("DELETE FROM sessions WHERE sid <> ? AND json_extract(sess, '$.userId') = ?", [keepSid, id]);
+    return changes;
+  },
+
   verifyPassword(user, password) {
     return Boolean(user) && bcrypt.compareSync(password, user.password_hash);
   },

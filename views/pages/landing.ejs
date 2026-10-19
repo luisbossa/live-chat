@@ -8,10 +8,60 @@
     <meta name="description" content="Yabla - la app de chat para hablar con tus amigos">
     <link rel="stylesheet" href="/assets/css/landing.css">
     <link rel="stylesheet" href="/assets/css/landing-responsive.css">
+    <link rel="stylesheet" href="/assets/css/landing-extra.css">
     <link rel="icon" href="/assets/images/ui/favicon.png" type="image/png">
 </head>
 
 <body>
+    <!-- Decoración del héroe (fuera de Framer para que su hidratación no la borre).
+         Solo adorno: no recibe clics. Estilos en /assets/css/landing-extra.css -->
+    <div class="yl-hero-deco" aria-hidden="true">
+        <div class="yl-hero-dots"></div>
+        <div class="yl-float yl-f1">
+            <img src="/assets/images/avatars/avatar-female-1.jpg" alt="">
+            <span><strong>Karla</strong><small>está escribiendo<i></i><i></i><i></i></small></span>
+        </div>
+        <div class="yl-float yl-f2">
+            <span class="yl-ico is-green"><svg><use href="/assets/images/icons.svg#i-video"></use></svg></span>
+            <span><strong>Videollamada</strong><small>en curso · 12:34</small></span>
+        </div>
+        <div class="yl-float yl-f3">
+            <span class="yl-ico is-blue"><svg><use href="/assets/images/icons.svg#i-wallet"></use></svg></span>
+            <span><strong>Recibiste ₡8 500</strong><small>Almuerzo en la soda 🍽️</small></span>
+        </div>
+        <div class="yl-float yl-f4 is-bubble">
+            <span>¡Nos vemos a las 7! ⚽</span>
+            <small>07:12 <svg><use href="/assets/images/icons.svg#i-check-check"></use></svg></small>
+        </div>
+        <div class="yl-float yl-f5 is-reactions"><span>❤️</span><span>😂</span><span>🔥</span><span>👍</span></div>
+    </div>
+
+    <!-- Llamadas alrededor del teléfono (sección de la mano de Framer). Se coloca con
+         landing-extra.js justo encima de esa sección. Solo adorno: no recibe clics. -->
+    <div class="yl-visual-deco" id="visualDeco" aria-hidden="true">
+        <i class="yl-spark s1"></i><i class="yl-spark s2"></i><i class="yl-spark s3"></i><i class="yl-spark s4"></i>
+        <div class="yl-callout c1">
+            <span class="yl-ico is-blue"><svg><use href="/assets/images/icons.svg#i-chat"></use></svg></span>
+            <span><strong>Mensajes al instante</strong><small class="yl-typing">Daniela escribe<i></i><i></i><i></i></small></span>
+        </div>
+        <div class="yl-callout c2">
+            <span class="yl-ico is-green"><svg><use href="/assets/images/icons.svg#i-mic"></use></svg></span>
+            <span><strong>Notas de voz</strong><small class="yl-wave"><b></b><b></b><b></b><b></b><b></b><b></b><b></b> 0:42</small></span>
+        </div>
+        <div class="yl-callout c3">
+            <span class="yl-rings">
+                <img src="/assets/images/avatars/friend-avatar2.jpg" alt="">
+                <img src="/assets/images/avatars/friend-avatar9.jpg" alt="">
+                <img src="/assets/images/avatars/friend-avatar7.jpg" alt="">
+            </span>
+            <span><strong>Estados de 24 h</strong><small>3 estados nuevos</small></span>
+        </div>
+        <div class="yl-callout c4">
+            <span class="yl-ico is-amber"><svg><use href="/assets/images/icons.svg#i-hand"></use></svg></span>
+            <span><strong>Saluda con un toque</strong><small>Haz nuevos amigos 👋</small></span>
+        </div>
+    </div>
+
     <div id="main">
         <div class="framer-tE4Hu framer-r2lalx" data-layout-template="true" style="min-height:100vh;width:auto">
             <div class="framer-b7olkk-container">
@@ -1132,7 +1182,7 @@
                                 </div>
                             </div>
                             <div class="framer-1mkq7p6" data-framer-name="bottom">
-                                <div class="framer-jjjhv0" data-framer-name="© 2025 Soonix by"
+                                <div class="framer-jjjhv0" data-framer-name="© 2026 Yabla"
                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--framer-paragraph-spacing:0px;transform:none"
                                     data-framer-component-type="RichTextContainer">
                                     <p class="framer-text framer-styles-preset-1qnc6s4" data-styles-preset="NTWwFC9H4">©
@@ -1201,10 +1251,10 @@
                                 </div>
                             </div>
                             <div class="framer-1mkq7p6" data-framer-name="bottom">
-                                <div class="framer-jjjhv0" data-framer-name="© 2025 Soonix by"
+                                <div class="framer-jjjhv0" data-framer-name="© 2026 Yabla"
                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--framer-paragraph-spacing:0px;transform:none"
                                     data-framer-component-type="RichTextContainer">
-                                    <p class="framer-text framer-styles-preset-1qnc6s4" data-styles-preset="NTWwFC9H4">© 2025 Yabla ·</p>
+                                    <p class="framer-text framer-styles-preset-1qnc6s4" data-styles-preset="NTWwFC9H4">© 2026 Yabla ·</p>
                                 </div>
                                 <div class="framer-2d128d" data-framer-name="Temlis"
                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--extracted-r6o4lv:var(--token-a0ae0bec-9f96-425e-ad3d-e9a756769361, rgb(38, 36, 36));--framer-paragraph-spacing:0px;transform:none"
@@ -1237,11 +1287,11 @@
                                 </div>
                             </div>
                             <div class="framer-1mkq7p6" data-framer-name="bottom">
-                                <div class="framer-jjjhv0" data-framer-name="© 2025 Soonix by"
+                                <div class="framer-jjjhv0" data-framer-name="© 2026 Yabla"
                                     style="outline:none;display:flex;flex-direction:column;justify-content:flex-start;flex-shrink:0;--framer-paragraph-spacing:0px;transform:none"
                                     data-framer-component-type="RichTextContainer">
                                     <p class="framer-text framer-styles-preset-1qnc6s4" data-styles-preset="NTWwFC9H4">©
-                                        2025 Yabla</p>
+                                        2026 Yabla</p>
                                 </div>
                             </div>
                         </div>
@@ -1250,8 +1300,219 @@
             </div>
         </div>
     </div>
+
+    <!-- ======================================================================
+         Preguntas frecuentes y pie de página propios (fuera de Framer, para que
+         su hidratación no los sobrescriba). Estilos: /assets/css/landing-extra.css
+         ====================================================================== -->
+    <!-- Funciones (debajo del teléfono) -->
+    <section class="yl-features" aria-labelledby="featTitle">
+        <div class="yl-wrap">
+            <header class="yl-head yl-reveal">
+                <span class="yl-eyebrow"><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-zap"></use></svg>Todo en una app</span>
+                <h2 id="featTitle">Hecha para hablar. <span>Y para mucho más.</span></h2>
+            </header>
+            <ul class="yl-feat-grid">
+                <li class="yl-feat yl-reveal">
+                    <span class="yl-feat-ico t-blue"><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-chat"></use></svg></span>
+                    <h3>Chats en tiempo real</h3>
+                    <p>Mensajes, notas de voz, fotos y stickers con confirmación de lectura.</p>
+                </li>
+                <li class="yl-feat yl-reveal">
+                    <span class="yl-feat-ico t-green"><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-video"></use></svg></span>
+                    <h3>Llamadas y video</h3>
+                    <p>Llama o haz videollamadas 1 a 1, e incluso comparte tu pantalla.</p>
+                </li>
+                <li class="yl-feat yl-reveal">
+                    <span class="yl-feat-ico t-pink"><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-status"></use></svg></span>
+                    <h3>Estados de 24 h</h3>
+                    <p>Comparte tu día con una foto y mira quién la vio.</p>
+                </li>
+                <li class="yl-feat yl-reveal">
+                    <span class="yl-feat-ico t-violet"><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-users"></use></svg></span>
+                    <h3>Grupos con menciones</h3>
+                    <p>Crea grupos, menciona con @ y fija los mensajes importantes.</p>
+                </li>
+                <li class="yl-feat yl-reveal">
+                    <span class="yl-feat-ico t-amber"><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-wallet"></use></svg></span>
+                    <h3>Billetera en ₡ y $</h3>
+                    <p>Envía dinero de demostración en colones o dólares desde el chat.</p>
+                </li>
+                <li class="yl-feat yl-reveal">
+                    <span class="yl-feat-ico t-dark"><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-palette"></use></svg></span>
+                    <h3>A tu manera</h3>
+                    <p>7 temas, colores, fondos y modo No molestar cuando lo necesites.</p>
+                </li>
+                <li class="yl-feat yl-feat-wide yl-reveal">
+                    <span class="yl-feat-ico t-love"><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-flame"></use></svg></span>
+                    <div class="yl-feat-text">
+                        <h3>Conocer gente <span class="yl-new">Nuevo</span></h3>
+                        <p>Activa tu perfil de citas si quieres: desliza, haz match y sigue la conversación en un chat de Yabla con rompehielos, juegos y propuestas de cita. Perfiles verificados y reportes en un toque.</p>
+                    </div>
+                    <ul class="yl-feat-chips" aria-label="Incluye">
+                        <li>💞 Match mutuo</li>
+                        <li>🎯 Afinidad por intereses</li>
+                        <li>🎲 Esto o aquello</li>
+                        <li>🛡️ Solo mayores de 18</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="yl-faq" id="preguntas" aria-labelledby="faqTitle">
+        <div class="yl-wrap">
+            <header class="yl-head yl-reveal">
+                <span class="yl-eyebrow"><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-sparkles"></use></svg>Preguntas frecuentes</span>
+                <h2 id="faqTitle">¿Tienes dudas? <span>Te las resolvemos.</span></h2>
+                <p>Todo lo que necesitas saber antes de empezar a chatear en Yabla.</p>
+            </header>
+
+            <div class="yl-faq-grid">
+                <!-- Tarjeta de ayuda -->
+                <aside class="yl-help yl-reveal">
+                    <div class="yl-help-art" aria-hidden="true">
+                        <span class="yl-bubble is-in">¿Cómo me registro? 🤔</span>
+                        <span class="yl-bubble is-out">¡En 30 segundos! 🚀</span>
+                    </div>
+                    <h3>¿No encuentras tu respuesta?</h3>
+                    <p>Crea tu cuenta y escríbele a la cuenta oficial de Yabla desde el chat: te respondemos al momento.</p>
+                    <div class="yl-people">
+                        <img src="/assets/images/landing/person_1.jpg" alt="">
+                        <img src="/assets/images/landing/person_2.jpg" alt="">
+                        <img src="/assets/images/landing/person_3.webp" alt="">
+                        <span>+5,000 personas ya chatean</span>
+                    </div>
+                    <a class="yl-btn is-dark" href="/register">Crear cuenta gratis<svg aria-hidden="true"><use href="/assets/images/icons.svg#i-arrow-up-right"></use></svg></a>
+                </aside>
+
+                <div class="yl-faq-main">
+                    <div class="yl-filters yl-reveal" role="tablist" aria-label="Filtrar preguntas">
+                        <button class="is-active" role="tab" aria-selected="true" data-faq-filter="all">Todas</button>
+                        <button role="tab" aria-selected="false" data-faq-filter="cuenta">Cuenta</button>
+                        <button role="tab" aria-selected="false" data-faq-filter="funciones">Funciones</button>
+                        <button role="tab" aria-selected="false" data-faq-filter="privacidad">Privacidad</button>
+                    </div>
+
+                    <ul class="yl-accordion" id="faqList">
+                        <li class="yl-item is-open yl-reveal" data-cat="cuenta">
+                            <button class="yl-q" aria-expanded="true" aria-controls="faq1" id="faq1q">
+                                <span class="yl-num">01</span><span class="yl-qtext">¿Qué es Yabla?</span><span class="yl-toggle" aria-hidden="true"></span>
+                            </button>
+                            <div class="yl-a" id="faq1" role="region" aria-labelledby="faq1q"><div><p>Yabla es una app de chat para hablar con tus amigos en tiempo real: mensajes, notas de voz, fotos, llamadas y videollamadas, grupos y estados que duran 24 horas.</p></div></div>
+                        </li>
+                        <li class="yl-item yl-reveal" data-cat="cuenta">
+                            <button class="yl-q" aria-expanded="false" aria-controls="faq2" id="faq2q">
+                                <span class="yl-num">02</span><span class="yl-qtext">¿Necesito un correo para registrarme?</span><span class="yl-toggle" aria-hidden="true"></span>
+                            </button>
+                            <div class="yl-a" id="faq2" role="region" aria-labelledby="faq2q"><div><p>No. Solo eliges un nombre, un <strong>@usuario</strong> y una contraseña de al menos 6 caracteres. Con tu usuario entras y te encuentran tus amigos.</p></div></div>
+                        </li>
+                        <li class="yl-item yl-reveal" data-cat="cuenta">
+                            <button class="yl-q" aria-expanded="false" aria-controls="faq3" id="faq3q">
+                                <span class="yl-num">03</span><span class="yl-qtext">¿Yabla es gratuita?</span><span class="yl-toggle" aria-hidden="true"></span>
+                            </button>
+                            <div class="yl-a" id="faq3" role="region" aria-labelledby="faq3q"><div><p>Sí, Yabla es gratis. Puedes chatear, llamar, crear grupos y publicar estados sin pagar nada.</p></div></div>
+                        </li>
+                        <li class="yl-item yl-reveal" data-cat="cuenta">
+                            <button class="yl-q" aria-expanded="false" aria-controls="faq4" id="faq4q">
+                                <span class="yl-num">04</span><span class="yl-qtext">¿Puedo usar Yabla en mi teléfono?</span><span class="yl-toggle" aria-hidden="true"></span>
+                            </button>
+                            <div class="yl-a" id="faq4" role="region" aria-labelledby="faq4q"><div><p>¡Claro! Yabla funciona desde el navegador de tu teléfono, tablet o computadora, sin instalar nada. El diseño se adapta a cada pantalla.</p></div></div>
+                        </li>
+                        <li class="yl-item yl-reveal" data-cat="funciones">
+                            <button class="yl-q" aria-expanded="false" aria-controls="faq5" id="faq5q">
+                                <span class="yl-num">05</span><span class="yl-qtext">¿Qué puedo hacer en un chat?</span><span class="yl-toggle" aria-hidden="true"></span>
+                            </button>
+                            <div class="yl-a" id="faq5" role="region" aria-labelledby="faq5q"><div><p>Reaccionar con cualquier emoji, responder, reenviar, fijar y destacar mensajes, mencionar con <strong>@</strong> en grupos, programar mensajes y activar mensajes temporales que desaparecen solos.</p></div></div>
+                        </li>
+                        <li class="yl-item yl-reveal" data-cat="funciones">
+                            <button class="yl-q" aria-expanded="false" aria-controls="faq6" id="faq6q">
+                                <span class="yl-num">06</span><span class="yl-qtext">¿Puedo enviar dinero en colones?</span><span class="yl-toggle" aria-hidden="true"></span>
+                            </button>
+                            <div class="yl-a" id="faq6" role="region" aria-labelledby="faq6q"><div><p>Sí. La billetera de demostración tiene saldo en dólares y en colones costarricenses, y cada envío aparece como un mensaje en el chat.</p></div></div>
+                        </li>
+                        <li class="yl-item yl-reveal" data-cat="funciones">
+                            <button class="yl-q" aria-expanded="false" aria-controls="faq7" id="faq7q">
+                                <span class="yl-num">07</span><span class="yl-qtext">¿Puedo personalizar la app?</span><span class="yl-toggle" aria-hidden="true"></span>
+                            </button>
+                            <div class="yl-a" id="faq7" role="region" aria-labelledby="faq7q"><div><p>Elige entre 7 temas (claro, sepia, oscuro, medianoche…), el color de la app, el fondo del chat, el tamaño del texto y el color de tu perfil.</p></div></div>
+                        </li>
+                        <li class="yl-item yl-reveal" data-cat="privacidad">
+                            <button class="yl-q" aria-expanded="false" aria-controls="faq8" id="faq8q">
+                                <span class="yl-num">08</span><span class="yl-qtext">¿Quién puede ver mis mensajes?</span><span class="yl-toggle" aria-hidden="true"></span>
+                            </button>
+                            <div class="yl-a" id="faq8" role="region" aria-labelledby="faq8q"><div><p>Solo los participantes de cada chat. Además puedes desactivar las confirmaciones de lectura y tu última conexión, bloquear contactos o usar el modo <strong>No molestar</strong>.</p></div></div>
+                        </li>
+                        <li class="yl-item yl-reveal" data-cat="funciones">
+                            <button class="yl-q" aria-expanded="false" aria-controls="faq9" id="faq9q">
+                                <span class="yl-num">09</span><span class="yl-qtext">¿Puedo conocer pareja en Yabla?</span><span class="yl-toggle" aria-hidden="true"></span>
+                            </button>
+                            <div class="yl-a" id="faq9" role="region" aria-labelledby="faq9q"><div><p>Sí, en la pestaña <strong>Conocer</strong>. Es opcional: solo te ven quienes también activaron su perfil de citas, y solo pueden escribirte las personas con las que hiciste match. Es para mayores de 18 y puedes pausar tu perfil, deshacer un match o reportar cuando quieras.</p></div></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="yl-footer">
+        <div class="yl-wrap">
+            <!-- Llamada a la acción -->
+            <div class="yl-cta yl-reveal">
+                <div class="yl-cta-glow" aria-hidden="true"></div>
+                <div class="yl-cta-text">
+                    <h2>Empieza a chatear hoy</h2>
+                    <p>Crea tu cuenta en segundos y saluda a tus amigos. Sin correo, sin códigos, gratis.</p>
+                    <div class="yl-cta-actions">
+                        <a class="yl-btn is-light" href="/register">Crear cuenta gratis<svg aria-hidden="true"><use href="/assets/images/icons.svg#i-arrow-up-right"></use></svg></a>
+                        <a class="yl-btn is-ghost" href="/login">Ya tengo cuenta</a>
+                    </div>
+                </div>
+                <ul class="yl-cta-stats" aria-label="Yabla en cifras">
+                    <li><strong>5,000+</strong><span>personas</span></li>
+                    <li><strong>24 h</strong><span>dura un estado</span></li>
+                    <li><strong>0 ₡</strong><span>cuesta usarla</span></li>
+                </ul>
+            </div>
+
+            <!-- Enlaces -->
+            <div class="yl-foot-grid">
+                <div class="yl-brand">
+                    <a href="/" class="yl-logo" aria-label="Yabla, inicio">
+                        <span><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-logo"></use></svg></span>YABLA
+                    </a>
+                    <p>La app de chat para hablar con tus amigos, cuando quieras y desde donde quieras.</p>
+                </div>
+                <nav class="yl-col" aria-label="Tu cuenta">
+                    <h4>Tu cuenta</h4>
+                    <a href="/register">Crear cuenta</a>
+                    <a href="/login">Iniciar sesión</a>
+                    <a href="#preguntas">Preguntas frecuentes</a>
+                </nav>
+                <div class="yl-col">
+                    <h4>Funciones</h4>
+                    <span><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-chat"></use></svg>Chats y grupos</span>
+                    <span><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-video"></use></svg>Llamadas y video</span>
+                    <span><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-status"></use></svg>Estados de 24 h</span>
+                    <span><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-wallet"></use></svg>Billetera en ₡ y $</span>
+                </div>
+                <div class="yl-col">
+                    <h4>Hecho con cariño</h4>
+                    <span><i class="yl-flag" aria-hidden="true"></i>Desde Costa Rica</span>
+                    <a href="https://www.bstudio.site/" target="_blank" rel="noopener">Diseño por BStudio<svg aria-hidden="true"><use href="/assets/images/icons.svg#i-arrow-up-right"></use></svg></a>
+                </div>
+            </div>
+
+            <div class="yl-bottom">
+                <span>© 2026 Yabla. Todos los derechos reservados.</span>
+                <button class="yl-top" type="button" data-scroll-top>Volver arriba<svg aria-hidden="true"><use href="/assets/images/icons.svg#i-chevron-down"></use></svg></button>
+            </div>
+        </div>
+    </footer>
+
     <script type="module" src="/assets/js/landing/script_main.AIEJLUG2.mjs"></script>
     <script src="/assets/js/landing-auth.js" defer></script>
+    <script src="/assets/js/landing-extra.js" defer></script>
 </body>
 
 </html>

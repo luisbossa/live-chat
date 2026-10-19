@@ -53,6 +53,7 @@ const COLUMN_MIGRATIONS = [
   ["users", "presence_status", "TEXT NOT NULL DEFAULT 'available'"],
   ["users", "profile_color", "TEXT NOT NULL DEFAULT 'blue'"],
   ["users", "birthday", "TEXT"],
+  ["conversations", "origin", "TEXT NOT NULL DEFAULT 'chat'"],
 ];
 
 // Índices sobre columnas añadidas por migración (deben crearse después de ellas)

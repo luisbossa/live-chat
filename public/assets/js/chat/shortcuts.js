@@ -28,12 +28,15 @@ const SHORTCUTS = [
 const ACTIONS = [
   { label: "Nuevo chat", icon: "chat-plus", run: () => openModal("modal-new-chat") },
   { label: "Nuevo grupo", icon: "users", run: () => openModal("modal-group") },
+  { label: "Conocer gente", icon: "flame", run: () => setTab("discover") },
+  { label: "Mi perfil de citas", icon: "heart", run: () => openModal("modal-dating") },
   { label: "Mensajes destacados", icon: "star", run: () => openModal("modal-starred") },
   { label: "Chats archivados", icon: "archive", run: () => (setTab("chats"), runAction("open-archived")) },
   { label: "Publicar un estado", icon: "camera", run: () => runAction("my-status") },
   { label: "Billetera", icon: "wallet", run: () => openModal("modal-wallet") },
   { label: "Mi código QR", icon: "qr", run: () => openModal("modal-qr") },
   { label: "Ajustes y apariencia", icon: "palette", run: () => openModal("modal-settings") },
+  { label: "Cambiar contraseña", icon: "lock", run: () => openModal("modal-password") },
   { label: "Cambiar tema claro / oscuro", icon: "moon", run: () => Yabla.toggleTheme() },
   { label: "Atajos de teclado", icon: "keyboard", run: () => openModal("modal-shortcuts") },
 ];

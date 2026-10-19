@@ -90,3 +90,24 @@ exports.qr = async (req, res) => {
   const dataUrl = await QRCode.toDataURL(url, { margin: 1, width: 320, color: { dark: "#262424", light: "#ffffff" } });
   res.json({ url, dataUrl });
 };
+
+/** Cambiar la contraseña: pide la actual y, si se elige, cierra la sesión en los demás dispositivos. */
+exports.changePassword = async (req, res) => {
+  const current = typeof req.body.current === "string" ? req.body.current : "";
+  const next = typeof req.body.next === "string" ? req.body.next : "";
+  const errors = {};
+  if (!User.verifyPassword(req.user, current)) errors.current = "La contraseña actual no es correcta.";
+  if (!validate.PASSWORD.test(next)) errors.next = "La nueva contraseña necesita al menos 6 caracteres.";
+  else if (User.verifyPassword(req.user, next)) errors.next = "La nueva contraseña debe ser distinta de la actual.";
+  if (Object.keys(errors).length) {
+    return res.status(422).json({ error: errors.current || errors.next, errors });
+  }
+
+  await User.updatePassword(req.user.id, next);
+  let closed = 0;
+  if (validate.toBool(req.body.logoutOthers)) {
+    closed = await User.destroyOtherSessions(req.user.id, req.sessionID);
+    await realtime.disconnectOtherSessions(req.user.id, req.sessionID);
+  }
+  res.json({ ok: true, closedSessions: closed });
+};

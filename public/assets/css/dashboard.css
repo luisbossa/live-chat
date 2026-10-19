@@ -6633,3 +6633,864 @@ button.home-pill:hover { transform: translateY(-2px); }
 
 /* Todas las tarjetas de personas alineadas: el estado siempre ocupa su fila */
 .person-status.is-empty { visibility: hidden; }
+
+/* ==========================================================================
+   Cambiar contraseña
+   ========================================================================== */
+.password-hero {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+  padding: 14px;
+  border-radius: var(--radius);
+  background: var(--brand-soft);
+}
+
+.password-hero > span {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--bubble-out);
+  color: #fff;
+  box-shadow: 0 8px 18px -8px color-mix(in srgb, var(--brand-2) 70%, transparent);
+}
+
+.password-hero p { margin: 0; font-size: 13.5px; line-height: 1.45; }
+
+#passwordForm .field-error:empty { display: none; }
+
+.pw-strength {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  margin: 8px 14px 0;
+}
+
+.pw-strength i { height: 4px; border-radius: 999px; background: var(--surface-3); transition: background-color 0.3s; }
+.pw-strength.is-short i:first-child { background: var(--danger); }
+.pw-strength[data-level="1"] i:first-child { background: var(--warning); }
+.pw-strength[data-level="2"] i:nth-child(-n + 2) { background: var(--brand); }
+.pw-strength[data-level="3"] i { background: var(--online); }
+
+/* Coinciden / no coinciden */
+.pw-match {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  translate: 0 -50%;
+}
+
+.pw-match[data-state="ok"] { background: var(--online); color: #fff; }
+.pw-match[data-state="no"] { background: var(--danger); color: #fff; }
+.pw-match .icon { width: 14px; height: 14px; stroke-width: 3; }
+
+.check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  cursor: pointer;
+}
+
+.check-row input { width: 18px; height: 18px; margin-top: 2px; flex: none; accent-color: var(--brand-2); }
+.check-row strong { display: block; color: var(--ink); font-size: 14px; font-weight: 500; }
+.check-row small { display: block; color: var(--muted); font-size: 12.5px; }
+#pwSubmit:disabled { opacity: 0.5; }
+
+
+/* ==========================================================================
+   Conocer (citas): pila de tarjetas, match, asistente y chat de un match
+   ========================================================================== */
+.badge.is-love { background: linear-gradient(135deg, #ff6b8b, #e0457b); }
+.dz-heart { width: 14px; height: 14px; margin-left: 5px; vertical-align: -2px; color: #e0457b; }
+.dz-verified { width: 18px; height: 18px; margin-left: 6px; vertical-align: -3px; color: #3b9cff; }
+
+/* La pila sustituye a la pantalla de inicio en la pestaña Conocer */
+.app.in-discover .chat-empty { display: none !important; }
+
+.discover {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 18px clamp(16px, 3vw, 32px) 20px;
+  background:
+    radial-gradient(60% 50% at 50% 0%, color-mix(in srgb, #ff6b8b 12%, transparent), transparent 70%),
+    radial-gradient(50% 40% at 100% 100%, color-mix(in srgb, var(--brand) 10%, transparent), transparent 70%),
+    var(--surface);
+}
+
+.discover[hidden] { display: none; }
+
+.dz-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.dz-head h2 { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 24px; }
+.dz-head h2 .icon { color: #ff5a79; }
+.dz-head p { margin: 2px 0 0; font-size: 13.5px; }
+.dz-back { display: none; }
+.dz-head-actions { display: flex; align-items: center; gap: 6px; }
+
+.dz-super-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: var(--pill);
+  background: color-mix(in srgb, #3b9cff 14%, transparent);
+  color: #1f7fe0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.dz-super-left.is-empty { opacity: 0.45; }
+
+.dz-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: 1;
+  min-height: 0;
+  padding: 14px 0;
+}
+
+.dz-stage { container-type: size; }
+
+.dz-deck {
+  position: relative;
+  height: min(100cqh, 600px);
+  width: min(100cqw, 400px, calc(min(100cqh, 600px) * 0.7));
+}
+
+.dz-deck:empty { display: none; }
+
+/* --- Tarjeta --------------------------------------------------------------- */
+.dz-card {
+  --like: 0;
+  --pass: 0;
+  --super: 0;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 28px;
+  background: var(--surface);
+  box-shadow: 0 24px 50px -24px rgba(16, 24, 40, 0.45), 0 0 0 1px var(--border);
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s;
+}
+
+.dz-card.is-dragging { transition: none; cursor: grabbing; }
+.dz-card.is-leaving { transition: transform 0.32s ease-in, opacity 0.32s; opacity: 0; }
+.dz-card.is-next { transform: scale(0.94) translateY(14px); filter: brightness(0.96); pointer-events: none; }
+.dz-card:focus-visible { outline: 3px solid var(--brand); outline-offset: 4px; }
+
+.dz-photo {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: var(--surface-2) center / cover no-repeat;
+}
+
+.dz-photo::after {
+  content: "";
+  position: absolute;
+  inset: 45% 0 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent);
+  pointer-events: none;
+}
+
+.dz-bars {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  right: 12px;
+  z-index: 2;
+  display: flex;
+  gap: 4px;
+}
+
+.dz-bars i { flex: 1; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.4); }
+.dz-bars i.is-on { background: #fff; }
+
+/* Sellos al arrastrar */
+.dz-stamp {
+  position: absolute;
+  top: 34px;
+  z-index: 3;
+  padding: 4px 12px;
+  border: 4px solid currentColor;
+  border-radius: 10px;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+
+.dz-stamp.is-like { left: 22px; color: #12c26b; transform: rotate(-16deg); opacity: var(--like); }
+.dz-stamp.is-pass { right: 22px; color: #ff4b5c; transform: rotate(16deg); opacity: var(--pass); }
+.dz-stamp.is-super { left: 50%; top: auto; bottom: 150px; color: #3b9cff; transform: translateX(-50%) rotate(-6deg); opacity: var(--super); }
+
+.dz-badge {
+  position: absolute;
+  top: 24px;
+  left: 14px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: var(--pill);
+  background: linear-gradient(135deg, #5ab8ff, #2e7cf6);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 700;
+  box-shadow: 0 6px 16px -6px rgba(46, 124, 246, 0.7);
+}
+
+.dz-more {
+  position: absolute;
+  right: 14px;
+  bottom: 18px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: #262424;
+}
+
+.dz-info {
+  position: absolute;
+  left: 18px;
+  right: 60px;
+  bottom: 16px;
+  z-index: 2;
+  color: #fff;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+}
+
+.dz-info h3 { margin: 0; color: #fff; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+.dz-info h3 span { font-weight: 400; }
+.dz-info p { display: flex; align-items: center; gap: 5px; margin: 4px 0 0; font-size: 14px; opacity: 0.95; }
+.dz-info .icon { width: 15px; height: 15px; }
+.dz-info p.dz-aff { display: block; }
+.dz-aff .icon { margin-right: 4px; vertical-align: -2px; }
+.dz-aff b { color: #ffd166; white-space: nowrap; }
+
+/* Detalles del perfil (se despliegan con «i») */
+.dz-details {
+  display: grid;
+  gap: 10px;
+  max-height: 0;
+  overflow-y: auto;
+  padding: 0 18px;
+  transition: max-height 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), padding 0.35s;
+}
+
+.dz-card.is-expanded .dz-details { max-height: 48%; padding: 14px 18px 18px; }
+.dz-card.is-expanded .dz-more { transform: rotate(180deg); }
+
+.dz-looking {
+  justify-self: start;
+  padding: 4px 10px;
+  border-radius: var(--pill);
+  background: color-mix(in srgb, #ff6b8b 14%, transparent);
+  color: #d6336c;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.dz-about { margin: 0; color: var(--ink); font-size: 14.5px; line-height: 1.5; }
+
+.dz-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.dz-tags span {
+  padding: 4px 10px;
+  border-radius: var(--pill);
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 12.5px;
+}
+
+.dz-tags span.is-common { background: color-mix(in srgb, #ff6b8b 16%, transparent); color: #d6336c; font-weight: 600; }
+
+.dz-prompt { padding: 10px 12px; border-radius: 14px; background: var(--surface-2); }
+.dz-prompt small { display: block; color: var(--muted); font-size: 12px; }
+.dz-prompt p { margin: 2px 0 0; color: var(--ink); font-size: 14.5px; font-weight: 600; }
+
+/* --- Botones de acción ---------------------------------------------------- */
+.dz-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.dz-actions[hidden] { display: none; }
+
+.dz-btn {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: 0 10px 24px -12px rgba(16, 24, 40, 0.45), 0 0 0 1px var(--border);
+  transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.3), box-shadow 0.2s;
+}
+
+.dz-btn .icon { width: 28px; height: 28px; stroke-width: 2.6; }
+.dz-btn:hover { transform: scale(1.1); }
+.dz-btn:active { transform: scale(0.9); }
+.dz-btn:disabled { opacity: 0.35; pointer-events: none; }
+.dz-btn.is-undo, .dz-btn.is-super { width: 48px; height: 48px; }
+.dz-btn.is-undo .icon, .dz-btn.is-super .icon { width: 22px; height: 22px; }
+.dz-btn.is-undo { color: #f5a524; }
+.dz-btn.is-pass { color: #ff4b5c; }
+.dz-btn.is-super { color: #3b9cff; }
+.dz-btn.is-like { color: #fff; background: linear-gradient(135deg, #ff6b8b, #ff3d6e); box-shadow: 0 12px 26px -10px rgba(255, 61, 110, 0.7); }
+
+/* --- Bienvenida y estados vacíos ------------------------------------------ */
+.dz-empty { width: min(100%, 400px); }
+.dz-empty[hidden] { display: none; }
+
+.dz-welcome {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 36px 28px;
+  border-radius: 28px;
+  background: var(--surface);
+  box-shadow: 0 0 0 1px var(--border), 0 24px 50px -30px rgba(16, 24, 40, 0.4);
+  text-align: center;
+}
+
+.dz-welcome h3 { margin: 6px 0 0; font-size: 21px; }
+.dz-welcome p { margin: 0 0 8px; color: var(--muted); font-size: 14.5px; line-height: 1.5; }
+
+.dz-welcome-art {
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #ff8fa3, #ff3d6e);
+  color: #fff;
+  box-shadow: 0 16px 30px -14px rgba(255, 61, 110, 0.8);
+  animation: dz-beat 2.4s ease-in-out infinite;
+}
+
+.dz-welcome-art.is-muted { background: var(--surface-3); color: var(--muted); box-shadow: none; animation: none; }
+.dz-welcome-art .icon { width: 40px; height: 40px; }
+
+@keyframes dz-beat {
+  0%, 100% { transform: scale(1); }
+  12% { transform: scale(1.08); }
+  24% { transform: scale(1); }
+  36% { transform: scale(1.06); }
+}
+
+/* --- Panel lateral ---------------------------------------------------------- */
+.dz-me {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 12px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, color-mix(in srgb, #ff6b8b 16%, var(--surface)), var(--surface-2));
+  text-align: left;
+  transition: transform 0.2s;
+}
+
+.dz-me:hover { transform: translateY(-1px); }
+.dz-me-pic img { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 3px var(--surface), 0 0 0 5px #ff6b8b; }
+.dz-me-text { flex: 1; min-width: 0; }
+.dz-me-text strong { display: block; color: var(--ink); font-size: 15px; }
+.dz-me-text small { display: block; color: var(--muted); font-size: 12.5px; }
+
+.dz-open-deck { display: none; margin-bottom: 10px; }
+
+.dz-quick {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.dz-likes,
+.dz-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: var(--surface-2);
+  text-align: left;
+}
+
+.dz-likes:hover, .dz-filter:hover { background: var(--surface-3); }
+.dz-likes strong { display: block; color: var(--ink); font-size: 18px; line-height: 1; }
+.dz-likes small { color: var(--muted); font-size: 12px; }
+.dz-filter { color: var(--ink); font-size: 13px; font-weight: 600; }
+
+.dz-likes-pics { display: flex; }
+
+.dz-likes-pics img {
+  width: 30px;
+  height: 30px;
+  margin-left: -10px;
+  border-radius: 50%;
+  border: 2px solid var(--surface-2);
+  object-fit: cover;
+  filter: blur(3px);
+}
+
+.dz-likes-pics img:first-child { margin-left: 0; }
+.dz-likes-empty { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--surface); color: #ff5a79; }
+
+.dz-new {
+  display: flex;
+  gap: 12px;
+  padding: 2px 8px 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.dz-new-item { display: grid; justify-items: center; gap: 4px; flex: none; width: 66px; color: var(--text); font-size: 12px; }
+
+.dz-new-pic {
+  padding: 3px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff8fa3, #ff3d6e);
+}
+
+.dz-new-pic img { display: block; width: 56px; height: 56px; border-radius: 50%; border: 3px solid var(--surface); object-fit: cover; }
+.dz-new-empty { padding: 4px 6px; }
+.dz-safe { display: flex; gap: 6px; margin: 14px 8px 4px; font-size: 12px; line-height: 1.45; }
+.dz-safe .icon { flex: none; color: var(--online); }
+#dzChats .empty-list { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 18px 8px; }
+
+/* --- ¡Es un match! --------------------------------------------------------- */
+.dz-match-modal { background: rgba(10, 6, 20, 0.6); }
+
+.dz-match {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  width: min(100%, 420px);
+  padding: 36px 28px 28px;
+  overflow: hidden;
+  border-radius: 32px;
+  background:
+    radial-gradient(80% 60% at 50% 0%, rgba(255, 255, 255, 0.25), transparent 60%),
+    linear-gradient(160deg, #ff7a95, #e0457b 50%, #7c4ddb);
+  color: #fff;
+  text-align: center;
+  transform: scale(0.85);
+  transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.35);
+}
+
+.modal.is-open .dz-match { transform: none; }
+
+.dz-match-kicker {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: -0.03em;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+}
+
+.dz-match h2 { margin: 0; color: rgba(255, 255, 255, 0.92); font-size: 17px; font-weight: 500; }
+
+.dz-match-pics {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0 4px;
+}
+
+.dz-match-pics img {
+  width: 116px;
+  height: 116px;
+  border-radius: 50%;
+  border: 5px solid #fff;
+  object-fit: cover;
+  box-shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.45);
+}
+
+.dz-match-pics img:first-child { transform: rotate(-8deg) translateX(14px); animation: dz-in-left 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.3); }
+.dz-match-pics img:last-child { transform: rotate(8deg) translateX(-14px); animation: dz-in-right 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.3); }
+
+@keyframes dz-in-left { from { transform: translateX(-80px) rotate(-30deg); opacity: 0; } }
+@keyframes dz-in-right { from { transform: translateX(80px) rotate(30deg); opacity: 0; } }
+
+.dz-match-heart {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #fff;
+  color: #ff3d6e;
+  box-shadow: 0 8px 18px -6px rgba(0, 0, 0, 0.35);
+  animation: dz-beat 1.6s ease-in-out infinite;
+}
+
+.dz-match-heart .icon { width: 24px; height: 24px; }
+.dz-match-common { margin: 0; color: rgba(255, 255, 255, 0.9); font-size: 14px; }
+.dz-match-common b { color: #fff; }
+.btn-light { background: #fff; color: #e0457b; }
+.btn-light:hover { filter: brightness(0.97); }
+.btn-outline-light { border: 1px solid rgba(255, 255, 255, 0.55); color: #fff; background: transparent; }
+.btn-outline-light:hover { background: rgba(255, 255, 255, 0.12); }
+.dz-match .btn { height: 48px; }
+.dz-match-tip { display: flex; align-items: center; gap: 6px; margin: 4px 0 0; color: rgba(255, 255, 255, 0.85); font-size: 12.5px; }
+
+/* Confeti */
+.dz-confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle, #ffd166 2px, transparent 3px),
+    radial-gradient(circle, #fff 2px, transparent 3px),
+    radial-gradient(circle, #7ef0c0 2px, transparent 3px),
+    radial-gradient(circle, #9ad0ff 2px, transparent 3px);
+  background-size: 60px 60px, 80px 80px, 70px 70px, 90px 90px;
+  background-position: 0 0, 30px 20px, 15px 40px, 45px 10px;
+  opacity: 0.8;
+  animation: dz-confetti 3s linear infinite;
+}
+
+@keyframes dz-confetti {
+  from { background-position: 0 -60px, 30px -80px, 15px -70px, 45px -90px; }
+  to { background-position: 0 600px, 30px 640px, 15px 620px, 45px 660px; }
+}
+
+/* --- Asistente del perfil de citas ---------------------------------------- */
+.dz-wizard { width: min(100%, 560px); }
+.dz-progress { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: -6px 0 18px; }
+.dz-progress i { height: 5px; border-radius: 999px; background: var(--surface-3); transition: background-color 0.3s; }
+.dz-progress i.is-on { background: linear-gradient(90deg, #ff8fa3, #ff3d6e); }
+.dz-step { display: none; }
+.dz-step.is-active { display: grid; gap: 12px; animation: fade-up 0.3s var(--ease); }
+.dz-step h3 { margin: 0; color: var(--ink); font-size: 18px; }
+.dz-step > p { margin: -6px 0 0; font-size: 13.5px; }
+.dz-sub { margin-top: 10px !important; }
+
+.dz-photos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.dz-photo-slot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 3 / 4;
+  border-radius: 18px;
+  border: 2px dashed var(--border);
+  background: var(--surface-2) center / cover no-repeat;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.dz-photo-slot:hover { border-color: #ff6b8b; color: #ff3d6e; }
+.dz-photo-slot.has-photo { border: 0; box-shadow: var(--shadow-sm); }
+.dz-photo-slot.is-main { box-shadow: 0 0 0 3px #ff6b8b; }
+
+.dz-photo-main {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #ff3d6e;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.dz-photo-del {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+}
+
+.dz-choice { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.dz-choice button,
+.dz-interests button {
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s, transform 0.15s;
+}
+
+.dz-choice button:hover,
+.dz-interests button:hover { border-color: #ff6b8b; }
+
+.dz-choice button.is-selected,
+.dz-interests button.is-selected {
+  border-color: transparent;
+  background: linear-gradient(135deg, #ff6b8b, #ff3d6e);
+  color: #fff;
+  transform: scale(1.03);
+}
+
+.dz-interests { display: flex; flex-wrap: wrap; gap: 8px; }
+.dz-interests button { height: 34px; font-size: 13.5px; }
+.dz-prompts { display: grid; gap: 10px; }
+.dz-prompt-edit { display: grid; gap: 6px; padding: 10px; border-radius: 16px; background: var(--surface-2); }
+
+.dz-verify {
+  display: flex;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 18px;
+  background: color-mix(in srgb, #3b9cff 10%, var(--surface));
+}
+
+.dz-verify-ico {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #5ab8ff, #2e7cf6);
+  color: #fff;
+}
+
+.dz-verify strong { color: var(--ink); }
+.dz-verify p { margin: 2px 0 8px; font-size: 13px; }
+.dz-verify.is-verified { background: color-mix(in srgb, var(--online) 12%, var(--surface)); }
+.dz-verify.is-verified .dz-verify-ico { background: linear-gradient(135deg, #5be08f, #12a150); }
+
+.dz-rules { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.dz-rules li { display: flex; gap: 8px; color: var(--text); font-size: 13.5px; }
+.dz-rules .icon { flex: none; margin-top: 2px; color: var(--online); }
+
+.dz-wiz-foot {
+  position: sticky;
+  bottom: -28px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 18px -28px -28px;
+  padding: 14px 28px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.dz-wiz-foot .btn-primary { margin-left: auto; min-width: 150px; }
+
+/* Filtros: dos controles de edad superpuestos */
+.dz-range { position: relative; height: 28px; }
+
+.dz-range input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  pointer-events: none;
+  background: none;
+  accent-color: #ff3d6e;
+}
+
+.dz-range input::-webkit-slider-thumb { pointer-events: auto; }
+.dz-range input::-moz-range-thumb { pointer-events: auto; }
+.dz-slider { width: 100%; accent-color: #ff3d6e; }
+#modal-dating-filters .label b { margin-left: auto; color: #ff3d6e; }
+#modal-dating-filters .label { display: flex; }
+
+/* --- Chat de un match ------------------------------------------------------ */
+.attach-menu .for-match { display: none; }
+.chat.is-match .attach-menu .for-match { display: flex; }
+
+.dz-ice {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  align-self: center;
+  width: min(100%, 420px);
+  margin: 10px auto 6px;
+  padding: 20px;
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: 0 0 0 1px var(--border), 0 16px 34px -24px rgba(16, 24, 40, 0.45);
+  text-align: center;
+}
+
+.dz-ice-pics { display: flex; align-items: center; }
+.dz-ice-pics img { width: 54px; height: 54px; border-radius: 50%; border: 3px solid var(--surface); object-fit: cover; }
+.dz-ice-pics span { display: grid; place-items: center; width: 30px; height: 30px; margin: 0 -8px; z-index: 1; border-radius: 50%; background: #ff3d6e; color: #fff; }
+.dz-ice-pics .icon { width: 16px; height: 16px; }
+.dz-ice strong { color: var(--ink); font-size: 15px; }
+.dz-ice p { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0; color: var(--muted); font-size: 13px; }
+.dz-ice p span { padding: 2px 9px; border-radius: 999px; background: color-mix(in srgb, #ff6b8b 14%, transparent); color: #d6336c; font-weight: 600; }
+.dz-ice-ideas { display: grid; gap: 6px; width: 100%; }
+
+.dz-ice-ideas button {
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: var(--surface-2);
+  color: var(--ink);
+  font-size: 13.5px;
+  text-align: left;
+  transition: background-color 0.15s, transform 0.15s;
+}
+
+.dz-ice-ideas button:hover { background: color-mix(in srgb, #ff6b8b 12%, var(--surface-2)); transform: translateX(3px); }
+.dz-ice-games { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+
+.dz-ice-games button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.dz-ice-games button:hover { border-color: #ff6b8b; color: #e0457b; }
+
+/* «Esto o aquello» */
+.bubble.is-game, .bubble.is-date { min-width: 240px; }
+.game-card { display: grid; gap: 8px; padding: 2px 0; }
+.game-card small { display: flex; align-items: center; gap: 5px; font-size: 12px; opacity: 0.85; }
+.game-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.game-options button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 46px;
+  padding: 8px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.06);
+  color: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  transition: transform 0.15s, background-color 0.15s;
+}
+
+.msg.me .game-options button { background: rgba(255, 255, 255, 0.18); }
+.game-options button:not(:disabled):hover { transform: scale(1.04); }
+.game-options button.is-mine { background: #fff; color: #e0457b; box-shadow: 0 0 0 2px #ff6b8b; }
+.game-options button b { padding: 0 6px; border-radius: 999px; background: #ff3d6e; color: #fff; font-size: 11px; }
+.game-state { justify-content: center; }
+
+/* Propuesta de cita */
+.date-card { display: flex; gap: 12px; padding: 2px 0; }
+
+.date-ico {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #b48cf2, #7c4ddb);
+  color: #fff;
+}
+
+.date-card small { display: block; font-size: 12px; opacity: 0.8; }
+.date-card strong { display: block; font-size: 15px; }
+.date-card span { display: block; font-size: 13px; opacity: 0.9; }
+.date-card span::first-letter { text-transform: uppercase; }
+.date-card em { display: block; margin-top: 4px; font-size: 13px; font-style: normal; font-weight: 600; }
+.date-card.is-accepted .date-ico { background: linear-gradient(135deg, #5be08f, #12a150); }
+.date-actions { display: flex; gap: 6px; margin-top: 8px; }
+
+.date-actions button,
+.date-remind {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: var(--brand-2);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.date-actions button + button { background: rgba(0, 0, 0, 0.08); color: inherit; }
+.date-remind { margin-top: 8px; background: rgba(0, 0, 0, 0.08); color: inherit; }
+.msg.me .date-remind { background: rgba(255, 255, 255, 0.2); }
+
+/* Info del contacto: perfil de citas */
+.info-dating h4 .icon { color: #ff3d6e; }
+.dz-info-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 0 0 8px; color: var(--muted); font-size: 13px; }
+.info-dating .dz-tags { margin: 10px 0; }
+.info-dating .dz-prompt { margin-top: 8px; background: var(--surface); }
+.dz-info-actions { display: flex; gap: 8px; margin-top: 12px; }
+
+/* --- Móvil ---------------------------------------------------------------- */
+@media (max-width: 860px) {
+  .rail-btn { width: 50px; }
+  .rail-btn > .icon { padding: 4px 10px; }
+  .dz-open-deck { display: flex; }
+
+  /* La pila se abre a pantalla completa como un chat */
+  .app.discover-open .chat { transform: none; }
+  .dz-back { display: grid; }
+  .discover { padding: calc(12px + env(safe-area-inset-top)) 14px 16px; }
+  .dz-head h2 { font-size: 20px; }
+  .dz-head p { display: none; }
+  .dz-deck { width: 100%; height: 100%; aspect-ratio: auto; }
+  .dz-actions { gap: 12px; }
+  .dz-photos { gap: 8px; }
+  .dz-wiz-foot { margin: 18px -20px -20px; padding: 12px 20px; }
+}

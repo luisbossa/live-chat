@@ -71,6 +71,16 @@ const realtime = {
 
   isOnline: (userId) => presence.isOnline(userId),
 
+  /** Desconecta los sockets del usuario que no pertenecen a la sesión `keepSid` (otros dispositivos). */
+  async disconnectOtherSessions(userId, keepSid) {
+    if (!io) return;
+    for (const socket of await io.in(room(userId)).fetchSockets()) {
+      if (socket.request?.sessionID === keepSid) continue;
+      socket.emit("session:revoked", { reason: "password" });
+      socket.disconnect(true);
+    }
+  },
+
   toSocket(socketId, event, payload) {
     io?.to(socketId).emit(event, payload);
   },

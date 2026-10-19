@@ -98,6 +98,7 @@
             <section class="profile-section profile-links">
                 <button type="button" class="profile-link" data-action="share-profile"><span class="row-icon tone-blue"><%- icon('link') %></span><span class="row-text">Compartir mi perfil<small>Copia tu enlace para que te agreguen</small></span></button>
                 <button type="button" class="profile-link" data-open="modal-qr"><span class="row-icon tone-violet"><%- icon('qr') %></span><span class="row-text">Mi código QR<small>Para escanear desde otro teléfono</small></span></button>
+                <button type="button" class="profile-link" data-open="modal-password"><span class="row-icon tone-orange"><%- icon('lock') %></span><span class="row-text">Cambiar contraseña<small>Protege tu cuenta</small></span></button>
                 <button type="button" class="profile-link" data-open="modal-settings"><span class="row-icon tone-green"><%- icon('palette') %></span><span class="row-text">Apariencia y privacidad<small>Tema, colores y confirmaciones</small></span></button>
             </section>
 
@@ -150,6 +151,10 @@
                 <span><strong>Última conexión</strong><small>Mostrar cuándo estuviste en línea</small></span>
                 <span class="switch"><input type="checkbox" id="lastSeenSwitch" data-setting="showLastSeen"><span></span></span>
             </label>
+            <button class="setting-row setting-link" data-open="modal-password">
+                <span><strong>Cambiar contraseña</strong><small>Te pediremos la actual</small></span>
+                <%- icon('chevron-right', 'icon-sm') %>
+            </button>
             <h4>Ayuda</h4>
             <button class="setting-row setting-link" data-open="modal-shortcuts">
                 <span><strong>Atajos de teclado</strong><small>Ctrl + K para ir a cualquier chat</small></span>
@@ -414,6 +419,231 @@
         <%- head('Mensajes programados') %>
         <ul class="scheduled-list" id="scheduledList"></ul>
         <button class="btn btn-ghost btn-block" data-action="new-schedule"><%- icon('plus') %>Programar otro</button>
+    </div>
+</div>
+
+<!-- Cambiar contraseña -->
+<div class="modal" id="modal-password">
+    <div class="modal-dialog password-dialog">
+        <%- head('Cambiar contraseña') %>
+        <div class="password-hero">
+            <span><%- icon('lock') %></span>
+            <p class="muted">Usa una contraseña que no uses en otros sitios. Te pediremos la actual para confirmar que eres tú.</p>
+        </div>
+        <form class="stack" id="passwordForm" novalidate>
+            <input type="text" name="username" autocomplete="username" value="<%= user.username %>" hidden>
+            <div class="field">
+                <label class="label" for="pwCurrent">Contraseña actual</label>
+                <div class="input-group">
+                    <input class="input" type="password" id="pwCurrent" name="current" autocomplete="current-password" required>
+                    <button type="button" class="icon-btn pw-toggle" data-pw-toggle="pwCurrent" aria-label="Mostrar contraseña"><%- icon('eye') %></button>
+                </div>
+                <span class="field-error" data-pw-error="current"></span>
+            </div>
+            <div class="field">
+                <label class="label" for="pwNext">Nueva contraseña</label>
+                <div class="input-group">
+                    <input class="input" type="password" id="pwNext" name="next" autocomplete="new-password" minlength="6" required>
+                    <button type="button" class="icon-btn pw-toggle" data-pw-toggle="pwNext" aria-label="Mostrar contraseña"><%- icon('eye') %></button>
+                </div>
+                <div class="pw-strength" id="pwStrength" data-level="0" aria-hidden="true"><i></i><i></i><i></i></div>
+                <small class="field-note" id="pwStrengthLabel">Mínimo 6 caracteres.</small>
+                <span class="field-error" data-pw-error="next"></span>
+            </div>
+            <div class="field">
+                <label class="label" for="pwConfirm">Repite la nueva contraseña</label>
+                <div class="input-group">
+                    <input class="input" type="password" id="pwConfirm" name="confirm" autocomplete="new-password" required>
+                    <span class="pw-match" id="pwMatch" aria-hidden="true"></span>
+                </div>
+                <span class="field-error" data-pw-error="confirm"></span>
+            </div>
+            <label class="check-row">
+                <input type="checkbox" id="pwLogoutOthers" checked>
+                <span><strong>Cerrar sesión en mis otros dispositivos</strong><small>Recomendado si crees que alguien conoce tu contraseña</small></span>
+            </label>
+            <button class="btn btn-primary btn-block" type="submit" id="pwSubmit" disabled><%- icon('check') %><span>Cambiar contraseña</span></button>
+        </form>
+    </div>
+</div>
+
+<!-- Conocer: asistente del perfil de citas -->
+<div class="modal" id="modal-dating">
+    <div class="modal-dialog dz-wizard">
+        <div class="modal-head">
+            <h2 id="dzWizTitle">Tu perfil de citas</h2>
+            <button class="icon-btn" data-close aria-label="Cerrar"><%- icon('x') %></button>
+        </div>
+        <div class="dz-progress" id="dzProgress"><i></i><i></i><i></i><i></i></div>
+        <form id="dzForm" novalidate>
+            <!-- 1. Fotos -->
+            <section class="dz-step is-active" data-step="1">
+                <h3>Tus fotos</h3>
+                <p class="muted">La primera es la principal. Sube hasta 6 (toca una para hacerla principal).</p>
+                <div class="dz-photos" id="dzPhotos"></div>
+                <input type="file" id="dzPhotoInput" accept="image/*" multiple hidden>
+            </section>
+            <!-- 2. Sobre ti -->
+            <section class="dz-step" data-step="2">
+                <h3>Sobre ti</h3>
+                <div class="field-row">
+                    <div class="field">
+                        <label class="label" for="dzBirth">Fecha de nacimiento</label>
+                        <input class="input" type="date" id="dzBirth" required>
+                        <small class="field-note">Debes ser mayor de 18. Solo se muestra tu edad.</small>
+                    </div>
+                    <div class="field">
+                        <label class="label" for="dzProvince">Provincia</label>
+                        <select class="input" id="dzProvince" required></select>
+                    </div>
+                </div>
+                <div class="field">
+                    <span class="label">Soy</span>
+                    <div class="dz-choice" data-name="gender">
+                        <button type="button" data-value="woman">Mujer</button>
+                        <button type="button" data-value="man">Hombre</button>
+                        <button type="button" data-value="nonbinary">No binario</button>
+                    </div>
+                </div>
+                <div class="field">
+                    <span class="label">Quiero conocer a</span>
+                    <div class="dz-choice" data-name="interestedIn">
+                        <button type="button" data-value="women">Mujeres</button>
+                        <button type="button" data-value="men">Hombres</button>
+                        <button type="button" data-value="everyone">Todos</button>
+                    </div>
+                </div>
+                <div class="field">
+                    <span class="label">Busco</span>
+                    <div class="dz-choice" data-name="lookingFor">
+                        <button type="button" data-value="pareja">💞 Pareja</button>
+                        <button type="button" data-value="algo_casual">🍹 Algo casual</button>
+                        <button type="button" data-value="amistad">🤝 Amistad</button>
+                        <button type="button" data-value="no_se">🤷 Aún no sé</button>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label" for="dzAbout">Sobre mí <span class="muted" id="dzAboutCount">0/300</span></label>
+                    <textarea class="input" id="dzAbout" rows="3" maxlength="300" placeholder="Algo corto que te describa…"></textarea>
+                </div>
+            </section>
+            <!-- 3. Intereses y preguntas -->
+            <section class="dz-step" data-step="3">
+                <h3>Lo que te gusta <span class="muted" id="dzInterestCount">0/8</span></h3>
+                <p class="muted">Elige entre 3 y 8. Te mostraremos la afinidad con cada persona.</p>
+                <div class="dz-interests" id="dzInterests"></div>
+                <h3 class="dz-sub">Responde hasta 3 preguntas</h3>
+                <div class="dz-prompts" id="dzPrompts"></div>
+            </section>
+            <!-- 4. Verificación y normas -->
+            <section class="dz-step" data-step="4">
+                <h3>Seguridad</h3>
+                <div class="dz-verify" id="dzVerify">
+                    <span class="dz-verify-ico"><%- icon('shield-check') %></span>
+                    <div>
+                        <strong>Verifica tu perfil</strong>
+                        <p class="muted">Toma una selfie haciendo ✌️. Los perfiles verificados reciben más matches.</p>
+                        <input type="file" id="dzSelfie" accept="image/*" capture="user" hidden>
+                        <button type="button" class="btn btn-ghost btn-sm" id="dzSelfieBtn"><%- icon('camera', 'icon-sm') %>Tomar selfie</button>
+                    </div>
+                </div>
+                <ul class="dz-rules">
+                    <li><%- icon('check', 'icon-sm') %>Trata a todas las personas con respeto.</li>
+                    <li><%- icon('check', 'icon-sm') %>Solo mayores de 18 años.</li>
+                    <li><%- icon('check', 'icon-sm') %>No compartas datos sensibles (dirección, cuentas, contraseñas).</li>
+                    <li><%- icon('check', 'icon-sm') %>Para la primera cita, elige un lugar público y avisa a alguien.</li>
+                </ul>
+                <label class="check-row">
+                    <input type="checkbox" id="dzPaused">
+                    <span><strong>Pausar mi perfil</strong><small>No aparecerás en «Conocer», pero conservas tus matches</small></span>
+                </label>
+            </section>
+            <p class="form-alert" id="dzAlert" role="alert" hidden></p>
+            <footer class="dz-wiz-foot">
+                <button type="button" class="btn btn-ghost" id="dzBack">Atrás</button>
+                <button type="button" class="btn btn-primary" id="dzNext">Siguiente</button>
+            </footer>
+        </form>
+    </div>
+</div>
+
+<!-- Conocer: filtros -->
+<div class="modal" id="modal-dating-filters">
+    <div class="modal-dialog">
+        <%- head('Filtros') %>
+        <form class="stack" id="dzFilters">
+            <div class="field">
+                <span class="label">Edad <b id="dzAgeLabel">21–40</b></span>
+                <div class="dz-range">
+                    <input type="range" id="dzAgeMin" min="18" max="99" step="1">
+                    <input type="range" id="dzAgeMax" min="18" max="99" step="1">
+                </div>
+            </div>
+            <div class="field">
+                <span class="label">Distancia máxima <b id="dzKmLabel">200 km</b></span>
+                <input type="range" id="dzKm" min="10" max="500" step="10" class="dz-slider">
+            </div>
+            <label class="check-row"><input type="checkbox" id="dzOnlyVerified"><span><strong>Solo perfiles verificados</strong><small>Con la insignia azul</small></span></label>
+            <label class="check-row"><input type="checkbox" id="dzOnlyCommon"><span><strong>Solo con intereses en común</strong><small>Al menos uno compartido</small></span></label>
+            <button class="btn btn-primary btn-block" type="submit">Aplicar filtros</button>
+        </form>
+    </div>
+</div>
+
+<!-- Conocer: ¡Es un match! -->
+<div class="modal dz-match-modal" id="modal-match">
+    <div class="dz-match">
+        <div class="dz-confetti" aria-hidden="true"></div>
+        <p class="dz-match-kicker">¡Es un match!</p>
+        <h2 id="dzMatchTitle">Tú y Daniela se gustan</h2>
+        <div class="dz-match-pics">
+            <img id="dzMatchMe" src="" alt="">
+            <span class="dz-match-heart"><%- icon('heart-fill') %></span>
+            <img id="dzMatchThem" src="" alt="">
+        </div>
+        <p class="dz-match-common" id="dzMatchCommon"></p>
+        <button class="btn btn-light btn-block" id="dzMatchChat"><%- icon('chat') %>Enviar un mensaje</button>
+        <button class="btn btn-outline-light btn-block" data-close>Seguir descubriendo</button>
+        <p class="dz-match-tip"><%- icon('shield-check', 'icon-sm') %> Consejo: conózcanse primero por chat o videollamada.</p>
+    </div>
+</div>
+
+<!-- Conocer: reportar -->
+<div class="modal" id="modal-report">
+    <div class="modal-dialog">
+        <%- head('Reportar perfil') %>
+        <form class="stack" id="reportForm">
+            <p class="muted">Gracias por ayudarnos. La persona no sabrá que la reportaste y quedará bloqueada para ti.</p>
+            <div class="radio-list" id="reportReasons"></div>
+            <div class="field">
+                <label class="label" for="reportDetails">Detalles (opcional)</label>
+                <textarea class="input" id="reportDetails" rows="2" maxlength="300"></textarea>
+            </div>
+            <button class="btn btn-danger btn-block" type="submit" id="reportSubmit" disabled><%- icon('flag') %>Reportar y bloquear</button>
+        </form>
+    </div>
+</div>
+
+<!-- Conocer: proponer una cita -->
+<div class="modal" id="modal-propose-date">
+    <div class="modal-dialog">
+        <%- head('Proponer una cita') %>
+        <form class="stack" id="proposeForm">
+            <div class="dz-choice" data-name="dateKind">
+                <button type="button" data-value="video" class="is-selected">📹 Videollamada</button>
+                <button type="button" data-value="place">📍 En persona</button>
+            </div>
+            <div class="field" id="proposePlaceField" hidden>
+                <label class="label" for="proposePlace">Lugar</label>
+                <input class="input" id="proposePlace" maxlength="80" placeholder="Ej. Café en Barrio Escalante">
+            </div>
+            <div class="field">
+                <label class="label" for="proposeWhen">Día y hora</label>
+                <input class="input" type="datetime-local" id="proposeWhen" required>
+            </div>
+            <p class="muted small"><%- icon('shield-check', 'icon-sm') %> Para la primera cita en persona, elige un lugar público.</p>
+            <button class="btn btn-primary btn-block" type="submit"><%- icon('calendar-heart') %>Enviar propuesta</button>
+        </form>
     </div>
 </div>
 

@@ -15,6 +15,7 @@ export const api = {
 
   updateProfile: (formData) => req("/api/me", { method: "PATCH", body: formData }),
   updateSettings: (settings) => req("/api/me/settings", { method: "PATCH", body: settings }),
+  changePassword: (data) => req("/api/me/password", { method: "PATCH", body: data }),
   qr: () => req("/api/me/qr"),
 
   openDirect: (userId) => req("/api/conversations", { method: "POST", body: { userId } }),
@@ -50,6 +51,28 @@ export const api = {
   viewStory: (id) => req(`/api/stories/${id}/view`, { method: "POST" }),
   storyViewers: (id) => req(`/api/stories/${id}/viewers`),
   deleteStory: (id) => req(`/api/stories/${id}`, { method: "DELETE" }),
+
+  // Conocer (citas)
+  datingOptions: () => req("/api/dating/options"),
+  datingProfile: () => req("/api/dating/profile"),
+  saveDatingProfile: (data) => req("/api/dating/profile", { method: "PUT", body: data }),
+  uploadDatingPhotos: (files) => {
+    const fd = new FormData();
+    [...files].forEach((f) => fd.append("photos", f));
+    return req("/api/dating/photos", { method: "POST", body: fd });
+  },
+  pauseDating: (paused) => req("/api/dating/profile/pause", { method: "PATCH", body: { paused } }),
+  verifyDating: (file) => req("/api/dating/verify", { method: "POST", body: form({ selfie: file }) }),
+  deck: (filters = {}) => req(`/api/dating/deck?${new URLSearchParams(Object.entries(filters).filter(([, v]) => v !== undefined && v !== null && v !== false))}`),
+  swipe: (toId, action) => req("/api/dating/swipe", { method: "POST", body: { toId, action } }),
+  undoSwipe: () => req("/api/dating/undo", { method: "POST" }),
+  datingMatches: () => req("/api/dating/matches"),
+  datingLikes: () => req("/api/dating/likes"),
+  unmatch: (id) => req(`/api/dating/matches/${id}`, { method: "DELETE" }),
+  report: (data) => req("/api/dating/report", { method: "POST", body: data }),
+  thisOrThat: (conversationId) => req(`/api/conversations/${conversationId}/this-or-that`, { method: "POST", body: {} }),
+  proposeDate: (conversationId, data) => req(`/api/conversations/${conversationId}/date`, { method: "POST", body: data }),
+  answer: (messageId, data) => req(`/api/messages/${messageId}/answer`, { method: "POST", body: data }),
 
   wallet: () => req("/api/wallet"),
   sendMoney: (data) => req("/api/wallet/send", { method: "POST", body: data }),

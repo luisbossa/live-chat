@@ -11,6 +11,9 @@
                 <h1 class="title">Bienvenido de nuevo</h1>
                 <p class="subtitle">Entra con tu usuario y contraseña. Sin correos ni códigos.</p>
 
+                <% if (locals.notice) { %>
+                <p class="form-notice" role="status"><%= notice %></p>
+                <% } %>
                 <% if (locals.error) { %>
                 <p class="form-alert" role="alert"><%= error %></p>
                 <% } %>

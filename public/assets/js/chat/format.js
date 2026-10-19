@@ -17,6 +17,14 @@ export function systemText(msg) {
       return `${actor} ${verb("saliste", "salió")} del grupo`;
     case "renamed":
       return `${actor} ${verb("cambiaste", "cambió")} el nombre del grupo a «${meta.name}»`;
+    case "matched":
+      return "¡Hicieron match en «Conocer»! 💞 Saluda y rompe el hielo.";
+    case "game-result": {
+      const picks = Object.entries(meta.answers || {});
+      const [a, b] = picks.map(([, choice]) => choice);
+      if (picks.length === 2 && a === b) return `🎲 ¡Ambos eligieron ${a}!`;
+      return `🎲 ${picks.map(([id, choice]) => `${userName(Number(id), { short: true })}: ${choice}`).join(" · ")}`;
+    }
     case "pinned":
       return `${actor} ${verb("fijaste", "fijó")} un mensaje`;
     case "disappearing":
@@ -63,7 +71,7 @@ export function paymentText(msg) {
 export function previewIcon(msg) {
   if (!msg) return null;
   if (msg.deletedAt) return "ban";
-  const icons = { image: "image", audio: "mic", file: "file", sticker: "sticker", payment: "wallet" };
+  const icons = { image: "image", audio: "mic", file: "file", sticker: "sticker", payment: "wallet", date: "calendar-heart", game: "dice" };
   if (msg.type === "call") return msg.meta?.callType === "video" ? "video" : "phone";
   return icons[msg.type] || null;
 }
@@ -75,6 +83,8 @@ export function previewOf(conv, msg = conv.lastMessage) {
   if (msg.type === "system") return systemText(msg);
   if (msg.type === "call") return callText(msg);
   if (msg.type === "payment") return paymentText(msg);
+  if (msg.type === "game") return `${msg.senderId === state.me.id ? "Tú: " : ""}🎲 ${(msg.meta?.options || []).join(" o ")}`;
+  if (msg.type === "date") return `${msg.senderId === state.me.id ? "Tú: " : ""}Propuesta de cita · ${msg.meta?.kind === "place" ? msg.meta.place : "Videollamada"}`;
 
   const labels = {
     image: msg.body || "Foto",

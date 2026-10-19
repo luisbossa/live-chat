@@ -560,7 +560,87 @@ function initLogout() {
   });
 }
 
+// ==========================================================================
+// Cambiar contraseña
+// ==========================================================================
+const PW_LABELS = ["Mínimo 6 caracteres.", "Aceptable. Más larga es más segura.", "Buena contraseña.", "¡Contraseña fuerte!"];
+
+function initPassword() {
+  const form = $("#passwordForm");
+  const f = form.elements;
+  const setErr = (name, msg) => {
+    $(`[data-pw-error="${name}"]`).textContent = msg || "";
+    f[name].classList.toggle("is-invalid", Boolean(msg));
+  };
+
+  function refresh() {
+    const next = f.next.value;
+    let level = 0;
+    if (next.length >= 6) level = 1;
+    if (next.length >= 8 && /\d/.test(next) && /[a-z]/i.test(next)) level = 2;
+    if (next.length >= 10 && /\d/.test(next) && /[A-Z]/.test(next) && /[^A-Za-z0-9]/.test(next)) level = 3;
+    $("#pwStrength").dataset.level = next ? level : 0;
+    $("#pwStrength").classList.toggle("is-short", Boolean(next) && next.length < 6);
+    $("#pwStrengthLabel").textContent = next && next.length < 6 ? `Faltan ${6 - next.length} caracteres.` : PW_LABELS[level];
+
+    const match = f.confirm.value && f.confirm.value === next;
+    $("#pwMatch").dataset.state = !f.confirm.value ? "" : match ? "ok" : "no";
+    $("#pwMatch").innerHTML = !f.confirm.value ? "" : icon(match ? "check" : "x", "icon-sm");
+    $("#pwSubmit").disabled = !(f.current.value && next.length >= 6 && match);
+  }
+
+  onModalOpen("modal-password", () => {
+    form.reset();
+    f.username.value = state.me.username;
+    $("#pwLogoutOthers").checked = true;
+    ["current", "next", "confirm"].forEach((n) => setErr(n, ""));
+    form.querySelectorAll("[data-pw-toggle]").forEach((btn) => {
+      $(`#${btn.dataset.pwToggle}`).type = "password";
+      btn.querySelector("use").setAttribute("href", "/assets/images/icons.svg#i-eye");
+    });
+    refresh();
+  });
+
+  form.addEventListener("input", (e) => {
+    if (e.target.name) setErr(e.target.name, "");
+    refresh();
+  });
+
+  // Mostrar u ocultar cada campo
+  form.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-pw-toggle]");
+    if (!btn) return;
+    const input = $(`#${btn.dataset.pwToggle}`);
+    const show = input.type === "password";
+    input.type = show ? "text" : "password";
+    btn.querySelector("use").setAttribute("href", `/assets/images/icons.svg#i-${show ? "eye-off" : "eye"}`);
+    btn.setAttribute("aria-label", show ? "Ocultar contraseña" : "Mostrar contraseña");
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (f.confirm.value !== f.next.value) return setErr("confirm", "Las contraseñas no coinciden.");
+    const btn = $("#pwSubmit");
+    btn.disabled = true;
+    try {
+      const { closedSessions } = await api.changePassword({ current: f.current.value, next: f.next.value, logoutOthers: $("#pwLogoutOthers").checked });
+      closeModal("modal-password");
+      toast(
+        closedSessions ? `Contraseña cambiada. Cerramos ${closedSessions} sesión${closedSessions === 1 ? "" : "es"} en otros dispositivos.` : "Contraseña cambiada",
+        { tone: "success", icon: "lock", duration: 4200 }
+      );
+    } catch (err) {
+      const errors = err.data?.errors || {};
+      Object.entries(errors).forEach(([name, msg]) => setErr(name, msg));
+      if (!Object.keys(errors).length) toastError(err.message);
+      (errors.current ? f.current : f.next).focus();
+      refresh();
+    }
+  });
+}
+
 export function initAccount() {
+  initPassword();
   initLogout();
   initProfile();
   initSettings();

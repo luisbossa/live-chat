@@ -7,6 +7,7 @@ import { registerAction, confirmDialog, openLightbox, onModalOpen, renderPicker,
 import { togglePin, toggleMute, toggleArchive, clearChat, deleteChat } from "./conv-actions.js";
 import { jumpToMessage } from "./conversation.js";
 import { openStories } from "./stories.js";
+import { matchForConversation, openReport, refreshMatches } from "./discover.js";
 
 const app = $("#app");
 const URL_RE = /https?:\/\/[^\s<]+[^\s<.,;:!?)\]]/g;
@@ -254,7 +255,24 @@ export function renderInfo(conv = activeConv(), { refreshMedia = false } = {}) {
   $("#deleteChatBtn").hidden = group;
   $("#leaveBtn").hidden = !group;
   $("#blockLabel").textContent = isBlockedConv(conv) ? "Desbloquear" : `Bloquear a ${peer?.name?.split(" ")[0] || ""}`;
+  renderDating(conv);
   renderMedia(conv, refreshMedia);
+}
+
+const LOOKING = { pareja: "💞 Busca pareja", algo_casual: "🍹 Algo casual", amistad: "🤝 Amistad", no_se: "🤷 Aún no sabe" };
+
+/** Chats de un match: su perfil de citas (sobre mí, intereses, preguntas) y acciones de seguridad. */
+function renderDating(conv) {
+  const m = conv.origin === "match" ? matchForConversation(conv.id) : null;
+  $("#infoDating").hidden = !m;
+  if (!m) return;
+  const u = m.user;
+  const common = new Set(u.common || []);
+  setHTML($("#infoDatingBody"), `
+    <p class="dz-info-meta">${escapeHTML(String(u.age || ""))} años · ${escapeHTML(u.provinceName || "")} · ${LOOKING[u.lookingFor] || ""}${u.verified ? ` · ${icon("shield-check", "icon-sm")} Verificado` : ""}</p>
+    ${u.about ? `<p class="info-bio">${escapeHTML(u.about)}</p>` : ""}
+    <div class="dz-tags">${(u.interests || []).map((i) => `<span class="${common.has(i) ? "is-common" : ""}">${escapeHTML(i)}</span>`).join("")}</div>
+    ${(u.prompts || []).map((p) => `<div class="dz-prompt"><small>${escapeHTML(p.q)}</small><p>${escapeHTML(p.a)}</p></div>`).join("")}`);
 }
 
 export function initInfo() {
@@ -290,6 +308,25 @@ export function initInfo() {
   });
 
   registerAction("leave-group", withActive(deleteChat));
+
+  // «Conocer»: deshacer match y reportar
+  registerAction("dz-unmatch", async () => {
+    const m = activeConv() && matchForConversation(activeConv().id);
+    if (!m) return;
+    const ok = await confirmDialog({ title: `¿Deshacer el match con ${m.user.firstName}?`, text: "El chat desaparecerá para los dos y no podrán volver a escribirse.", okText: "Deshacer match" });
+    if (!ok) return;
+    try {
+      await api.unmatch(m.id);
+      await refreshMatches();
+      toast("Match deshecho", { icon: "x" });
+    } catch (err) {
+      toastError(err.message);
+    }
+  });
+  registerAction("dz-report", () => {
+    const m = activeConv() && matchForConversation(activeConv().id);
+    if (m) openReport(m.user.userId, m.user.firstName);
+  });
 
   // Pestañas de archivos
   $("#mediaTabs").addEventListener("click", (e) => {

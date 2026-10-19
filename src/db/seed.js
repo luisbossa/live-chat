@@ -38,7 +38,7 @@ async function isEmpty() {
 }
 
 async function clear() {
-  const tables = ["scheduled_messages", "receipt_events", "pinned_messages", "message_hidden", "stars", "reactions", "story_views", "stories", "transactions", "blocks", "messages", "conversation_members", "conversations", "sessions", "files", "users"];
+  const tables = ["dating_reports", "dating_matches", "dating_swipes", "dating_profiles", "scheduled_messages", "receipt_events", "pinned_messages", "message_hidden", "stars", "reactions", "story_views", "stories", "transactions", "blocks", "messages", "conversation_members", "conversations", "sessions", "files", "users"];
   await db.transaction(async (tx) => {
     for (const t of tables) await tx.run(`DELETE FROM ${t}`);
     await tx.run("DELETE FROM sqlite_sequence");
@@ -169,6 +169,46 @@ async function seed({ reset = false } = {}) {
   await say(pelis, u.karla, at(1, "00:25"), "¡Algo de miedo! 👻");
   await say(pelis, u.mariana, at(1, "00:30"), "Vamos a ver Dune 🏜️");
   for (const m of [u.andres, u.karla, u.daniela, u.mariana]) await readUpTo(pelis, m);
+
+  // «Conocer»: perfiles de citas de ejemplo (todas las personas son mayores de edad)
+  const Dating = require("../models/Dating");
+  const born = (years, month = "06", day = "15") => `${new Date().getFullYear() - years}-${month}-${day}`;
+  const datingProfiles = [
+    [u.andres, { birthdate: born(29, "03", "14"), gender: "man", interestedIn: "women", lookingFor: "pareja", province: "san-jose", about: "Ingeniero de día, cocinero aficionado de noche. Siempre con un café en la mano ☕", interests: ["Café ☕", "Cocinar 🍳", "Senderismo 🥾", "Música 🎵", "Viajar ✈️"], prompts: [{ q: "Mi plan ideal un sábado es…", a: "Subir al Irazú temprano y terminar con un gallo pinto en Cartago." }] }],
+    [u.karla, { birthdate: born(27), gender: "woman", interestedIn: "men", lookingFor: "pareja", province: "heredia", about: "Viajera, cafetera y fan de los atardeceres en la playa 🌅", interests: ["Café ☕", "Playa 🏖️", "Viajar ✈️", "Fotografía 📷", "Comida tica 🌮"], prompts: [{ q: "Un lugar de Costa Rica que te tengo que mostrar…", a: "Playa Conchal en Guanacaste, el agua es transparente." }] }],
+    [u.daniela, { birthdate: born(26, "09", "02"), gender: "woman", interestedIn: "men", lookingFor: "pareja", province: "san-jose", about: "Diseñadora UX. Me encantan los museos, las series y los gatos 🐱", interests: ["Arte 🎨", "Series 📺", "Gatos 🐱", "Café ☕", "Música 🎵"], prompts: [{ q: "La mejor primera cita sería…", a: "Un café en Barrio Escalante y caminar sin rumbo." }] }],
+    [u.valeria, { birthdate: born(28, "08", "02"), gender: "woman", interestedIn: "men", lookingFor: "algo_casual", province: "puntarenas", about: "Yoga al amanecer y playa al atardecer 🧘‍♀️", interests: ["Yoga 🧘", "Playa 🏖️", "Surf 🏄", "Naturaleza 🌿", "Cocinar 🍳"], prompts: [{ q: "Me río mucho cuando…", a: "Intento surfear y la ola gana." }] }],
+    [u.mariana, { birthdate: born(30, "11", "20"), gender: "woman", interestedIn: "everyone", lookingFor: "no_se", province: "alajuela", about: "Fotógrafa de paisajes. Si hay un volcán cerca, ahí estoy 🌋", interests: ["Fotografía 📷", "Volcanes 🌋", "Senderismo 🥾", "Viajar ✈️", "Café ☕"], prompts: [{ q: "Un dato curioso sobre mí…", a: "He fotografiado los 5 volcanes activos del país." }] }],
+    [u.fernanda, { birthdate: born(31, "04", "08"), gender: "woman", interestedIn: "men", lookingFor: "amistad", province: "cartago", about: "Profe de inglés. Libros, té y conversaciones largas 📚", interests: ["Lectura 📚", "Idiomas 🗣️", "Cine 🎬", "Café ☕"], prompts: [{ q: "Lo que más valoro en alguien es…", a: "Que sepa escuchar y me recomiende libros." }] }],
+    [u.sofia, { birthdate: born(25, "01", "30"), gender: "woman", interestedIn: "men", lookingFor: "pareja", province: "san-jose", about: "Estudiante de Medicina en la UCR. Bailo salsa los viernes 💃", interests: ["Bailar 💃", "Música 🎵", "Café ☕", "Voluntariado 🤝", "Playa 🏖️"], prompts: [{ q: "Mi canción para un viaje en carro…", a: "Cualquiera de Malpaís, sin discusión." }] }],
+    [u.mauricio, { birthdate: born(30), gender: "man", interestedIn: "women", lookingFor: "pareja", province: "san-jose", about: "Cine, palomitas y mejenga los viernes ⚽", interests: ["Cine 🎬", "Mejenga ⚽", "Series 📺", "Videojuegos 🎮"], prompts: [{ q: "Mi comida tica favorita es…", a: "Un casado con chuleta, sin pensarlo." }] }],
+    [u.diego, { birthdate: born(28, "05", "05"), gender: "man", interestedIn: "women", lookingFor: "algo_casual", province: "heredia", about: "Ciclista y fan del café de altura 🚴", interests: ["Ciclismo 🚴", "Café ☕", "Naturaleza 🌿", "Mejenga ⚽"], prompts: [{ q: "Mi plan ideal un sábado es…", a: "Rodar hasta Barva y bajar por un café." }] }],
+    [u.kevin, { birthdate: born(27, "07", "12"), gender: "man", interestedIn: "women", lookingFor: "no_se", province: "puntarenas", about: "Surfista en Santa Teresa 🏄 Si no estoy en el agua, estoy en la hamaca.", interests: ["Surf 🏄", "Playa 🏖️", "Música 🎵", "Viajar ✈️", "Fotografía 📷"], prompts: [{ q: "La mejor primera cita sería…", a: "Ver el atardecer en Playa Hermosa con un pipa fría." }] }],
+  ];
+  for (const [user, d] of datingProfiles) {
+    await Dating.upsertProfile(user.id, { ...d, photos: [user.avatar], ageMin: 21, ageMax: 40, maxKm: 250, paused: false });
+  }
+  await Dating.verify(u.daniela.id);
+  await Dating.verify(u.karla.id);
+  await Dating.verify(u.mariana.id);
+
+  // Les gustas: al deslizarles a la derecha habrá match
+  for (const fan of [u.daniela, u.valeria]) await Dating.swipe(fan.id, u.andres.id, "like");
+  await Dating.swipe(u.mariana.id, u.andres.id, "superlike");
+  for (const fan of [u.mauricio, u.diego]) await Dating.swipe(fan.id, u.karla.id, "like");
+
+  // Un match ya hecho con su chat (Andrés ↔ Sofía)
+  await Dating.swipe(u.sofia.id, u.andres.id, "like");
+  const sofiaMatch = await Dating.swipe(u.andres.id, u.sofia.id, "like");
+  const matchChat = await direct(u.andres, u.sofia);
+  await Conversation.setOrigin(matchChat, "match");
+  await Dating.setMatchConversation(sofiaMatch.matchId, matchChat);
+  await say(matchChat, u.andres, at(1, "18:00"), { type: "system", meta: { action: "matched" } });
+  await say(matchChat, u.sofia, at(1, "18:04"), "¡Hola! Vi que también te gusta el café ☕ ¿Cuál es tu favorito?");
+  await say(matchChat, u.andres, at(1, "18:10"), "¡Hola Sofía! El de Tarrazú, sin duda. ¿Y vos?");
+  await say(matchChat, u.sofia, at(0, "08:15"), "Naranjo 😄 Un día de estos te reto a una cata.");
+  await readUpTo(matchChat, u.andres, 1);
+  await readUpTo(matchChat, u.sofia);
 
   // Un mensaje programado de ejemplo
   await require("../models/Scheduled").create({

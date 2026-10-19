@@ -65,6 +65,31 @@
         </div>
     </div>
 
+    <!-- Conocer: pila de tarjetas para deslizar (pestaña «Conocer» sin chat abierto) -->
+    <section class="discover" id="discover" aria-label="Conocer gente" hidden>
+        <header class="dz-head">
+            <button class="icon-btn dz-back" data-action="dz-back" aria-label="Ver mis matches"><%- icon('arrow-left') %></button>
+            <div>
+                <h2><%- icon('flame') %> Conocer</h2>
+                <p class="muted" id="dzHint">Desliza a la derecha si te gusta, a la izquierda para pasar.</p>
+            </div>
+            <div class="dz-head-actions">
+                <span class="dz-super-left" id="dzSuperLeft" title="Súper likes de hoy"><%- icon('star-fill', 'icon-sm') %><b>3</b></span>
+                <button class="icon-btn" data-open="modal-dating-filters" aria-label="Filtros" title="Filtros"><%- icon('sliders') %></button>
+            </div>
+        </header>
+        <div class="dz-stage">
+            <div class="dz-deck" id="dzDeck" aria-live="polite"></div>
+            <div class="dz-empty" id="dzEmpty" hidden></div>
+        </div>
+        <div class="dz-actions" id="dzActions">
+            <button class="dz-btn is-undo" data-swipe="undo" aria-label="Deshacer" title="Deshacer (Ctrl+Z)"><%- icon('rotate-ccw') %></button>
+            <button class="dz-btn is-pass" data-swipe="pass" aria-label="Paso" title="Paso (←)"><%- icon('x') %></button>
+            <button class="dz-btn is-super" data-swipe="superlike" aria-label="Súper like" title="Súper like (↑)"><%- icon('star-fill') %></button>
+            <button class="dz-btn is-like" data-swipe="like" aria-label="Me gusta" title="Me gusta (→)"><%- icon('heart-fill') %></button>
+        </div>
+    </section>
+
     <header class="chat-head">
         <button class="icon-btn back-btn" data-action="close-chat" aria-label="Volver"><%- icon('arrow-left') %></button>
         <button class="chat-peer" data-action="toggle-info">
@@ -144,6 +169,8 @@
             <button data-attach="file"><span class="tone-violet"><%- icon('file') %></span>Documento</button>
             <button data-attach="payment"><span class="tone-green"><%- icon('wallet') %></span>Enviar dinero</button>
             <button data-attach="schedule"><span class="tone-orange"><%- icon('calendar-clock') %></span>Programar mensaje</button>
+            <button data-attach="this-or-that" class="for-match"><span class="tone-pink"><%- icon('dice') %></span>Esto o aquello</button>
+            <button data-attach="date" class="for-match"><span class="tone-violet"><%- icon('calendar-heart') %></span>Proponer una cita</button>
         </div>
 
         <!-- Grabando nota de voz -->

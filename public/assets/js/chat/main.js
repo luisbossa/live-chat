@@ -22,6 +22,8 @@ import { initShortcuts } from "./shortcuts.js";
 import { initChatActions } from "./chat-actions.js";
 import { initMentions } from "./mentions.js";
 import { initTimed } from "./timed.js";
+import { initDiscover } from "./discover.js";
+import { initDatingProfile } from "./dating-profile.js";
 
 const app = $("#app");
 
@@ -178,6 +180,8 @@ async function start() {
   initChatActions();
   initMentions();
   initTimed();
+  initDiscover();
+  initDatingProfile();
   bindSocket();
   bindClicks();
   bindKeys();
