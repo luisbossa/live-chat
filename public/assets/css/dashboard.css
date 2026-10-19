@@ -5850,17 +5850,6 @@ kbd,
 .info-card.info-options { padding: 6px; }
 .info-card.info-options button { padding: 10px; }
 
-.info-foot {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  margin: 16px 0 0;
-  font-size: 12px;
-  text-align: center;
-}
-
-
 /* ==========================================================================
    Estados de disponibilidad
    ========================================================================== */
