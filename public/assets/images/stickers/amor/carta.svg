@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<defs><filter id="o" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+  <feMorphology in="SourceAlpha" operator="dilate" radius="5" result="d"/>
+  <feFlood flood-color="#fff"/><feComposite in2="d" operator="in" result="w"/>
+  <feGaussianBlur in="d" stdDeviation="3.5"/><feOffset dy="4" result="b"/>
+  <feFlood flood-color="#1a1530" flood-opacity=".22"/><feComposite in2="b" operator="in" result="s"/>
+  <feMerge><feMergeNode in="s"/><feMergeNode in="w"/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter></defs>
+<style>
+.a{transform-box:fill-box;transform-origin:center}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes pop{0%,100%{transform:scale(1) rotate(var(--r,0deg))}50%{transform:scale(1.06) rotate(var(--r,0deg))}}
+@keyframes beat{0%,100%{transform:scale(1)}14%{transform:scale(1.12)}28%{transform:scale(1)}42%{transform:scale(1.08)}}
+@keyframes wob{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes shake{0%,100%{transform:rotate(0)}20%{transform:rotate(-7deg)}40%{transform:rotate(6deg)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+@keyframes rise{0%{transform:translateY(8px);opacity:0}30%{opacity:.9}100%{transform:translateY(-26px);opacity:0}}
+@keyframes twinkle{0%,100%{transform:scale(.6) rotate(0);opacity:.4}50%{transform:scale(1.1) rotate(45deg);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blink{0%,90%,100%{transform:scaleY(0)}94%{transform:scaleY(1)}}
+@keyframes float{0%{transform:translate(0,6px) scale(.7);opacity:0}25%{opacity:1}100%{transform:translate(var(--dx,0),-40px) scale(1);opacity:0}}
+</style>
+
+<g filter="url(#o)">
+  <g fill="#ff5c8a">
+    <g class="a" style="--dx:-14px;animation:float 2.2s ease-out infinite"><path d="M80,70.85714285714286 C68.0,61.42857142857143 70.57142857142857,51.142857142857146 76.14285714285714,51.142857142857146 C78.71428571428571,51.142857142857146 80,53.285714285714285 80,54.57142857142857 C80,53.285714285714285 81.28571428571429,51.142857142857146 83.85714285714286,51.142857142857146 C89.42857142857143,51.142857142857146 92.0,61.42857142857143 80,70.85714285714286Z" fill="#ff5c8a" /></g>
+    <g class="a" style="--dx:12px;animation:float 2.2s 1.1s ease-out infinite"><path d="M122,65.71428571428571 C112.0,57.857142857142854 114.14285714285714,49.285714285714285 118.78571428571429,49.285714285714285 C120.92857142857143,49.285714285714285 122,51.07142857142857 122,52.14285714285714 C122,51.07142857142857 123.07142857142857,49.285714285714285 125.21428571428571,49.285714285714285 C129.85714285714286,49.285714285714285 132.0,57.857142857142854 122,65.71428571428571Z" fill="#ff8fab" /></g>
+  </g>
+  <g class="a" style="animation:wob 2.6s ease-in-out infinite">
+    <rect x="34" y="70" width="132" height="92" rx="12" fill="#fff4f7"/>
+    <path d="M34 82 L100 128 L166 82" fill="#ffd6e0"/>
+    <path d="M34 82 Q34 70 46 70 H154 Q166 70 166 82 L100 128Z" fill="#ffe3ea" stroke="#ffc2d1" stroke-width="2"/>
+    <path d="M34 160 L84 116 M166 160 L116 116" stroke="#ffc2d1" stroke-width="3"/>
+    <path d="M100,138.57142857142858 C78.0,121.28571428571429 82.71428571428572,102.42857142857143 92.92857142857143,102.42857142857143 C97.64285714285714,102.42857142857143 100,106.35714285714286 100,108.71428571428572 C100,106.35714285714286 102.35714285714286,102.42857142857143 107.07142857142857,102.42857142857143 C117.28571428571428,102.42857142857143 122.0,121.28571428571429 100,138.57142857142858Z" fill="#e8243b" />
+  </g>
+</g>
+
+</svg>

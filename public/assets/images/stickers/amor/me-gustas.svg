@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<defs><filter id="o" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+  <feMorphology in="SourceAlpha" operator="dilate" radius="5" result="d"/>
+  <feFlood flood-color="#fff"/><feComposite in2="d" operator="in" result="w"/>
+  <feGaussianBlur in="d" stdDeviation="3.5"/><feOffset dy="4" result="b"/>
+  <feFlood flood-color="#1a1530" flood-opacity=".22"/><feComposite in2="b" operator="in" result="s"/>
+  <feMerge><feMergeNode in="s"/><feMergeNode in="w"/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter></defs>
+<style>
+.a{transform-box:fill-box;transform-origin:center}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes pop{0%,100%{transform:scale(1) rotate(var(--r,0deg))}50%{transform:scale(1.06) rotate(var(--r,0deg))}}
+@keyframes beat{0%,100%{transform:scale(1)}14%{transform:scale(1.12)}28%{transform:scale(1)}42%{transform:scale(1.08)}}
+@keyframes wob{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes shake{0%,100%{transform:rotate(0)}20%{transform:rotate(-7deg)}40%{transform:rotate(6deg)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+@keyframes rise{0%{transform:translateY(8px);opacity:0}30%{opacity:.9}100%{transform:translateY(-26px);opacity:0}}
+@keyframes twinkle{0%,100%{transform:scale(.6) rotate(0);opacity:.4}50%{transform:scale(1.1) rotate(45deg);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blink{0%,90%,100%{transform:scaleY(0)}94%{transform:scaleY(1)}}
+@keyframes float{0%{transform:translate(0,6px) scale(.7);opacity:0}25%{opacity:1}100%{transform:translate(var(--dx,0),-40px) scale(1);opacity:0}}
+</style>
+
+<g filter="url(#o)">
+  <g class="a" style="--r:5deg;animation:pop 1.6s ease-in-out infinite">
+    <rect x="18" y="38" width="164" height="120" rx="34" fill="#ffd1dc"/>
+    <path d="M56 146 L44 178 L84 150Z" fill="#ffd1dc"/>
+    <text x="100" y="88" text-anchor="middle" font-family="'Arial Black','Segoe UI Black','Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="36" fill="#e0245e" stroke="#fff" stroke-width="6" stroke-linejoin="round" paint-order="stroke">Me</text><text x="100" y="132" text-anchor="middle" font-family="'Arial Black','Segoe UI Black','Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="40" fill="#e0245e" stroke="#fff" stroke-width="6" stroke-linejoin="round" paint-order="stroke">gustas</text>
+  </g>
+  <path d="M40,52.0 C26.0,41.0 29.0,29.0 35.5,29.0 C38.5,29.0 40,31.5 40,33.0 C40,31.5 41.5,29.0 44.5,29.0 C51.0,29.0 54.0,41.0 40,52.0Z" fill="#ff3d6e" /><path d="M166,166.85714285714286 C154.0,157.42857142857142 156.57142857142858,147.14285714285714 162.14285714285714,147.14285714285714 C164.71428571428572,147.14285714285714 166,149.28571428571428 166,150.57142857142858 C166,149.28571428571428 167.28571428571428,147.14285714285714 169.85714285714286,147.14285714285714 C175.42857142857142,147.14285714285714 178.0,157.42857142857142 166,166.85714285714286Z" fill="#ff8fab" />
+</g>
+
+</svg>

@@ -17,23 +17,19 @@
          Solo adorno: no recibe clics. Estilos en /assets/css/landing-extra.css -->
     <div class="yl-hero-deco" aria-hidden="true">
         <div class="yl-hero-dots"></div>
-        <div class="yl-float yl-f1">
-            <img src="/assets/images/avatars/avatar-female-1.jpg" alt="">
-            <span><strong>Karla</strong><small>está escribiendo<i></i><i></i><i></i></small></span>
+        <!-- Órbitas: anillos tenues que giran despacio con avatares e iconos (sin texto) -->
+        <div class="yl-orbit">
+            <div class="yl-ring r1">
+                <span class="yl-planet at-0"><img src="/assets/images/avatars/avatar-female-1.jpg" alt=""></span>
+                <span class="yl-planet at-180 is-icon is-blue"><svg><use href="/assets/images/icons.svg#i-chat"></use></svg></span>
+            </div>
+            <div class="yl-ring r2">
+                <span class="yl-planet at-200"><img src="/assets/images/avatars/friend-avatar9.jpg" alt=""></span>
+                <span class="yl-planet at-20 is-icon is-pink"><svg><use href="/assets/images/icons.svg#i-heart-fill"></use></svg></span>
+                <span class="yl-planet at-330"><img src="/assets/images/avatars/friend-avatar2.jpg" alt=""></span>
+                <span class="yl-planet at-150 is-icon is-green"><svg><use href="/assets/images/icons.svg#i-video"></use></svg></span>
+            </div>
         </div>
-        <div class="yl-float yl-f2">
-            <span class="yl-ico is-green"><svg><use href="/assets/images/icons.svg#i-video"></use></svg></span>
-            <span><strong>Videollamada</strong><small>en curso · 12:34</small></span>
-        </div>
-        <div class="yl-float yl-f3">
-            <span class="yl-ico is-blue"><svg><use href="/assets/images/icons.svg#i-wallet"></use></svg></span>
-            <span><strong>Recibiste ₡8 500</strong><small>Almuerzo en la soda 🍽️</small></span>
-        </div>
-        <div class="yl-float yl-f4 is-bubble">
-            <span>¡Nos vemos a las 7! ⚽</span>
-            <small>07:12 <svg><use href="/assets/images/icons.svg#i-check-check"></use></svg></small>
-        </div>
-        <div class="yl-float yl-f5 is-reactions"><span>❤️</span><span>😂</span><span>🔥</span><span>👍</span></div>
     </div>
 
     <!-- Llamadas alrededor del teléfono (sección de la mano de Framer). Se coloca con
@@ -1350,10 +1346,10 @@
                         <p>Activa tu perfil de citas si quieres: desliza, haz match y sigue la conversación en un chat de Yabla con rompehielos, juegos y propuestas de cita. Perfiles verificados y reportes en un toque.</p>
                     </div>
                     <ul class="yl-feat-chips" aria-label="Incluye">
-                        <li>💞 Match mutuo</li>
-                        <li>🎯 Afinidad por intereses</li>
-                        <li>🎲 Esto o aquello</li>
-                        <li>🛡️ Solo mayores de 18</li>
+                        <li><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-heart"></use></svg>Match mutuo</li>
+                        <li><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-sparkles"></use></svg>Afinidad por intereses</li>
+                        <li><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-dice"></use></svg>Esto o aquello</li>
+                        <li><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-shield-check"></use></svg>Solo mayores de 18</li>
                     </ul>
                 </li>
             </ul>
@@ -1475,37 +1471,29 @@
                 </ul>
             </div>
 
-            <!-- Enlaces -->
-            <div class="yl-foot-grid">
+            <!-- Marca y enlaces -->
+            <div class="yl-foot-top">
                 <div class="yl-brand">
                     <a href="/" class="yl-logo" aria-label="Yabla, inicio">
                         <span><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-logo"></use></svg></span>YABLA
                     </a>
                     <p>La app de chat para hablar con tus amigos, cuando quieras y desde donde quieras.</p>
                 </div>
-                <nav class="yl-col" aria-label="Tu cuenta">
-                    <h4>Tu cuenta</h4>
-                    <a href="/register">Crear cuenta</a>
+                <nav class="yl-foot-nav" aria-label="Tu cuenta">
+                    <a href="/register">Crear cuenta<svg aria-hidden="true"><use href="/assets/images/icons.svg#i-arrow-up-right"></use></svg></a>
                     <a href="/login">Iniciar sesión</a>
                     <a href="#preguntas">Preguntas frecuentes</a>
                 </nav>
-                <div class="yl-col">
-                    <h4>Funciones</h4>
-                    <span><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-chat"></use></svg>Chats y grupos</span>
-                    <span><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-video"></use></svg>Llamadas y video</span>
-                    <span><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-status"></use></svg>Estados de 24 h</span>
-                    <span><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-wallet"></use></svg>Billetera en ₡ y $</span>
-                </div>
-                <div class="yl-col">
-                    <h4>Hecho con cariño</h4>
-                    <span><i class="yl-flag" aria-hidden="true"></i>Desde Costa Rica</span>
-                    <a href="https://www.bstudio.site/" target="_blank" rel="noopener">Diseño por BStudio<svg aria-hidden="true"><use href="/assets/images/icons.svg#i-arrow-up-right"></use></svg></a>
-                </div>
             </div>
 
+            <!-- Marca grande que se desvanece -->
+            <div class="yl-wordmark" aria-hidden="true">YABLA</div>
+
             <div class="yl-bottom">
-                <span>© 2026 Yabla. Todos los derechos reservados.</span>
-                <button class="yl-top" type="button" data-scroll-top>Volver arriba<svg aria-hidden="true"><use href="/assets/images/icons.svg#i-chevron-down"></use></svg></button>
+                <span class="yl-copy">© 2026 Yabla</span>
+                <span class="yl-made"><i class="yl-flag" aria-hidden="true"></i>Hecho con cariño desde Costa Rica</span>
+                <a class="yl-credit" href="https://www.bstudio.site/" target="_blank" rel="noopener">Diseño por BStudio<svg aria-hidden="true"><use href="/assets/images/icons.svg#i-arrow-up-right"></use></svg></a>
+                <button class="yl-top" type="button" data-scroll-top aria-label="Volver arriba" title="Volver arriba"><svg aria-hidden="true"><use href="/assets/images/icons.svg#i-chevron-down"></use></svg></button>
             </div>
         </div>
     </footer>

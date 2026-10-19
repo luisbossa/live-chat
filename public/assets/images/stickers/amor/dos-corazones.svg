@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<defs><filter id="o" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+  <feMorphology in="SourceAlpha" operator="dilate" radius="5" result="d"/>
+  <feFlood flood-color="#fff"/><feComposite in2="d" operator="in" result="w"/>
+  <feGaussianBlur in="d" stdDeviation="3.5"/><feOffset dy="4" result="b"/>
+  <feFlood flood-color="#1a1530" flood-opacity=".22"/><feComposite in2="b" operator="in" result="s"/>
+  <feMerge><feMergeNode in="s"/><feMergeNode in="w"/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter></defs>
+<style>
+.a{transform-box:fill-box;transform-origin:center}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes pop{0%,100%{transform:scale(1) rotate(var(--r,0deg))}50%{transform:scale(1.06) rotate(var(--r,0deg))}}
+@keyframes beat{0%,100%{transform:scale(1)}14%{transform:scale(1.12)}28%{transform:scale(1)}42%{transform:scale(1.08)}}
+@keyframes wob{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes shake{0%,100%{transform:rotate(0)}20%{transform:rotate(-7deg)}40%{transform:rotate(6deg)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+@keyframes rise{0%{transform:translateY(8px);opacity:0}30%{opacity:.9}100%{transform:translateY(-26px);opacity:0}}
+@keyframes twinkle{0%,100%{transform:scale(.6) rotate(0);opacity:.4}50%{transform:scale(1.1) rotate(45deg);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blink{0%,90%,100%{transform:scaleY(0)}94%{transform:scaleY(1)}}
+@keyframes float{0%{transform:translate(0,6px) scale(.7);opacity:0}25%{opacity:1}100%{transform:translate(var(--dx,0),-40px) scale(1);opacity:0}}
+</style>
+
+<g filter="url(#o)">
+  <g class="a" style="--r:-12deg;animation:pop 1.4s ease-in-out infinite"><path d="M77,130.28571428571428 C31.0,94.14285714285714 40.85714285714286,54.714285714285715 62.214285714285715,54.714285714285715 C72.07142857142857,54.714285714285715 77,62.92857142857143 77,67.85714285714286 C77,62.92857142857143 81.92857142857143,54.714285714285715 91.78571428571428,54.714285714285715 C113.14285714285714,54.714285714285715 123.0,94.14285714285714 77,130.28571428571428Z" fill="#ff5c8a" /><circle cx="64" cy="98" r="4" fill="#3a0d1a"/><circle cx="90" cy="98" r="4" fill="#3a0d1a"/><path d="M70 110 q7 6 14 0" stroke="#3a0d1a" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+  <g class="a" style="--r:12deg;animation:pop 1.4s .7s ease-in-out infinite"><path d="M125,142.28571428571428 C79.0,106.14285714285714 88.85714285714286,66.71428571428572 110.21428571428572,66.71428571428572 C120.07142857142857,66.71428571428572 125,74.92857142857143 125,79.85714285714286 C125,74.92857142857143 129.92857142857142,66.71428571428572 139.78571428571428,66.71428571428572 C161.14285714285714,66.71428571428572 171.0,106.14285714285714 125,142.28571428571428Z" fill="#b47cff" /><circle cx="112" cy="110" r="4" fill="#3a0d1a"/><circle cx="138" cy="110" r="4" fill="#3a0d1a"/><path d="M118 122 q7 6 14 0" stroke="#3a0d1a" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+  <path class="a" d="M100,28 Q101.8,38.2 112,40 Q101.8,41.8 100,52 Q98.2,41.8 88,40 Q98.2,38.2 100,28Z" fill="#ffd23f" style="animation:twinkle 1.8s 0s ease-in-out infinite"/><path class="a" d="M168,52 Q169.2,58.8 176,60 Q169.2,61.2 168,68 Q166.8,61.2 160,60 Q166.8,58.8 168,52Z" fill="#ffd23f" style="animation:twinkle 1.8s 0.8s ease-in-out infinite"/>
+</g>
+
+</svg>

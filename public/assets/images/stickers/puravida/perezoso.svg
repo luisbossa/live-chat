@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<defs><filter id="o" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+  <feMorphology in="SourceAlpha" operator="dilate" radius="5" result="d"/>
+  <feFlood flood-color="#fff"/><feComposite in2="d" operator="in" result="w"/>
+  <feGaussianBlur in="d" stdDeviation="3.5"/><feOffset dy="4" result="b"/>
+  <feFlood flood-color="#1a1530" flood-opacity=".22"/><feComposite in2="b" operator="in" result="s"/>
+  <feMerge><feMergeNode in="s"/><feMergeNode in="w"/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter></defs>
+<style>
+.a{transform-box:fill-box;transform-origin:center}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes pop{0%,100%{transform:scale(1) rotate(var(--r,0deg))}50%{transform:scale(1.06) rotate(var(--r,0deg))}}
+@keyframes beat{0%,100%{transform:scale(1)}14%{transform:scale(1.12)}28%{transform:scale(1)}42%{transform:scale(1.08)}}
+@keyframes wob{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes shake{0%,100%{transform:rotate(0)}20%{transform:rotate(-7deg)}40%{transform:rotate(6deg)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+@keyframes rise{0%{transform:translateY(8px);opacity:0}30%{opacity:.9}100%{transform:translateY(-26px);opacity:0}}
+@keyframes twinkle{0%,100%{transform:scale(.6) rotate(0);opacity:.4}50%{transform:scale(1.1) rotate(45deg);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blink{0%,90%,100%{transform:scaleY(0)}94%{transform:scaleY(1)}}
+@keyframes float{0%{transform:translate(0,6px) scale(.7);opacity:0}25%{opacity:1}100%{transform:translate(var(--dx,0),-40px) scale(1);opacity:0}}
+</style>
+
+<g filter="url(#o)">
+  <path d="M18 46 Q100 30 182 50" stroke="#7a5233" stroke-width="12" stroke-linecap="round" fill="none"/>
+  <path d="M40 40 q-8 -18 6 -26 q6 14 -6 26Z M150 44 q4 -20 20 -22 q-2 16 -20 22Z M112 36 q-2 -16 12 -20 q2 14 -12 20Z" fill="#43b05c"/>
+  <g style="animation:wob 3.4s ease-in-out infinite;transform-origin:100px 42px">
+    <path d="M70 44 Q62 80 72 104 M130 44 Q140 80 128 104" stroke="#a07a55" stroke-width="18" stroke-linecap="round" fill="none"/>
+    <path d="M66 40 l-4 -6 M72 40 l0 -8 M78 41 l4 -6 M124 41 l-4 -6 M130 40 l0 -8 M136 41 l4 -6" stroke="#3b2a1e" stroke-width="3.5" stroke-linecap="round"/>
+    <ellipse cx="100" cy="126" rx="52" ry="48" fill="#a98059"/>
+    <ellipse cx="100" cy="122" rx="38" ry="30" fill="#ecd9bc"/>
+    <path d="M70 116 q8 -14 24 -4 q-4 14 -24 4Z M130 116 q-8 -14 -24 -4 q4 14 24 4Z" fill="#5a3b24"/>
+    <circle cx="83" cy="114" r="5" fill="#141018"/><circle cx="117" cy="114" r="5" fill="#141018"/>
+    <circle cx="85" cy="112" r="1.8" fill="#fff"/><circle cx="119" cy="112" r="1.8" fill="#fff"/>
+    <ellipse cx="100" cy="128" rx="7" ry="5" fill="#3b2a1e"/>
+    <path d="M90 138 q10 8 20 0" stroke="#3b2a1e" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="72" cy="134" rx="7" ry="4" fill="#ff9aa8" opacity=".7"/><ellipse cx="128" cy="134" rx="7" ry="4" fill="#ff9aa8" opacity=".7"/>
+  </g>
+  <g transform="rotate(-6 100 182)">
+    <rect x="44" y="164" width="112" height="30" rx="15" fill="#43b05c"/>
+    <text x="100" y="186" text-anchor="middle" font-family="'Arial Black','Segoe UI Black','Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="18" fill="#fff">Con calma</text>
+  </g>
+</g>
+
+</svg>

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<defs><filter id="o" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+  <feMorphology in="SourceAlpha" operator="dilate" radius="5" result="d"/>
+  <feFlood flood-color="#fff"/><feComposite in2="d" operator="in" result="w"/>
+  <feGaussianBlur in="d" stdDeviation="3.5"/><feOffset dy="4" result="b"/>
+  <feFlood flood-color="#1a1530" flood-opacity=".22"/><feComposite in2="b" operator="in" result="s"/>
+  <feMerge><feMergeNode in="s"/><feMergeNode in="w"/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter></defs>
+<style>
+.a{transform-box:fill-box;transform-origin:center}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes pop{0%,100%{transform:scale(1) rotate(var(--r,0deg))}50%{transform:scale(1.06) rotate(var(--r,0deg))}}
+@keyframes beat{0%,100%{transform:scale(1)}14%{transform:scale(1.12)}28%{transform:scale(1)}42%{transform:scale(1.08)}}
+@keyframes wob{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes shake{0%,100%{transform:rotate(0)}20%{transform:rotate(-7deg)}40%{transform:rotate(6deg)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+@keyframes rise{0%{transform:translateY(8px);opacity:0}30%{opacity:.9}100%{transform:translateY(-26px);opacity:0}}
+@keyframes twinkle{0%,100%{transform:scale(.6) rotate(0);opacity:.4}50%{transform:scale(1.1) rotate(45deg);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blink{0%,90%,100%{transform:scaleY(0)}94%{transform:scaleY(1)}}
+@keyframes float{0%{transform:translate(0,6px) scale(.7);opacity:0}25%{opacity:1}100%{transform:translate(var(--dx,0),-40px) scale(1);opacity:0}}
+</style>
+
+<g filter="url(#o)">
+  <g fill="none" stroke="#c9b6a6" stroke-width="6" stroke-linecap="round">
+    <path class="a" d="M78 70 q-8 -10 0 -20 q8 -10 0 -20" style="animation:rise 2.2s ease-in infinite"/>
+    <path class="a" d="M100 70 q-8 -10 0 -20 q8 -10 0 -20" style="animation:rise 2.2s .7s ease-in infinite"/>
+    <path class="a" d="M122 70 q-8 -10 0 -20 q8 -10 0 -20" style="animation:rise 2.2s 1.4s ease-in infinite"/>
+  </g>
+  <ellipse cx="100" cy="150" rx="74" ry="16" fill="#e7e0f5"/>
+  <path d="M146 96 q30 0 28 24 q-2 22 -32 20" stroke="#ff6b6b" stroke-width="11" fill="none"/>
+  <path d="M48 84 h104 l-8 54 q-4 18 -24 18 h-40 q-20 0 -24 -18Z" fill="#ff6b6b"/>
+  <ellipse cx="100" cy="86" rx="52" ry="11" fill="#6b3b22"/>
+  <ellipse cx="92" cy="84" rx="18" ry="3" fill="#8c5634"/>
+  <circle cx="82" cy="112" r="4.5" fill="#2a1a20"/><circle cx="118" cy="112" r="4.5" fill="#2a1a20"/>
+  <path d="M92 122 q8 7 16 0" stroke="#2a1a20" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  <ellipse cx="72" cy="124" rx="7" ry="4" fill="#fff" opacity=".45"/><ellipse cx="128" cy="124" rx="7" ry="4" fill="#fff" opacity=".45"/>
+  <g transform="rotate(-5 100 184)">
+    <rect x="34" y="168" width="132" height="28" rx="14" fill="#6b3b22"/>
+    <text x="100" y="188" text-anchor="middle" font-family="'Arial Black','Segoe UI Black','Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="16" fill="#ffe2b8">¿Un cafecito?</text>
+  </g>
+</g>
+
+</svg>

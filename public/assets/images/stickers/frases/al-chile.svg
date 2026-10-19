@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<defs><filter id="o" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+  <feMorphology in="SourceAlpha" operator="dilate" radius="5" result="d"/>
+  <feFlood flood-color="#fff"/><feComposite in2="d" operator="in" result="w"/>
+  <feGaussianBlur in="d" stdDeviation="3.5"/><feOffset dy="4" result="b"/>
+  <feFlood flood-color="#1a1530" flood-opacity=".22"/><feComposite in2="b" operator="in" result="s"/>
+  <feMerge><feMergeNode in="s"/><feMergeNode in="w"/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter></defs>
+<style>
+.a{transform-box:fill-box;transform-origin:center}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes pop{0%,100%{transform:scale(1) rotate(var(--r,0deg))}50%{transform:scale(1.06) rotate(var(--r,0deg))}}
+@keyframes beat{0%,100%{transform:scale(1)}14%{transform:scale(1.12)}28%{transform:scale(1)}42%{transform:scale(1.08)}}
+@keyframes wob{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes shake{0%,100%{transform:rotate(0)}20%{transform:rotate(-7deg)}40%{transform:rotate(6deg)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+@keyframes rise{0%{transform:translateY(8px);opacity:0}30%{opacity:.9}100%{transform:translateY(-26px);opacity:0}}
+@keyframes twinkle{0%,100%{transform:scale(.6) rotate(0);opacity:.4}50%{transform:scale(1.1) rotate(45deg);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blink{0%,90%,100%{transform:scaleY(0)}94%{transform:scaleY(1)}}
+@keyframes float{0%{transform:translate(0,6px) scale(.7);opacity:0}25%{opacity:1}100%{transform:translate(var(--dx,0),-40px) scale(1);opacity:0}}
+</style>
+
+<g filter="url(#o)">
+  <g class="a" style="animation:shake 1.3s ease-in-out infinite">
+    <path d="M60 56 Q78 40 96 52" stroke="#2e9a46" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <path d="M58 58 Q34 60 34 92 Q36 140 96 160 Q150 176 168 150 Q120 150 92 118 Q72 92 84 64 Q72 54 58 58Z" fill="#e8243b"/>
+    <path d="M52 76 Q48 100 66 118" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round" opacity=".5"/>
+    <circle cx="66" cy="96" r="5" fill="#3a0d1a"/><circle cx="86" cy="110" r="5" fill="#3a0d1a"/>
+    <path d="M70 120 q8 8 16 4" stroke="#3a0d1a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  </g>
+  <text x="128" y="74" text-anchor="middle" font-family="'Arial Black','Segoe UI Black','Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="30" fill="#fff" stroke="#e8243b" stroke-width="8" paint-order="stroke" transform="rotate(8 128 66)">¡Al</text>
+  <text x="138" y="108" text-anchor="middle" font-family="'Arial Black','Segoe UI Black','Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="30" fill="#fff" stroke="#e8243b" stroke-width="8" paint-order="stroke" transform="rotate(8 138 100)">chile!</text>
+</g>
+
+</svg>

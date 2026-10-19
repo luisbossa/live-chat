@@ -8,6 +8,7 @@ import { togglePin, toggleMute, toggleArchive, clearChat, deleteChat } from "./c
 import { jumpToMessage } from "./conversation.js";
 import { openStories } from "./stories.js";
 import { matchForConversation, openReport, refreshMatches } from "./discover.js";
+import { labelHTML, lookingHTML } from "./dz-icons.js";
 
 const app = $("#app");
 const URL_RE = /https?:\/\/[^\s<]+[^\s<.,;:!?)\]]/g;
@@ -269,13 +270,29 @@ function renderDating(conv) {
   const u = m.user;
   const common = new Set(u.common || []);
   setHTML($("#infoDatingBody"), `
-    <p class="dz-info-meta">${escapeHTML(String(u.age || ""))} años · ${escapeHTML(u.provinceName || "")} · ${LOOKING[u.lookingFor] || ""}${u.verified ? ` · ${icon("shield-check", "icon-sm")} Verificado` : ""}</p>
+    <p class="dz-info-meta">${escapeHTML(String(u.age || ""))} años · ${escapeHTML(u.provinceName || "")} · ${lookingHTML(u.lookingFor)}${u.verified ? ` · ${icon("shield-check", "icon-sm")} Verificado` : ""}</p>
     ${u.about ? `<p class="info-bio">${escapeHTML(u.about)}</p>` : ""}
-    <div class="dz-tags">${(u.interests || []).map((i) => `<span class="${common.has(i) ? "is-common" : ""}">${escapeHTML(i)}</span>`).join("")}</div>
+    <div class="dz-tags">${(u.interests || []).map((i) => `<span class="${common.has(i) ? "is-common" : ""}">${labelHTML(i)}</span>`).join("")}</div>
     ${(u.prompts || []).map((p) => `<div class="dz-prompt"><small>${escapeHTML(p.q)}</small><p>${escapeHTML(p.a)}</p></div>`).join("")}`);
 }
 
+// Sombra y barra de progreso bajo la cabecera según el desplazamiento
+function trackInfoScroll() {
+  const info = $("#info");
+  const body = info.querySelector(".info-body");
+  const update = () => {
+    const max = body.scrollHeight - body.clientHeight;
+    info.classList.toggle("is-scrollable", max > 4);
+    info.classList.toggle("is-scrolled", body.scrollTop > 4);
+    info.style.setProperty("--info-progress", max > 0 ? Math.min(1, body.scrollTop / max).toFixed(3) : 0);
+  };
+  body.addEventListener("scroll", update, { passive: true });
+  new ResizeObserver(update).observe(body);
+  new MutationObserver(update).observe(body, { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden"] });
+}
+
 export function initInfo() {
+  trackInfoScroll();
   registerAction("toggle-info", () => toggleInfo());
   const withActive = (fn) => () => activeConv() && fn(activeConv());
   registerAction("mute", withActive(toggleMute));

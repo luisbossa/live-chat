@@ -950,7 +950,7 @@ body {
   width: 128px;
   height: 128px;
   border-radius: 16px;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .bubble.is-sticker .bubble-meta {
@@ -7483,3 +7483,531 @@ button.home-pill:hover { transform: translateY(-2px); }
   .dz-photos { gap: 8px; }
   .dz-wiz-foot { margin: 18px -20px -20px; padding: 12px 20px; }
 }
+
+/* ==========================================================================
+   Stickers por packs: pestañas con portada, nombre del pack y cuadrícula
+   ========================================================================== */
+.sticker-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: min(400px, calc(100% - 32px));
+  max-height: none;
+  height: 380px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.sticker-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 8px 8px 6px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.sticker-tabs::-webkit-scrollbar { display: none; }
+
+.sticker-panel .sticker-tabs button {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  color: var(--muted);
+  transition: background-color 0.15s, transform 0.15s;
+}
+
+.sticker-panel .sticker-tabs button:hover { background: var(--surface-2); transform: none; }
+.sticker-panel .sticker-tabs button.is-active { background: var(--brand-soft); color: var(--brand); }
+
+.sticker-panel .sticker-tabs button.is-active::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: -7px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--brand);
+}
+
+.sticker-panel .sticker-tabs img { width: 34px; height: 34px; aspect-ratio: auto; object-fit: contain; }
+
+.sticker-pack-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 10px 14px 4px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sticker-pack-name span {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  font-size: 11px;
+}
+
+.sticker-grid {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 6px;
+  flex: 1;
+  min-height: 0;
+  padding: 4px 10px 10px;
+  overflow-y: auto;
+}
+
+.sticker-grid button {
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  transition: transform 0.18s cubic-bezier(0.2, 0.9, 0.3, 1.4), background-color 0.15s;
+}
+
+.sticker-grid button:hover { background: var(--surface-2); transform: scale(1.08) rotate(-2deg); }
+.sticker-grid button:active { transform: scale(0.94); }
+/* La celda es la que fija el cuadrado: así el alto de la fila no depende de la imagen (y no se recorta) */
+.sticker-grid button { display: block; flex: none; width: calc((100% - 18px) / 4); aspect-ratio: 1; overflow: hidden; }
+.sticker-grid img { display: block; width: 100%; height: 100%; aspect-ratio: auto; object-fit: contain; }
+.sticker-grid img[src$=".gif"] { border-radius: 10px; }
+
+/* En el chat: los SVG llevan su propio contorno y sombra, sin recorte */
+.bubble.is-sticker img[src$=".svg"] {
+  width: 150px;
+  height: 150px;
+  border-radius: 0;
+  object-fit: contain;
+}
+
+@media (max-width: 860px) {
+  .sticker-panel { width: auto; height: 340px; }
+}
+
+/* ==========================================================================
+   Columna «Info del contacto»: barra de desplazamiento propia
+   Riel suave con el color de la app, pulgar degradado y una barra de progreso
+   bajo la cabecera que indica cuánto llevas recorrido.
+   ========================================================================== */
+.info { --info-progress: 0; }
+
+.info-head {
+  position: relative;
+  z-index: 2;
+  transition: box-shadow 0.2s;
+}
+
+.info.is-scrolled .info-head { box-shadow: 0 8px 16px -14px rgba(16, 24, 40, 0.5); }
+
+.info-head::after {
+  content: "";
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 0;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--brand), color-mix(in srgb, var(--brand) 45%, #ff6b8b));
+  transform: scaleX(var(--info-progress));
+  transform-origin: left;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.info.is-scrollable.is-scrolled .info-head::after { opacity: 1; }
+
+/* Firefox (estándar): pulgar con el color de la app sobre un riel tenue */
+.info .info-body,
+.info .info-body:hover {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--brand) 55%, transparent) color-mix(in srgb, var(--brand) 8%, transparent);
+  scrollbar-gutter: stable;
+}
+
+/* Chrome, Edge y Safari: con «auto» se usan los pseudoelementos y se puede dibujar el degradado */
+@supports selector(::-webkit-scrollbar) {
+  .info .info-body,
+  .info .info-body:hover {
+    scrollbar-width: auto;
+    scrollbar-color: auto;
+  }
+
+  .info .info-body::-webkit-scrollbar { width: 12px; }
+
+  .info .info-body::-webkit-scrollbar-track {
+    margin: 10px 0 14px;
+    border: 4px solid transparent;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--brand) 9%, transparent) padding-box;
+  }
+
+  .info .info-body::-webkit-scrollbar-thumb {
+    min-height: 48px;
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--brand) 55%, transparent), color-mix(in srgb, var(--brand) 35%, transparent)) padding-box;
+  }
+
+  .info .info-body:hover::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--brand), color-mix(in srgb, var(--brand) 55%, #ff6b8b)) padding-box;
+  }
+
+  .info .info-body::-webkit-scrollbar-thumb:hover,
+  .info .info-body::-webkit-scrollbar-thumb:active {
+    border-width: 2px;
+    background: linear-gradient(180deg, var(--brand-2), var(--brand)) padding-box;
+  }
+}
+
+
+/* ==========================================================================
+   Conocer: avisos de validación, pasos con etiqueta y fotos estilo app de citas
+   ========================================================================== */
+@keyframes dz-shake {
+  0%, 100% { translate: 0; }
+  20% { translate: -6px 0; }
+  40% { translate: 5px 0; }
+  60% { translate: -3px 0; }
+  80% { translate: 2px 0; }
+}
+
+@keyframes dz-alert-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+}
+
+@keyframes dz-shimmer { to { background-position: -200% 0; } }
+
+/* Pasos con etiqueta; los completados se pueden tocar para volver */
+.dz-progress {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  margin: -6px 0 18px;
+  padding: 0;
+  list-style: none;
+}
+
+.dz-progress li { display: grid; gap: 6px; min-width: 0; }
+.dz-progress li i { height: 5px; border-radius: 999px; background: var(--surface-3); transition: background-color 0.3s; }
+
+.dz-progress li span {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+.dz-progress li.is-current i { background: linear-gradient(90deg, #ff8fa3, #ff3d6e); }
+.dz-progress li.is-current span { color: var(--ink); }
+.dz-progress li.is-done { cursor: pointer; }
+.dz-progress li.is-done i { background: color-mix(in srgb, #ff3d6e 55%, var(--surface-3)); }
+.dz-progress li.is-done span { color: #e0457b; }
+.dz-progress li.is-done span::before { content: "✓ "; }
+.dz-progress li.is-done:hover span { text-decoration: underline; }
+
+/* Contadores (fotos e intereses) */
+.dz-count {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  vertical-align: 2px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.dz-count.is-ok { background: color-mix(in srgb, var(--online) 16%, transparent); color: color-mix(in srgb, var(--online) 75%, var(--ink)); }
+.dz-count.is-full { background: color-mix(in srgb, #ff3d6e 14%, transparent); color: #e0457b; }
+
+#dzInterestHint,
+#dzBirthNote { display: flex; align-items: center; gap: 5px; transition: color 0.2s; }
+#dzInterestHint.is-ok,
+#dzBirthNote.is-ok { color: color-mix(in srgb, var(--online) 75%, var(--ink)); }
+#dzBirthNote.is-error { color: var(--danger); }
+#dzInterestHint .icon,
+#dzBirthNote .icon { flex: none; }
+
+/* Fotos: la principal ocupa 2×2 y las demás van numeradas */
+.dz-photos {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: auto;
+  gap: 10px;
+  border-radius: 20px;
+}
+
+.dz-photo-slot { aspect-ratio: 1; border-radius: 18px; }
+.dz-photo-slot:first-child { grid-column: span 2; grid-row: span 2; aspect-ratio: auto; border-radius: 22px; }
+
+.dz-photo-slot.is-empty {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 4px;
+  border: 2px dashed color-mix(in srgb, var(--muted) 35%, transparent);
+  background: var(--surface-2);
+}
+
+.dz-photo-slot.is-empty:hover {
+  border-color: #ff6b8b;
+  background: color-mix(in srgb, #ff6b8b 6%, var(--surface-2));
+  color: #ff3d6e;
+  transform: translateY(-2px);
+}
+
+.dz-photo-slot.is-empty .icon { width: 22px; height: 22px; }
+
+.dz-photo-slot.is-empty.is-main {
+  border-color: color-mix(in srgb, #ff6b8b 55%, transparent);
+  background:
+    radial-gradient(80% 60% at 50% 30%, color-mix(in srgb, #ff6b8b 16%, transparent), transparent 70%),
+    var(--surface-2);
+  box-shadow: none;
+  color: var(--ink);
+}
+
+.dz-photo-slot.is-main strong { margin-top: 6px; font-size: 15px; }
+.dz-photo-slot.is-main small { color: var(--muted); font-size: 12.5px; }
+
+.dz-slot-ico {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff8fa3, #ff3d6e);
+  color: #fff;
+  box-shadow: 0 12px 24px -12px rgba(255, 61, 110, 0.9);
+  transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.4), background-color 0.2s;
+}
+
+.dz-photo-slot.is-main:hover .dz-slot-ico { transform: scale(1.08) rotate(-6deg); }
+.dz-photo-slot .dz-slot-ico .icon { width: 26px; height: 26px; }
+
+.dz-slot-n {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 10%, transparent);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.dz-photo-slot.has-photo .dz-slot-n { background: rgba(0, 0, 0, 0.5); color: #fff; }
+
+.dz-photo-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  left: 10px;
+  bottom: 10px;
+  padding: 4px 10px;
+  font-size: 12px;
+  box-shadow: 0 6px 14px -6px rgba(255, 61, 110, 0.8);
+}
+
+.dz-photo-slot.has-photo { cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+.dz-photo-slot.has-photo:not(.is-main):hover { transform: translateY(-2px); box-shadow: 0 0 0 2px #ff8fa3; }
+
+.dz-photo-slot.is-loading {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 8px;
+  border: 0;
+  background: linear-gradient(110deg, var(--surface-2) 30%, var(--surface-3) 50%, var(--surface-2) 70%) 0 0 / 200% 100%;
+  color: var(--muted);
+  animation: dz-shimmer 1.2s linear infinite;
+}
+
+.dz-photo-slot.is-loading .spinner { border-top-color: #ff3d6e; }
+
+.dz-tips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+
+.dz-tips li {
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 12.5px;
+}
+
+/* Campos con error: borde rojo, sacudida y motivo debajo */
+.dz-photos.is-invalid .dz-photo-slot.is-main,
+.dz-choice.is-invalid,
+.dz-interests.is-invalid,
+#dzForm .input.is-invalid,
+#proposeForm .input.is-invalid { animation: dz-shake 0.4s; }
+
+.dz-photos.is-invalid .dz-photo-slot.is-main {
+  border-color: var(--danger);
+  background-color: color-mix(in srgb, var(--danger) 6%, var(--surface-2));
+}
+
+.dz-photos.is-invalid .dz-slot-ico { background: var(--danger); box-shadow: 0 12px 24px -12px color-mix(in srgb, var(--danger) 90%, transparent); }
+
+.dz-choice.is-invalid button,
+.dz-interests.is-invalid button { border-color: color-mix(in srgb, var(--danger) 55%, transparent); }
+
+.dz-interests.is-invalid {
+  margin: -8px;
+  padding: 8px;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--danger) 5%, transparent);
+}
+
+#dzForm .input.is-invalid,
+#proposeForm .input.is-invalid {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--danger) 14%, transparent);
+}
+
+.dz-inline-error {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 6px 0 0;
+  color: var(--danger);
+  font-size: 12.5px;
+  font-weight: 600;
+  animation: fade-up 0.25s var(--ease);
+}
+
+.dz-inline-error .icon { flex: none; }
+.dz-interests.is-invalid + .dz-inline-error { margin-top: 14px; }
+
+/* Aviso: icono, título y motivo; en el asistente flota sobre el pie */
+.dz-alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px 10px 12px;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--danger) 30%, transparent);
+  background: color-mix(in srgb, var(--danger) 9%, var(--surface));
+  color: var(--ink);
+  text-align: left;
+}
+
+.dz-alert[hidden] { display: none; }
+.dz-alert.is-anim { animation: dz-alert-in 0.28s var(--ease), dz-shake 0.45s 0.15s; }
+
+.dz-alert-ico {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: var(--danger);
+  color: #fff;
+  box-shadow: 0 8px 16px -8px color-mix(in srgb, var(--danger) 90%, transparent);
+}
+
+.dz-alert-ico .icon { width: 18px; height: 18px; }
+.dz-alert-text { display: grid; flex: 1; min-width: 0; gap: 1px; }
+.dz-alert-text strong { font-size: 14px; }
+.dz-alert-text span { color: var(--text); font-size: 13px; line-height: 1.4; }
+
+.dz-alert-x {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--muted);
+}
+
+.dz-alert-x:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); color: var(--ink); }
+
+.dz-alert.is-warn { border-color: color-mix(in srgb, #f5a524 40%, transparent); background: color-mix(in srgb, #f5a524 11%, var(--surface)); }
+.dz-alert.is-warn .dz-alert-ico { background: #f5a524; box-shadow: none; }
+
+.dz-wiz-foot .dz-alert {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: calc(100% + 10px);
+  z-index: 2;
+  box-shadow: 0 18px 36px -18px rgba(16, 24, 40, 0.45);
+  background: color-mix(in srgb, var(--danger) 7%, var(--surface));
+}
+
+.dz-wiz-foot .dz-alert.is-warn { background: color-mix(in srgb, #f5a524 9%, var(--surface)); }
+
+/* Pie del asistente y preguntas */
+.dz-wiz-foot .btn-primary { gap: 6px; }
+.dz-wiz-foot .btn-primary.is-loading { opacity: 0.75; pointer-events: none; }
+.dz-prompt-edit { transition: background-color 0.2s, box-shadow 0.2s; }
+.dz-prompt-edit.is-filled { box-shadow: inset 0 0 0 1px color-mix(in srgb, #ff6b8b 35%, transparent); }
+
+@media (max-width: 860px) {
+  .dz-progress li span { font-size: 11px; }
+  .dz-wiz-foot .dz-alert { left: 12px; right: 12px; }
+}
+
+/* Ajustes del asistente: fila de fecha y provincia alineada arriba y fotos más compactas */
+#dzForm .field-row { align-items: start; }
+.dz-photos { width: 100%; max-width: 440px; justify-self: center; }
+#dzInterestHint.is-error { color: var(--danger); }
+
+/* Conocer: iconos SVG en lugar de emojis (consejos, opciones, intereses y etiquetas) */
+.dz-tips li,
+.dz-choice button,
+.dz-interests button,
+.dz-tags span,
+.dz-looking,
+.dz-ice p span,
+.dz-match-common b,
+.date-card em {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dz-tips li .icon { color: #ff3d6e; }
+.dz-choice button .icon,
+.dz-interests button .icon { width: 16px; height: 16px; color: #ff5a79; transition: color 0.15s; }
+.dz-choice button.is-selected .icon,
+.dz-interests button.is-selected .icon { color: #fff; }
+.dz-tags span .icon { width: 14px; height: 14px; opacity: 0.8; }
+.dz-tags span.is-common .icon { opacity: 1; }
+.dz-looking .icon { width: 14px; height: 14px; }
+.dz-ice p span .icon { width: 13px; height: 13px; }
+.dz-match-common { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px; }
+
+.dz-match-common b {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  font-weight: 600;
+}
+
+.dz-match-common b .icon { width: 14px; height: 14px; }
+.game-options button .icon { width: 18px; height: 18px; flex: none; }
+.date-card em .icon { width: 15px; height: 15px; }
+.date-card.is-accepted em .icon { color: var(--online); }
+.dz-verify-text .icon { width: 15px; height: 15px; vertical-align: -3px; color: #2e7cf6; }

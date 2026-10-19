@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<defs><filter id="o" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+  <feMorphology in="SourceAlpha" operator="dilate" radius="5" result="d"/>
+  <feFlood flood-color="#fff"/><feComposite in2="d" operator="in" result="w"/>
+  <feGaussianBlur in="d" stdDeviation="3.5"/><feOffset dy="4" result="b"/>
+  <feFlood flood-color="#1a1530" flood-opacity=".22"/><feComposite in2="b" operator="in" result="s"/>
+  <feMerge><feMergeNode in="s"/><feMergeNode in="w"/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter></defs>
+<style>
+.a{transform-box:fill-box;transform-origin:center}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes pop{0%,100%{transform:scale(1) rotate(var(--r,0deg))}50%{transform:scale(1.06) rotate(var(--r,0deg))}}
+@keyframes beat{0%,100%{transform:scale(1)}14%{transform:scale(1.12)}28%{transform:scale(1)}42%{transform:scale(1.08)}}
+@keyframes wob{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes shake{0%,100%{transform:rotate(0)}20%{transform:rotate(-7deg)}40%{transform:rotate(6deg)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+@keyframes rise{0%{transform:translateY(8px);opacity:0}30%{opacity:.9}100%{transform:translateY(-26px);opacity:0}}
+@keyframes twinkle{0%,100%{transform:scale(.6) rotate(0);opacity:.4}50%{transform:scale(1.1) rotate(45deg);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blink{0%,90%,100%{transform:scaleY(0)}94%{transform:scaleY(1)}}
+@keyframes float{0%{transform:translate(0,6px) scale(.7);opacity:0}25%{opacity:1}100%{transform:translate(var(--dx,0),-40px) scale(1);opacity:0}}
+</style>
+
+<g filter="url(#o)">
+  <g class="a" style="animation:bob 1.2s ease-in-out infinite">
+    <ellipse cx="100" cy="126" rx="62" ry="46" fill="#4cc94f"/>
+    <path d="M44 132 Q60 150 86 140 M156 132 Q140 150 114 140" stroke="#2f7fd8" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <path d="M48 142 Q62 156 82 150 M152 142 Q138 156 118 150" stroke="#ffd23f" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <ellipse cx="100" cy="140" rx="34" ry="22" fill="#e9f7c8"/>
+    <circle cx="66" cy="82" r="26" fill="#4cc94f"/><circle cx="134" cy="82" r="26" fill="#4cc94f"/>
+    <circle cx="66" cy="82" r="19" fill="#e8243b"/><circle cx="134" cy="82" r="19" fill="#e8243b"/>
+    <ellipse cx="66" cy="82" rx="4" ry="12" fill="#141018"/><ellipse cx="134" cy="82" rx="4" ry="12" fill="#141018"/>
+    <circle cx="72" cy="74" r="4" fill="#fff"/><circle cx="140" cy="74" r="4" fill="#fff"/>
+    <g class="a" style="animation:blink 3.5s infinite;transform-origin:center 63px">
+      <path d="M45 82 a21 21 0 0 1 42 0Z M113 82 a21 21 0 0 1 42 0Z" fill="#3aa83f"/>
+    </g>
+    <path d="M78 116 Q100 132 122 116" stroke="#1f5e22" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+    <g fill="#ff8a1f">
+      <circle cx="54" cy="168" r="7"/><circle cx="66" cy="172" r="7"/><circle cx="42" cy="164" r="6"/>
+      <circle cx="146" cy="168" r="7"/><circle cx="134" cy="172" r="7"/><circle cx="158" cy="164" r="6"/>
+    </g>
+  </g>
+</g>
+
+</svg>

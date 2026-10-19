@@ -17,6 +17,7 @@ App de **chat y videollamadas en tiempo real** hecha con Node.js, Express, EJS, 
 **Mensajería en tiempo real**
 - Chats individuales y grupos (crear, añadir participantes, salir, administradores)
 - Texto con enlaces, **más de 1.100 emojis por categorías** (con buscador y recientes, como WhatsApp), stickers, fotos, documentos y **notas de voz**
+- **61 stickers en 4 packs**: «Pura vida» (perezoso, tucán, rana de ojos rojos, cafecito, gallo pinto, volcán…), «Frases ticas» (¡Tuanis!, ¡Qué chiva!, Mae…, ¡Upe!), «Amor» y los clásicos; los nuevos son SVG animados ligeros, con pestaña de recientes
 - **Vista previa antes de enviar**: varios archivos a la vez (máx. 10), quitar o añadir, comentario por archivo y previsualización de PDF; las fotos pueden enviarse como documento (calidad original)
 - Confirmaciones de lectura con tres estados: enviando, enviado ✓, entregado ✓✓ y leído (✓✓ en color)
 - "Escribiendo…", "en línea" y "últ. vez…"
@@ -156,6 +157,7 @@ Para probar el tiempo real y las llamadas, abre dos navegadores (o una ventana n
 | `chat-actions.js` | Reacciones, deslizar para responder, selección, eliminar, info del mensaje y fijados |
 | `mentions.js` | @menciones en grupos |
 | `timed.js` | Mensajes temporales y programados |
+| `stickers.js` | Panel de stickers por packs con recientes |
 | `discover.js` | «Conocer»: pila de tarjetas, match, filtros, panel de matches, rompehielos y reportes |
 | `dating-profile.js` | Asistente del perfil de citas |
 

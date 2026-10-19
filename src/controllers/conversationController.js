@@ -1,3 +1,5 @@
+const fs = require("fs");
+const path = require("path");
 const User = require("../models/User");
 const Conversation = require("../models/Conversation");
 const Message = require("../models/Message");
@@ -12,7 +14,14 @@ const messaging = require("../services/messaging");
 const Scheduled = require("../models/Scheduled");
 
 const MAX_TEXT = 4000;
-const STICKER_PATH = /^\/assets\/images\/stickers\/sticker\d{1,3}\.gif$/;
+// Stickers válidos: solo los archivos que existen en public/assets/images/stickers (GIF clásicos y packs SVG)
+const STICKER_DIR = path.join(__dirname, "../../public/assets/images/stickers");
+const STICKERS = new Set(
+  fs.readdirSync(STICKER_DIR, { recursive: true })
+    .map((f) => String(f).split(path.sep).join("/"))
+    .filter((f) => /\.(gif|svg)$/.test(f))
+    .map((f) => `/assets/images/stickers/${f}`)
+);
 
 /** Carga la conversación y comprueba que el usuario es miembro. Se usa como middleware. */
 exports.loadMembership = async (req, res, next) => {
@@ -114,7 +123,7 @@ exports.send = async (req, res) => {
     data.meta = { name: file.originalname.slice(0, 120), size: file.size, mime: file.mimetype };
     if (data.type === "audio") data.meta.duration = Math.min(Number(req.body.duration) || 0, 60 * 30);
   } else if (sticker) {
-    if (!STICKER_PATH.test(sticker)) throw httpError(422, "Sticker no válido.");
+    if (!STICKERS.has(sticker)) throw httpError(422, "Sticker no válido.");
     Object.assign(data, { type: "sticker", mediaUrl: sticker, body: null });
   } else if (!text) {
     throw httpError(422, "El mensaje está vacío.");

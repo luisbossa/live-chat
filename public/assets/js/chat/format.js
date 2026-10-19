@@ -1,6 +1,7 @@
 // Textos derivados de los mensajes (vista previa, sistema, llamadas, pagos).
 import { state, userName, isGroup } from "./state.js";
 import { duration, money } from "./utils.js";
+import { plainLabel } from "./dz-icons.js";
 
 export function systemText(msg) {
   const mine = msg.senderId === state.me.id;
@@ -18,12 +19,12 @@ export function systemText(msg) {
     case "renamed":
       return `${actor} ${verb("cambiaste", "cambió")} el nombre del grupo a «${meta.name}»`;
     case "matched":
-      return "¡Hicieron match en «Conocer»! 💞 Saluda y rompe el hielo.";
+      return "¡Hicieron match en «Conocer»! Saluda y rompe el hielo.";
     case "game-result": {
       const picks = Object.entries(meta.answers || {});
       const [a, b] = picks.map(([, choice]) => choice);
-      if (picks.length === 2 && a === b) return `🎲 ¡Ambos eligieron ${a}!`;
-      return `🎲 ${picks.map(([id, choice]) => `${userName(Number(id), { short: true })}: ${choice}`).join(" · ")}`;
+      if (picks.length === 2 && a === b) return `¡Ambos eligieron ${plainLabel(a)}!`;
+      return picks.map(([id, choice]) => `${userName(Number(id), { short: true })}: ${plainLabel(choice)}`).join(" · ");
     }
     case "pinned":
       return `${actor} ${verb("fijaste", "fijó")} un mensaje`;
@@ -83,7 +84,7 @@ export function previewOf(conv, msg = conv.lastMessage) {
   if (msg.type === "system") return systemText(msg);
   if (msg.type === "call") return callText(msg);
   if (msg.type === "payment") return paymentText(msg);
-  if (msg.type === "game") return `${msg.senderId === state.me.id ? "Tú: " : ""}🎲 ${(msg.meta?.options || []).join(" o ")}`;
+  if (msg.type === "game") return `${msg.senderId === state.me.id ? "Tú: " : ""}${(msg.meta?.options || []).map(plainLabel).join(" o ")}`;
   if (msg.type === "date") return `${msg.senderId === state.me.id ? "Tú: " : ""}Propuesta de cita · ${msg.meta?.kind === "place" ? msg.meta.place : "Videollamada"}`;
 
   const labels = {

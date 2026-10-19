@@ -434,12 +434,14 @@
 .yl-cta-stats strong { color: #fff; font-size: 24px; font-weight: 600; letter-spacing: -0.03em; }
 .yl-cta-stats span { color: rgba(255, 255, 255, 0.65); font-size: 13px; }
 
-/* Columnas de enlaces */
-.yl-foot-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
-  gap: 32px;
-  padding: clamp(40px, 6vw, 64px) 8px clamp(28px, 4vw, 40px);
+/* --- Pie: marca + enlaces en píldoras, marca gigante y barra inferior ------ */
+.yl-foot-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px 40px;
+  flex-wrap: wrap;
+  padding: clamp(40px, 6vw, 64px) 8px 0;
 }
 
 .yl-logo {
@@ -461,90 +463,109 @@
   border-radius: 12px;
   background: var(--ink);
   color: #fff;
+  box-shadow: 0 10px 22px -12px rgba(38, 36, 36, 0.6);
 }
 
 .yl-logo span svg { width: 22px; height: 22px; }
 
 .yl-brand p {
-  max-width: 32ch;
-  margin: 14px 0 0;
+  max-width: 36ch;
+  margin: 12px 0 0;
   font-size: 15px;
   line-height: 1.55;
 }
 
-.yl-col {
-  display: grid;
-  align-content: start;
-  gap: 10px;
+.yl-foot-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.yl-col h4 {
-  margin: 0 0 4px;
-  color: var(--ink);
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.yl-col a,
-.yl-col span {
+.yl-foot-nav a {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  justify-self: start;
-  color: var(--text);
+  gap: 6px;
+  height: 42px;
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
   font-size: 14.5px;
+  font-weight: 500;
   text-decoration: none;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
 }
 
-.yl-col span svg { color: var(--mist); }
-.yl-col a { position: relative; transition: color 0.2s; }
-
-/* Subrayado animado al pasar el ratón */
-.yl-col a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 100%;
-  height: 1px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+.yl-foot-nav a:hover {
+  border-color: #c9cbcd;
+  box-shadow: 0 10px 22px -14px rgba(38, 36, 36, 0.45);
+  transform: translateY(-2px);
 }
 
-.yl-col a:hover { color: var(--ink); }
-.yl-col a:hover::after { transform: scaleX(1); }
-.yl-col a svg { width: 13px; height: 13px; }
+.yl-foot-nav a.is-main { border-color: var(--ink); background: var(--ink); color: #fff; }
+.yl-foot-nav a.is-main:hover { background: #000; }
+.yl-foot-nav a svg { width: 14px; height: 14px; transition: transform 0.2s; }
+.yl-foot-nav a:hover svg { transform: translate(2px, -2px); }
+
+/* Marca gigante: degradado que se funde con el fondo */
+.yl-wordmark {
+  margin: clamp(24px, 4vw, 40px) 0 -0.12em;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(38, 36, 36, 0.14) 0%, rgba(96, 146, 213, 0.12) 55%, rgba(247, 247, 247, 0) 92%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: clamp(88px, 21vw, 260px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  text-align: center;
+  user-select: none;
+}
 
 .yl-bottom {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 20px 8px 0;
+  gap: 10px 20px;
+  flex-wrap: wrap;
+  padding: 18px 8px 0;
   border-top: 1px solid var(--line);
   color: var(--muted);
   font-size: 13.5px;
 }
 
-.yl-top {
+.yl-made { display: inline-flex; align-items: center; gap: 8px; }
+
+.yl-credit {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  height: 36px;
-  padding: 0 14px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: #fff;
-  color: var(--ink);
-  font: 500 13.5px Inter, system-ui, sans-serif;
-  cursor: pointer;
-  transition: transform 0.2s, border-color 0.2s;
+  gap: 4px;
+  margin-left: auto;
+  color: var(--text);
+  text-decoration: none;
+  transition: color 0.2s;
 }
 
-.yl-top svg { transform: rotate(180deg); width: 14px; height: 14px; }
-.yl-top:hover { border-color: var(--ink); transform: translateY(-2px); }
+.yl-credit:hover { color: var(--ink); }
+.yl-credit svg { width: 13px; height: 13px; }
+
+.yl-top {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.2s, background-color 0.2s, color 0.2s;
+}
+
+.yl-top svg { transform: rotate(180deg); width: 16px; height: 16px; }
+.yl-top:hover { border-color: var(--ink); background: var(--ink); color: #fff; transform: translateY(-3px); }
 
 /* --- Responsive ----------------------------------------------------------- */
 @media (max-width: 960px) {
@@ -553,8 +574,6 @@
   .yl-cta { flex-direction: column; align-items: flex-start; }
   .yl-cta-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
   .yl-cta-stats li { min-width: 0; }
-  .yl-foot-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .yl-brand { grid-column: 1 / -1; }
 }
 
 @media (max-width: 600px) {
@@ -565,8 +584,12 @@
   .yl-cta { border-radius: 28px; }
   .yl-cta-stats { grid-template-columns: 1fr; }
   .yl-cta-actions .yl-btn { flex: 1 1 100%; }
-  .yl-foot-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
-  .yl-bottom { flex-direction: column-reverse; align-items: flex-start; }
+  .yl-foot-nav { width: 100%; }
+  .yl-foot-nav a { flex: 1 1 auto; justify-content: center; }
+  .yl-bottom { display: grid; grid-template-columns: 1fr auto; justify-items: start; }
+  .yl-bottom .yl-made { grid-column: 1; grid-row: 2; }
+  .yl-bottom .yl-credit { grid-column: 1; grid-row: 3; margin-left: 0; }
+  .yl-bottom .yl-top { grid-column: 2; grid-row: 1 / 4; align-self: center; }
 }
 
 /* Bandera de Costa Rica dibujada (los emojis de banderas no se ven en Windows) */
@@ -617,60 +640,7 @@
   transform: translateX(-50%);
 }
 
-/* Tarjetas flotantes (solo en pantallas anchas) */
-.yl-float {
-  position: absolute;
-  display: none;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px 10px 10px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.82);
-  border: 1px solid rgba(222, 223, 223, 0.9);
-  box-shadow: 0 18px 40px -18px rgba(38, 36, 36, 0.35);
-  backdrop-filter: blur(10px);
-  color: #262424;
-  opacity: 0;
-  animation: yl-pop 0.7s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards, yl-float 7s ease-in-out infinite;
-}
-
-.yl-float img {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.yl-float strong { display: block; font-size: 14px; font-weight: 600; }
-
-.yl-float small {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  color: #8b8d90;
-  font-size: 12.5px;
-}
-
-.yl-f1 small { color: #3a6fd8; }
-
-/* Puntos de "escribiendo…" */
-.yl-f1 small i {
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: currentColor;
-  animation: yl-typing 1.2s infinite;
-}
-
-.yl-f1 small i:nth-of-type(1) { margin-left: 3px; }
-.yl-f1 small i:nth-of-type(2) { animation-delay: 0.15s; }
-.yl-f1 small i:nth-of-type(3) { animation-delay: 0.3s; }
-
-@keyframes yl-typing {
-  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
-  30% { opacity: 1; transform: translateY(-2px); }
-}
-
+/* Iconos de color (también en las llamadas alrededor del teléfono) */
 .yl-ico {
   display: grid;
   place-items: center;
@@ -693,53 +663,9 @@
 .yl-ico.is-green { background: linear-gradient(135deg, #5be08f, #12a150); }
 .yl-ico.is-blue { background: linear-gradient(135deg, #7aa6ea, #3a6fd8); }
 
-/* Burbuja enviada con doble check azul */
-.yl-float.is-bubble {
-  display: none;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
-  padding: 10px 14px 8px;
-  border: 0;
-  border-radius: 18px 18px 6px 18px;
-  background: linear-gradient(135deg, #5b8def, #3a6fd8);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.yl-float.is-bubble small { color: rgba(255, 255, 255, 0.8); font-size: 11px; }
-.yl-float.is-bubble svg { width: 15px; height: 15px; fill: none; stroke: #b9f0cf; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
-
-.yl-float.is-reactions {
-  gap: 2px;
-  padding: 6px 8px;
-  border-radius: 999px;
-  font-size: 18px;
-}
-
-.yl-float.is-reactions span { display: grid; place-items: center; width: 30px; height: 30px; }
-
-/* Posiciones alrededor del contenido (que mide unos 790 px de ancho) */
-/* max(): nunca pegadas al borde de la ventana */
-.yl-f1 { top: 150px; left: max(24px, calc(50% - 600px)); animation-delay: 0.6s, 1.3s; }
-.yl-f2 { top: 400px; left: max(40px, calc(50% - 640px)); animation-delay: 0.9s, 1.6s; }
-.yl-f3 { top: 120px; right: max(24px, calc(50% - 610px)); animation-delay: 0.75s, 1.45s; }
-.yl-f4 { top: 330px; right: max(24px, calc(50% - 600px)); animation-delay: 1.05s, 1.75s; }
-.yl-f5 { top: 470px; right: max(110px, calc(50% - 520px)); animation-delay: 1.2s, 1.9s; }
-
 @keyframes yl-pop {
   from { opacity: 0; translate: 0 18px; scale: 0.9; }
   to { opacity: 1; translate: 0 0; scale: 1; }
-}
-
-@media (min-width: 1180px) {
-  .yl-float,
-  .yl-float.is-bubble { display: flex; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .yl-float { animation: yl-pop 0.01s forwards; }
 }
 
 /* --- Logo: sombra suave que sigue su propia forma (sin aros extra) ---------- */
@@ -1158,4 +1084,165 @@
 
 @media (max-width: 600px) {
   .yl-feat-wide { grid-template-columns: 1fr; gap: 14px; }
+}
+
+/* --- Héroe: órbitas tenues (reemplazan a las tarjetas flotantes) -----------
+   Dos anillos centrados en el título giran muy despacio; sobre ellos viajan
+   avatares e iconos pequeños que se mantienen derechos. Sin texto: las
+   tarjetas con mensajes quedan solo alrededor del teléfono. */
+.yl-orbit {
+  position: absolute;
+  top: var(--orbit-y, 300px);
+  left: 50%;
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+.yl-ring {
+  --d: 1000px;
+  --t: 90s;
+  position: absolute;
+  top: calc(var(--d) / -2);
+  left: calc(var(--d) / -2);
+  width: var(--d);
+  height: var(--d);
+  border-radius: 50%;
+  border: 1px solid rgba(58, 111, 216, 0.13);
+  animation: yl-orbit-spin var(--t) linear infinite;
+}
+
+.yl-ring.r2 {
+  --d: 1340px;
+  --t: 140s;
+  border: 1px dashed rgba(38, 36, 36, 0.1);
+  animation-direction: reverse;
+}
+
+.yl-planet {
+  --s: 44px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--s);
+  height: var(--s);
+  margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2);
+  transform: rotate(var(--a)) translateX(calc(var(--d) / 2)) rotate(calc(-1 * var(--a)));
+  opacity: 0;
+  animation: yl-pop 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.2) 0.6s forwards;
+}
+
+.yl-planet.at-0 { --a: 0deg; }
+.yl-planet.at-20 { --a: 20deg; animation-delay: 0.8s; }
+.yl-planet.at-150 { --a: 150deg; animation-delay: 1s; }
+.yl-planet.at-180 { --a: 180deg; animation-delay: 0.7s; }
+.yl-planet.at-200 { --a: 200deg; animation-delay: 0.9s; }
+.yl-planet.at-330 { --a: 330deg; animation-delay: 1.1s; }
+
+/* El contenido gira al revés que su anillo: así los avatares no se ponen de cabeza */
+.yl-planet > * { animation: yl-orbit-spin var(--t) linear infinite reverse; }
+.yl-ring.r2 .yl-planet > * { animation-direction: normal; }
+
+.yl-planet img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  object-fit: cover;
+  box-shadow: 0 12px 26px -12px rgba(38, 36, 36, 0.5);
+}
+
+.yl-planet.is-icon { --s: 40px; }
+
+.yl-planet.is-icon svg {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  border-radius: 14px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  box-shadow: 0 12px 24px -12px rgba(38, 36, 36, 0.55);
+}
+
+.yl-planet.is-blue svg { background: linear-gradient(135deg, #7aa6ea, #3a6fd8); }
+.yl-planet.is-green svg { background: linear-gradient(135deg, #5be08f, #12a150); }
+.yl-planet.is-pink svg { background: linear-gradient(135deg, #ff8fa3, #ff3d6e); fill: #fff; }
+
+@keyframes yl-orbit-spin { to { rotate: 360deg; } }
+
+@media (min-width: 900px) {
+  .yl-orbit { display: block; }
+}
+
+@media (max-width: 1179px) {
+  .yl-planet { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yl-ring,
+  .yl-planet > * { animation: none; }
+}
+
+/* Los anillos se desvanecen antes del borde inferior del héroe (sin corte recto) */
+.yl-hero-deco {
+  -webkit-mask-image: linear-gradient(#000 62%, transparent 96%);
+  mask-image: linear-gradient(#000 62%, transparent 96%);
+}
+
+/* --- Funciones: sombra al pasar el ratón ---------------------------------
+   La sección queda por encima de la siguiente y con aire abajo, para que la
+   sombra no se corte. Sombra en capas (suave y amplia) y borde un poco más
+   marcado; la tarjeta de «Conocer gente» toma un tono rosa. */
+.yl-features {
+  z-index: 1;
+  padding-bottom: 32px;
+}
+
+.yl-feat {
+  box-shadow: 0 1px 2px rgba(38, 36, 36, 0.03);
+}
+
+.yl-feat:hover {
+  border-color: #d3d5d7;
+  box-shadow:
+    0 1px 2px rgba(38, 36, 36, 0.04),
+    0 10px 20px -12px rgba(38, 36, 36, 0.16),
+    0 26px 48px -24px rgba(38, 36, 36, 0.22);
+}
+
+.yl-feat-wide:hover {
+  border-color: rgba(255, 61, 110, 0.28);
+  box-shadow:
+    0 1px 2px rgba(38, 36, 36, 0.04),
+    0 12px 24px -14px rgba(255, 61, 110, 0.28),
+    0 30px 56px -28px rgba(255, 61, 110, 0.32);
+}
+
+/* Chips con icono SVG */
+.yl-feat-chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.yl-feat-chips li svg { width: 15px; height: 15px; color: #ff3d6e; }
+.yl-feat-wide:hover .yl-feat-chips li { border-color: rgba(255, 61, 110, 0.22); }
+
+/* --- Desplazamiento suave ----------------------------------------------------
+   Enlaces internos (#preguntas) y «Volver arriba» se desplazan con suavidad.
+   Quien pidió menos movimiento en su sistema lo ve sin animación. */
+html { scroll-behavior: smooth; }
+
+/* Al llegar a una sección queda un poco de aire arriba */
+#preguntas { scroll-margin-top: 24px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }

@@ -142,7 +142,7 @@ exports.swipe = async (req, res) => {
   if (!(await Dating.getProfile(req.user.id))) throw httpError(409, "Primero crea tu perfil de citas.");
   if (await User.isBlocked(req.user.id, toId)) throw httpError(404, "Ese perfil ya no está disponible.");
   if (action === "superlike" && (await Dating.superlikesLeft(req.user.id)) <= 0) {
-    throw httpError(429, `Ya usaste tus ${Dating.SUPERLIKES_PER_DAY} súper likes de hoy. Vuelve mañana ⭐`);
+    throw httpError(429, `Ya usaste tus ${Dating.SUPERLIKES_PER_DAY} súper likes de hoy. Vuelve mañana.`);
   }
 
   const result = await Dating.swipe(req.user.id, toId, action);

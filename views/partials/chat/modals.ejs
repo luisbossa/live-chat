@@ -474,13 +474,23 @@
             <h2 id="dzWizTitle">Tu perfil de citas</h2>
             <button class="icon-btn" data-close aria-label="Cerrar"><%- icon('x') %></button>
         </div>
-        <div class="dz-progress" id="dzProgress"><i></i><i></i><i></i><i></i></div>
+        <ol class="dz-progress" id="dzProgress" aria-label="Pasos">
+            <li data-goto="1"><i></i><span>Fotos</span></li>
+            <li data-goto="2"><i></i><span>Sobre ti</span></li>
+            <li data-goto="3"><i></i><span>Gustos</span></li>
+            <li data-goto="4"><i></i><span>Seguridad</span></li>
+        </ol>
         <form id="dzForm" novalidate>
             <!-- 1. Fotos -->
             <section class="dz-step is-active" data-step="1">
-                <h3>Tus fotos</h3>
-                <p class="muted">La primera es la principal. Sube hasta 6 (toca una para hacerla principal).</p>
+                <h3>Tus fotos <span class="dz-count" id="dzPhotoCount">0/6</span></h3>
+                <p class="muted">La primera es la principal. Toca otra foto para hacerla principal.</p>
                 <div class="dz-photos" id="dzPhotos"></div>
+                <ul class="dz-tips" aria-label="Consejos">
+                    <li><%- icon('sun', 'icon-sm') %>Buena luz</li>
+                    <li><%- icon('smile-face', 'icon-sm') %>Que se vea tu cara</li>
+                    <li><%- icon('user-focus', 'icon-sm') %>Solo tú en la principal</li>
+                </ul>
                 <input type="file" id="dzPhotoInput" accept="image/*" multiple hidden>
             </section>
             <!-- 2. Sobre ti -->
@@ -490,7 +500,7 @@
                     <div class="field">
                         <label class="label" for="dzBirth">Fecha de nacimiento</label>
                         <input class="input" type="date" id="dzBirth" required>
-                        <small class="field-note">Debes ser mayor de 18. Solo se muestra tu edad.</small>
+                        <small class="field-note" id="dzBirthNote">Debes ser mayor de 18. Solo se muestra tu edad.</small>
                     </div>
                     <div class="field">
                         <label class="label" for="dzProvince">Provincia</label>
@@ -516,10 +526,10 @@
                 <div class="field">
                     <span class="label">Busco</span>
                     <div class="dz-choice" data-name="lookingFor">
-                        <button type="button" data-value="pareja">💞 Pareja</button>
-                        <button type="button" data-value="algo_casual">🍹 Algo casual</button>
-                        <button type="button" data-value="amistad">🤝 Amistad</button>
-                        <button type="button" data-value="no_se">🤷 Aún no sé</button>
+                        <button type="button" data-value="pareja"><%- icon('heart', 'icon-sm') %>Pareja</button>
+                        <button type="button" data-value="algo_casual"><%- icon('martini', 'icon-sm') %>Algo casual</button>
+                        <button type="button" data-value="amistad"><%- icon('handshake', 'icon-sm') %>Amistad</button>
+                        <button type="button" data-value="no_se"><%- icon('help', 'icon-sm') %>Aún no sé</button>
                     </div>
                 </div>
                 <div class="field">
@@ -529,8 +539,8 @@
             </section>
             <!-- 3. Intereses y preguntas -->
             <section class="dz-step" data-step="3">
-                <h3>Lo que te gusta <span class="muted" id="dzInterestCount">0/8</span></h3>
-                <p class="muted">Elige entre 3 y 8. Te mostraremos la afinidad con cada persona.</p>
+                <h3>Lo que te gusta <span class="dz-count" id="dzInterestCount">0/8</span></h3>
+                <p class="muted" id="dzInterestHint">Elige entre 3 y 8. Te mostraremos la afinidad con cada persona.</p>
                 <div class="dz-interests" id="dzInterests"></div>
                 <h3 class="dz-sub">Responde hasta 3 preguntas</h3>
                 <div class="dz-prompts" id="dzPrompts"></div>
@@ -542,7 +552,7 @@
                     <span class="dz-verify-ico"><%- icon('shield-check') %></span>
                     <div>
                         <strong>Verifica tu perfil</strong>
-                        <p class="muted">Toma una selfie haciendo ✌️. Los perfiles verificados reciben más matches.</p>
+                        <p class="muted dz-verify-text">Toma una selfie haciendo el gesto de paz <%- icon('victory', 'icon-sm') %>. Los perfiles verificados reciben más matches.</p>
                         <input type="file" id="dzSelfie" accept="image/*" capture="user" hidden>
                         <button type="button" class="btn btn-ghost btn-sm" id="dzSelfieBtn"><%- icon('camera', 'icon-sm') %>Tomar selfie</button>
                     </div>
@@ -558,8 +568,8 @@
                     <span><strong>Pausar mi perfil</strong><small>No aparecerás en «Conocer», pero conservas tus matches</small></span>
                 </label>
             </section>
-            <p class="form-alert" id="dzAlert" role="alert" hidden></p>
             <footer class="dz-wiz-foot">
+                <div class="dz-alert" id="dzAlert" role="alert" hidden></div>
                 <button type="button" class="btn btn-ghost" id="dzBack">Atrás</button>
                 <button type="button" class="btn btn-primary" id="dzNext">Siguiente</button>
             </footer>
@@ -628,10 +638,10 @@
 <div class="modal" id="modal-propose-date">
     <div class="modal-dialog">
         <%- head('Proponer una cita') %>
-        <form class="stack" id="proposeForm">
+        <form class="stack" id="proposeForm" novalidate>
             <div class="dz-choice" data-name="dateKind">
-                <button type="button" data-value="video" class="is-selected">📹 Videollamada</button>
-                <button type="button" data-value="place">📍 En persona</button>
+                <button type="button" data-value="video" class="is-selected"><%- icon('video', 'icon-sm') %>Videollamada</button>
+                <button type="button" data-value="place"><%- icon('map-pin', 'icon-sm') %>En persona</button>
             </div>
             <div class="field" id="proposePlaceField" hidden>
                 <label class="label" for="proposePlace">Lugar</label>
@@ -642,6 +652,7 @@
                 <input class="input" type="datetime-local" id="proposeWhen" required>
             </div>
             <p class="muted small"><%- icon('shield-check', 'icon-sm') %> Para la primera cita en persona, elige un lugar público.</p>
+            <div class="dz-alert" id="proposeAlert" role="alert" hidden></div>
             <button class="btn btn-primary btn-block" type="submit"><%- icon('calendar-heart') %>Enviar propuesta</button>
         </form>
     </div>

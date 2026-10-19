@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<defs><filter id="o" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+  <feMorphology in="SourceAlpha" operator="dilate" radius="5" result="d"/>
+  <feFlood flood-color="#fff"/><feComposite in2="d" operator="in" result="w"/>
+  <feGaussianBlur in="d" stdDeviation="3.5"/><feOffset dy="4" result="b"/>
+  <feFlood flood-color="#1a1530" flood-opacity=".22"/><feComposite in2="b" operator="in" result="s"/>
+  <feMerge><feMergeNode in="s"/><feMergeNode in="w"/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter></defs>
+<style>
+.a{transform-box:fill-box;transform-origin:center}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes pop{0%,100%{transform:scale(1) rotate(var(--r,0deg))}50%{transform:scale(1.06) rotate(var(--r,0deg))}}
+@keyframes beat{0%,100%{transform:scale(1)}14%{transform:scale(1.12)}28%{transform:scale(1)}42%{transform:scale(1.08)}}
+@keyframes wob{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes shake{0%,100%{transform:rotate(0)}20%{transform:rotate(-7deg)}40%{transform:rotate(6deg)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+@keyframes rise{0%{transform:translateY(8px);opacity:0}30%{opacity:.9}100%{transform:translateY(-26px);opacity:0}}
+@keyframes twinkle{0%,100%{transform:scale(.6) rotate(0);opacity:.4}50%{transform:scale(1.1) rotate(45deg);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blink{0%,90%,100%{transform:scaleY(0)}94%{transform:scaleY(1)}}
+@keyframes float{0%{transform:translate(0,6px) scale(.7);opacity:0}25%{opacity:1}100%{transform:translate(var(--dx,0),-40px) scale(1);opacity:0}}
+</style>
+
+<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9a5a"/><stop offset="1" stop-color="#ff5d8f"/></linearGradient>
+<clipPath id="c"><circle cx="100" cy="88" r="70"/></clipPath></defs>
+<g filter="url(#o)">
+  <circle cx="100" cy="88" r="70" fill="url(#sky)"/>
+  <g clip-path="url(#c)">
+    <g class="a" style="animation:spin 14s linear infinite;transform-origin:100px 104px">
+      <path d="M100 104 L92 30 L108 30Z M100 104 L40 60 L48 48Z M100 104 L160 60 L152 48Z" fill="#ffd966" opacity=".55"/>
+    </g>
+    <circle cx="100" cy="104" r="26" fill="#ffe27a"/>
+    <path d="M28 116 q18 -10 36 0 t36 0 t36 0 t36 0 V170 H28Z" fill="#22a6c9"/>
+    <path d="M28 132 q18 -10 36 0 t36 0 t36 0 t36 0 V170 H28Z" fill="#1585b5"/>
+    <path d="M140 140 Q146 100 136 64" stroke="#3b2a1e" stroke-width="6" fill="none"/>
+    <path d="M136 64 q-30 -6 -40 14 q22 -10 40 -14Z M136 64 q24 -12 40 4 q-22 -6 -40 -4Z M136 64 q-8 -22 -30 -24 q18 10 30 24Z M136 64 q10 -24 32 -22 q-20 6 -32 22Z" fill="#2e9a46"/>
+  </g>
+  <g transform="rotate(-6 100 168)">
+    <rect x="22" y="146" width="156" height="42" rx="21" fill="#1f8f4e"/>
+    <text x="100" y="176" text-anchor="middle" font-family="'Arial Black','Segoe UI Black','Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="26" fill="#fff" letter-spacing="1">PURA VIDA</text>
+  </g>
+</g>
+
+</svg>

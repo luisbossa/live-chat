@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<defs><filter id="o" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+  <feMorphology in="SourceAlpha" operator="dilate" radius="5" result="d"/>
+  <feFlood flood-color="#fff"/><feComposite in2="d" operator="in" result="w"/>
+  <feGaussianBlur in="d" stdDeviation="3.5"/><feOffset dy="4" result="b"/>
+  <feFlood flood-color="#1a1530" flood-opacity=".22"/><feComposite in2="b" operator="in" result="s"/>
+  <feMerge><feMergeNode in="s"/><feMergeNode in="w"/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter></defs>
+<style>
+.a{transform-box:fill-box;transform-origin:center}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes pop{0%,100%{transform:scale(1) rotate(var(--r,0deg))}50%{transform:scale(1.06) rotate(var(--r,0deg))}}
+@keyframes beat{0%,100%{transform:scale(1)}14%{transform:scale(1.12)}28%{transform:scale(1)}42%{transform:scale(1.08)}}
+@keyframes wob{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes shake{0%,100%{transform:rotate(0)}20%{transform:rotate(-7deg)}40%{transform:rotate(6deg)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+@keyframes rise{0%{transform:translateY(8px);opacity:0}30%{opacity:.9}100%{transform:translateY(-26px);opacity:0}}
+@keyframes twinkle{0%,100%{transform:scale(.6) rotate(0);opacity:.4}50%{transform:scale(1.1) rotate(45deg);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blink{0%,90%,100%{transform:scaleY(0)}94%{transform:scaleY(1)}}
+@keyframes float{0%{transform:translate(0,6px) scale(.7);opacity:0}25%{opacity:1}100%{transform:translate(var(--dx,0),-40px) scale(1);opacity:0}}
+</style>
+
+<g filter="url(#o)">
+  <g class="a" style="--r:-6deg;animation:pop 1.6s ease-in-out infinite">
+    <rect x="18" y="48" width="164" height="104" rx="34" fill="#7c4ddb"/>
+    <path d="M56 146 L44 178 L84 150Z" fill="#7c4ddb"/>
+    <text x="100" y="106" text-anchor="middle" font-family="'Arial Black','Segoe UI Black','Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="27" fill="#fff" stroke="#4b2a99" stroke-width="6" stroke-linejoin="round" paint-order="stroke">¿Salimos?</text>
+  </g>
+  <path d="M166,54.0 C152.0,43.0 155.0,31.0 161.5,31.0 C164.5,31.0 166,33.5 166,35.0 C166,33.5 167.5,31.0 170.5,31.0 C177.0,31.0 180.0,43.0 166,54.0Z" fill="#ff5c8a" /><path class="a" d="M30,150 Q31.5,158.5 40,160 Q31.5,161.5 30,170 Q28.5,161.5 20,160 Q28.5,158.5 30,150Z" fill="#ffd23f" style="animation:twinkle 1.8s 0.5s ease-in-out infinite"/><path class="a" d="M172,142 Q173.2,148.8 180,150 Q173.2,151.2 172,158 Q170.8,151.2 164,150 Q170.8,148.8 172,142Z" fill="#ffd23f" style="animation:twinkle 1.8s 1s ease-in-out infinite"/>
+</g>
+
+</svg>

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<defs><filter id="o" x="-25%" y="-25%" width="150%" height="150%" color-interpolation-filters="sRGB">
+  <feMorphology in="SourceAlpha" operator="dilate" radius="5" result="d"/>
+  <feFlood flood-color="#fff"/><feComposite in2="d" operator="in" result="w"/>
+  <feGaussianBlur in="d" stdDeviation="3.5"/><feOffset dy="4" result="b"/>
+  <feFlood flood-color="#1a1530" flood-opacity=".22"/><feComposite in2="b" operator="in" result="s"/>
+  <feMerge><feMergeNode in="s"/><feMergeNode in="w"/><feMergeNode in="SourceGraphic"/></feMerge>
+</filter></defs>
+<style>
+.a{transform-box:fill-box;transform-origin:center}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes pop{0%,100%{transform:scale(1) rotate(var(--r,0deg))}50%{transform:scale(1.06) rotate(var(--r,0deg))}}
+@keyframes beat{0%,100%{transform:scale(1)}14%{transform:scale(1.12)}28%{transform:scale(1)}42%{transform:scale(1.08)}}
+@keyframes wob{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes shake{0%,100%{transform:rotate(0)}20%{transform:rotate(-7deg)}40%{transform:rotate(6deg)}60%{transform:rotate(-4deg)}80%{transform:rotate(3deg)}}
+@keyframes rise{0%{transform:translateY(8px);opacity:0}30%{opacity:.9}100%{transform:translateY(-26px);opacity:0}}
+@keyframes twinkle{0%,100%{transform:scale(.6) rotate(0);opacity:.4}50%{transform:scale(1.1) rotate(45deg);opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blink{0%,90%,100%{transform:scaleY(0)}94%{transform:scaleY(1)}}
+@keyframes float{0%{transform:translate(0,6px) scale(.7);opacity:0}25%{opacity:1}100%{transform:translate(var(--dx,0),-40px) scale(1);opacity:0}}
+</style>
+
+<g filter="url(#o)">
+  <rect x="18" y="30" width="164" height="140" rx="36" fill="#1e2a5a"/>
+  <g class="a" style="animation:wob 3s ease-in-out infinite">
+    <path d="M128 52 a30 30 0 1 0 26 44 a24 24 0 1 1 -26 -44Z" fill="#ffd966"/>
+    <path d="M128 84 q4 3 8 0" stroke="#7a5a10" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  </g>
+  <path class="a" d="M40,43 Q41.05,48.95 47,50 Q41.05,51.05 40,57 Q38.95,51.05 33,50 Q38.95,48.95 40,43Z" fill="#fff" style="animation:twinkle 1.8s 0s ease-in-out infinite"/><path class="a" d="M166,134 Q166.9,139.1 172,140 Q166.9,140.9 166,146 Q165.1,140.9 160,140 Q165.1,139.1 166,134Z" fill="#fff" style="animation:twinkle 1.8s 0.7s ease-in-out infinite"/><path class="a" d="M46,145 Q46.75,149.25 51,150 Q46.75,150.75 46,155 Q45.25,150.75 41,150 Q45.25,149.25 46,145Z" fill="#fff" style="animation:twinkle 1.8s 1.2s ease-in-out infinite"/>
+  <text x="100" y="128" text-anchor="middle" font-family="'Arial Black','Segoe UI Black','Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="26" fill="#fff">Buenas</text>
+  <text x="100" y="156" text-anchor="middle" font-family="'Arial Black','Segoe UI Black','Helvetica Neue',Arial,sans-serif" font-weight="900" font-size="26" fill="#ffd966">noches</text>
+  <g fill="#9fb3ff" font-family="'Arial Black','Segoe UI Black','Helvetica Neue',Arial,sans-serif" font-weight="900">
+    <text class="a" x="54" y="80" font-size="16" style="animation:bob 2s infinite">z</text>
+    <text class="a" x="66" y="64" font-size="20" style="animation:bob 2s .4s infinite">z</text>
+    <text class="a" x="82" y="50" font-size="24" style="animation:bob 2s .8s infinite">Z</text>
+  </g>
+</g>
+
+</svg>

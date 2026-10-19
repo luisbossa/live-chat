@@ -85,7 +85,8 @@
 
   // --- Volver arriba ------------------------------------------------------------
   document.querySelector("[data-scroll-top]")?.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+    // Sin «behavior»: lo decide el CSS (scroll-behavior: smooth, o auto si se reduce el movimiento)
+    window.scrollTo({ top: 0 });
   });
 })();
 

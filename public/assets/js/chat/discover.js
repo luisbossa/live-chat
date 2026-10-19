@@ -7,6 +7,7 @@ import { socket } from "./socket.js";
 import { openModal, closeModal, onModalOpen, registerAction, openModals } from "./ui.js";
 import { openChat, closeChat } from "./conversation.js";
 import { previewOf, previewIcon } from "./format.js";
+import { labelHTML, plainLabel, lookingHTML } from "./dz-icons.js";
 
 const app = $("#app");
 const deckEl = $("#dzDeck");
@@ -28,6 +29,34 @@ const filters = () => ({ verified: false, common: false, ...prefs.get("dzFilters
 // ==========================================================================
 // Datos
 // ==========================================================================
+/** Aviso de validación de «Conocer»: icono, título, texto y animación (vuelve a sacudirse si se repite). */
+export function dzAlert(el, text, { title = "Revisa este paso", tone = "error" } = {}) {
+  el.className = `dz-alert is-${tone}`;
+  el.innerHTML = `
+    <span class="dz-alert-ico">${icon(tone === "ok" ? "check" : "alert")}</span>
+    <span class="dz-alert-text"><strong>${escapeHTML(title)}</strong><span>${escapeHTML(text)}</span></span>
+    <button type="button" class="dz-alert-x" aria-label="Cerrar aviso">${icon("x", "icon-sm")}</button>`;
+  el.hidden = false;
+  void el.offsetWidth; // reinicia la animación
+  el.classList.add("is-anim");
+  el.onclick = (e) => e.target.closest(".dz-alert-x") && (el.hidden = true);
+}
+
+/** Marca un campo con error, muestra el motivo debajo y lo lleva a la vista. */
+export function markInvalid(field, text) {
+  if (!field) return;
+  clearInvalid(field.closest("form"));
+  field.classList.add("is-invalid");
+  if (text) field.insertAdjacentHTML("afterend", `<p class="dz-inline-error">${icon("alert", "icon-sm")}${escapeHTML(text)}</p>`);
+  field.scrollIntoView({ block: "center", behavior: "smooth" });
+  if (/INPUT|SELECT|TEXTAREA/.test(field.tagName)) field.focus({ preventScroll: true });
+}
+
+export function clearInvalid(root) {
+  root?.querySelectorAll(".is-invalid").forEach((x) => x.classList.remove("is-invalid"));
+  root?.querySelectorAll(".dz-inline-error").forEach((x) => x.remove());
+}
+
 export async function loadProfile() {
   const { profile, superlikesLeft } = await api.datingProfile();
   dz.profile = profile;
@@ -102,9 +131,9 @@ function cardHTML(c, top) {
         </div>
       </div>
       <div class="dz-details">
-        <span class="dz-looking">${LOOKING[c.lookingFor] || ""}</span>
+        <span class="dz-looking">${lookingHTML(c.lookingFor)}</span>
         ${c.about ? `<p class="dz-about">${escapeHTML(c.about)}</p>` : ""}
-        <div class="dz-tags">${c.interests.map((i) => `<span class="${common.has(i) ? "is-common" : ""}">${escapeHTML(i)}</span>`).join("")}</div>
+        <div class="dz-tags">${c.interests.map((i) => `<span class="${common.has(i) ? "is-common" : ""}">${labelHTML(i)}</span>`).join("")}</div>
         ${prompt ? `<div class="dz-prompt"><small>${escapeHTML(prompt.q)}</small><p>${escapeHTML(prompt.a)}</p></div>` : ""}
       </div>
     </article>`;
@@ -220,7 +249,7 @@ async function decide(action) {
   if (!card || !c || deciding) return;
   if (action === "superlike" && !dz.superlikesLeft) {
     card.style.transform = "";
-    return toast("Ya usaste tus súper likes de hoy. Vuelve mañana ⭐", { icon: "star" });
+    return toast("Ya usaste tus súper likes de hoy. Vuelve mañana", { icon: "star" });
   }
   deciding = true;
   // La tarjeta sale volando hacia su lado
@@ -285,8 +314,8 @@ async function showMatch({ conversationId, user, me }) {
   $("#dzMatchMe").src = me.photo || state.me.avatar;
   $("#dzMatchThem").src = user.photos?.[0] || user.avatar;
   $("#dzMatchCommon").innerHTML = user.common?.length
-    ? `Tienen en común: ${user.common.slice(0, 3).map((i) => `<b>${escapeHTML(i)}</b>`).join(", ")}`
-    : `Rompe el hielo: pregúntale por ${escapeHTML(user.interests?.[0] || "su plan ideal")}`;
+    ? `Tienen en común: ${user.common.slice(0, 3).map((i) => `<b>${labelHTML(i)}</b>`).join("")}`
+    : `Rompe el hielo: pregúntale por ${escapeHTML(plainLabel(user.interests?.[0] || "su plan ideal").toLowerCase())}`;
   openModal("modal-match");
   await refreshMatches();
 }
@@ -381,14 +410,14 @@ export function icebreakerHTML(conv) {
   if (!m) return "";
   const u = m.user;
   const ideas = [];
-  (u.common || []).slice(0, 2).forEach((i) => ideas.push(`¡Vi que te gusta ${i.replace(/\s\S+$/u, "").toLowerCase()}! ¿Qué es lo que más te gusta de eso?`));
-  if (u.prompts?.[0]) ideas.push(`«${u.prompts[0].a}» 😄 ¡Contame más de eso!`);
+  (u.common || []).slice(0, 2).forEach((i) => ideas.push(`¡Vi que te gusta ${plainLabel(i).toLowerCase()}! ¿Qué es lo que más te gusta de eso?`));
+  if (u.prompts?.[0]) ideas.push(`«${u.prompts[0].a}». ¡Contame más de eso!`);
   ideas.push(`¡Hola ${u.firstName}! ¿Cuál sería tu plan ideal para este finde?`);
   return `
     <div class="dz-ice">
       <div class="dz-ice-pics"><img src="${escapeHTML(state.me.avatar)}" alt=""><span>${icon("heart-fill")}</span><img src="${escapeHTML(u.photos?.[0] || u.avatar)}" alt=""></div>
       <strong>Hicieron match · ${escapeHTML(listTime(m.createdAt))}</strong>
-      ${u.common?.length ? `<p>Tienen en común: ${u.common.map((i) => `<span>${escapeHTML(i)}</span>`).join("")}</p>` : ""}
+      ${u.common?.length ? `<p>Tienen en común: ${u.common.map((i) => `<span>${labelHTML(i)}</span>`).join("")}</p>` : ""}
       <div class="dz-ice-ideas">${ideas.slice(0, 3).map((t) => `<button data-icebreaker="${escapeHTML(t)}">${escapeHTML(t)}</button>`).join("")}</div>
       <div class="dz-ice-games">
         <button data-dz-game>${icon("dice", "icon-sm")}Esto o aquello</button>
@@ -420,7 +449,7 @@ export function openReport(userId, name) {
 export function initDiscover() {
   registerAction("dz-likes", () => {
     const n = dz.likes.count;
-    toast(n ? `${n} persona${n === 1 ? "" : "s"} te dieron like. ¡Sigue deslizando para encontrarlas! 😉` : "Aún no tienes likes. ¡Completa tu perfil para recibir más!", { icon: "heart" });
+    toast(n ? `${n} persona${n === 1 ? "" : "s"} te dieron like. ¡Sigue deslizando para encontrarlas!` : "Aún no tienes likes. ¡Completa tu perfil para recibir más!", { icon: "heart" });
     if (isMobile()) app.classList.add("discover-open");
   });
   registerAction("dz-resume", async () => {
@@ -509,7 +538,7 @@ export function initDiscover() {
   socket.on("dating:like", ({ superlike }) => {
     dz.likes.count += 1;
     renderPanel();
-    if (superlike) toast("¡Alguien te dio un súper like! ⭐", { icon: "star" });
+    if (superlike) toast("¡Alguien te dio un súper like!", { icon: "star" });
   });
   socket.on("dating:unmatch", () => refreshMatches());
 
@@ -556,6 +585,8 @@ export function initDiscover() {
     $("#proposePlace").value = "";
     $$('#proposeForm [data-name="dateKind"] button').forEach((x) => x.classList.toggle("is-selected", x.dataset.value === "video"));
     $("#proposePlaceField").hidden = true;
+    $("#proposeAlert").hidden = true;
+    clearInvalid($("#proposeForm"));
   });
   $('#proposeForm [data-name="dateKind"]').addEventListener("click", (e) => {
     const btn = e.target.closest("[data-value]");
@@ -565,12 +596,32 @@ export function initDiscover() {
   });
   $("#proposeForm").addEventListener("submit", async (e) => {
     e.preventDefault();
+    const form = $("#proposeForm");
+    const alertEl = $("#proposeAlert");
+    clearInvalid(form);
+    alertEl.hidden = true;
     const kind = $('#proposeForm [data-name="dateKind"] .is-selected')?.dataset.value || "video";
+    const place = $("#proposePlace").value.trim();
+    const when = new Date($("#proposeWhen").value).getTime();
+    if (kind === "place" && !place) {
+      markInvalid($("#proposePlace"), "Escribe dónde se verán.");
+      return dzAlert(alertEl, "Para una cita en persona necesitamos el lugar.", { title: "Falta el lugar" });
+    }
+    if (!Number.isFinite(when) || when < Date.now()) {
+      markInvalid($("#proposeWhen"), Number.isFinite(when) ? "Esa fecha ya pasó." : "Elige día y hora.");
+      return dzAlert(alertEl, "Elige un día y una hora en el futuro.", { title: "Revisa la fecha" });
+    }
     try {
-      await api.proposeDate(activeConv().id, { kind, place: $("#proposePlace").value.trim(), when: new Date($("#proposeWhen").value).getTime() });
+      await api.proposeDate(activeConv().id, { kind, place, when });
       closeModal("modal-propose-date");
     } catch (err) {
-      toastError(err.message);
+      dzAlert(alertEl, err.message, { title: "No se pudo enviar" });
+    }
+  });
+  $("#proposeForm").addEventListener("input", (e) => {
+    if (e.target.classList.contains("is-invalid")) {
+      clearInvalid($("#proposeForm"));
+      $("#proposeAlert").hidden = true;
     }
   });
 

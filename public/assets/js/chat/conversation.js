@@ -16,6 +16,8 @@ import { openReactTray, isSelecting, toggleSelected, isSelected, exitSelect, ent
 import { renderMentions, mentionsMe } from "./mentions.js";
 import { renderScheduledChip, openSchedule } from "./timed.js";
 import { icebreakerHTML, sendThisOrThat, matchForConversation } from "./discover.js";
+import { initStickers } from "./stickers.js";
+import { labelHTML } from "./dz-icons.js";
 
 const app = $("#app");
 const messagesEl = $("#messages");
@@ -128,7 +130,7 @@ function bodyHTML(msg) {
             <div class="game-options">${(msg.meta?.options || [])
               .map((o) => {
                 const picked = Object.values(msg.meta?.answers || {}).filter((a) => a === o).length;
-                return `<button data-game-choice="${escapeHTML(o)}" class="${mine === o ? "is-mine" : ""}" ${mine ? "disabled" : ""}>${escapeHTML(o)}${both ? `<b>${picked}</b>` : ""}</button>`;
+                return `<button data-game-choice="${escapeHTML(o)}" class="${mine === o ? "is-mine" : ""}" ${mine ? "disabled" : ""}>${labelHTML(o)}${both ? `<b>${picked}</b>` : ""}</button>`;
               })
               .join("")}</div>
             <small class="game-state">${both ? "¡Ya respondieron los dos!" : mine ? "Esperando la otra respuesta…" : "Toca tu favorita"}</small>
@@ -139,7 +141,7 @@ function bodyHTML(msg) {
       const m = msg.meta || {};
       const whenText = new Date(m.when).toLocaleString("es", { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" });
       const mine = msg.senderId === state.me.id;
-      const status = { pending: mine ? "Esperando respuesta…" : "", accepted: "✅ ¡Cita confirmada!", declined: "Esta vez no 🙏" }[m.status] || "";
+      const status = { pending: mine ? "Esperando respuesta…" : "", accepted: `${icon("check-circle", "icon-sm")}¡Cita confirmada!`, declined: `${icon("x", "icon-sm")}Esta vez no` }[m.status] || "";
       return {
         kind: "is-date",
         html: `
@@ -1128,16 +1130,8 @@ export function initConversation() {
     if (!isMobile()) input.focus();
   });
 
-  $("#stickerPanel").addEventListener("popover:open", () => {
-    if ($("#stickerPanel").childElementCount) return;
-    $("#stickerPanel").innerHTML = Array.from({ length: 35 }, (_, i) => `/assets/images/stickers/sticker${i + 1}.gif`)
-      .map((src) => `<button type="button" data-sticker="${src}"><img src="${src}" alt="Sticker" loading="lazy"></button>`)
-      .join("");
-  });
-  $("#stickerPanel").addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-sticker]");
-    if (!btn) return;
-    send({ sticker: btn.dataset.sticker }, { type: "sticker", mediaUrl: btn.dataset.sticker });
+  initStickers((src) => {
+    send({ sticker: src }, { type: "sticker", mediaUrl: src });
     closePopovers();
   });
 
