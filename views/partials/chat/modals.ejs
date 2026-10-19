@@ -121,10 +121,26 @@
                 <span><strong>Enviar con Enter</strong><small>Shift + Enter para salto de línea</small></span>
                 <span class="switch"><input type="checkbox" id="enterSwitch"><span></span></span>
             </label>
+            <h4>Notificaciones</h4>
             <label class="setting-row">
-                <span><strong>Sonidos</strong><small>Sonido al recibir mensajes</small></span>
+                <span><strong>Notificaciones en este dispositivo</strong><small id="pushStatus">Comprobando…</small></span>
+                <span class="switch"><input type="checkbox" id="pushSwitch"><span></span></span>
+            </label>
+            <label class="setting-row" id="pushPreviewRow">
+                <span><strong>Mostrar el contenido</strong><small>Quién escribe y el mensaje. Desactívalo para que solo diga «Tienes un mensaje nuevo»</small></span>
+                <span class="switch"><input type="checkbox" id="pushPreviewSwitch"><span></span></span>
+            </label>
+            <label class="setting-row">
+                <span><strong>Sonidos</strong><small>Al recibir y enviar mensajes con Yabla abierta</small></span>
                 <span class="switch"><input type="checkbox" id="soundSwitch"><span></span></span>
             </label>
+            <div class="setting-row setting-actions">
+                <button type="button" class="btn btn-ghost btn-sm" id="pushTest" hidden><%- icon('bell-ring', 'icon-sm') %>Enviar notificación de prueba</button>
+            </div>
+            <div class="setting-row" id="installRow" hidden>
+                <span><strong>Instalar Yabla</strong><small>Ábrela desde tu pantalla de inicio, a pantalla completa y con notificaciones</small></span>
+                <button type="button" class="btn btn-primary btn-sm" id="installApp">Instalar</button>
+            </div>
             <h4>Apariencia</h4>
             <div class="setting-block">
                 <span><strong>Tema</strong><small>Combínalo con cualquier color de la app</small></span>
@@ -655,6 +671,28 @@
             <div class="dz-alert" id="proposeAlert" role="alert" hidden></div>
             <button class="btn btn-primary btn-block" type="submit"><%- icon('calendar-heart') %>Enviar propuesta</button>
         </form>
+    </div>
+</div>
+
+<!-- Instalar Yabla (instrucciones para iPhone y otros navegadores) -->
+<div class="modal" id="modal-install">
+    <div class="modal-dialog install-dialog">
+        <%- head('Instalar Yabla') %>
+        <div class="install-hero">
+            <img src="/assets/images/pwa/icon-192.png" alt="" width="72" height="72">
+            <p>Instálala en tu pantalla de inicio para usarla como una app: a pantalla completa y con <strong>notificaciones con sonido</strong>.</p>
+        </div>
+        <ol class="install-steps" id="installIos">
+            <li><span class="install-n">1</span><span>En Safari, toca <strong>Compartir</strong> <span class="install-ico"><%- icon('share', 'icon-sm') %></span> en la barra de abajo.</span></li>
+            <li><span class="install-n">2</span><span>Elige <strong>Agregar a inicio</strong> <span class="install-ico"><%- icon('square-plus', 'icon-sm') %></span> y toca <strong>Agregar</strong>.</span></li>
+            <li><span class="install-n">3</span><span>Abre Yabla desde su icono y activa las notificaciones en <strong>Ajustes</strong>.</span></li>
+        </ol>
+        <ol class="install-steps" id="installOther" hidden>
+            <li><span class="install-n">1</span><span>Abre el menú del navegador <span class="install-ico"><%- icon('more', 'icon-sm') %></span>.</span></li>
+            <li><span class="install-n">2</span><span>Elige <strong>Instalar app</strong> o <strong>Agregar a la pantalla de inicio</strong>.</span></li>
+            <li><span class="install-n">3</span><span>Abre Yabla desde su icono. Las notificaciones se activan en <strong>Ajustes</strong>.</span></li>
+        </ol>
+        <p class="muted small install-note"><%- icon('info', 'icon-sm') %>En iPhone hace falta iOS 16.4 o posterior.</p>
     </div>
 </div>
 

@@ -38,7 +38,7 @@ async function isEmpty() {
 }
 
 async function clear() {
-  const tables = ["dating_reports", "dating_matches", "dating_swipes", "dating_profiles", "scheduled_messages", "receipt_events", "pinned_messages", "message_hidden", "stars", "reactions", "story_views", "stories", "transactions", "blocks", "messages", "conversation_members", "conversations", "sessions", "files", "users"];
+  const tables = ["push_subscriptions", "dating_reports", "dating_matches", "dating_swipes", "dating_profiles", "scheduled_messages", "receipt_events", "pinned_messages", "message_hidden", "stars", "reactions", "story_views", "stories", "transactions", "blocks", "messages", "conversation_members", "conversations", "sessions", "files", "users"];
   await db.transaction(async (tx) => {
     for (const t of tables) await tx.run(`DELETE FROM ${t}`);
     await tx.run("DELETE FROM sqlite_sequence");

@@ -39,6 +39,8 @@ module.exports = {
   databaseUrl: process.env.TURSO_DATABASE_URL || `file:${resolve(process.env.DATABASE_PATH || "./data/yabla.db").replace(/\\/g, "/")}`,
   databaseAuthToken: process.env.TURSO_AUTH_TOKEN || undefined,
   iceServers: parseIceServers(process.env.ICE_SERVERS),
+  // Contacto del emisor de notificaciones push (lo exige el estándar VAPID: mailto: o https:)
+  vapidSubject: process.env.VAPID_SUBJECT || "mailto:hola@yabla.app",
   sessionMaxAge: 1000 * 60 * 60 * 24 * 30, // 30 días
   storyTtl: 1000 * 60 * 60 * 24, // 24 horas
   uploadLimit: 5 * 1024 * 1024, // 5 MB: los archivos se guardan en la base de datos

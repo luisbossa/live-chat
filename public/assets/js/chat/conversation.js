@@ -17,6 +17,8 @@ import { renderMentions, mentionsMe } from "./mentions.js";
 import { renderScheduledChip, openSchedule } from "./timed.js";
 import { icebreakerHTML, sendThisOrThat, matchForConversation } from "./discover.js";
 import { initStickers } from "./stickers.js";
+import { playIncoming, playInChat, playSent } from "./sounds.js";
+import { pushEnabled, showLocalNotification } from "./push.js";
 import { labelHTML } from "./dz-icons.js";
 
 const app = $("#app");
@@ -516,7 +518,10 @@ export async function onIncomingMessage(msg) {
   if (!mine && msg.type !== "system") {
     socket.emit("message:delivered", { conversationId: conv.id, messageId: msg.id });
     const visible = conv.id === state.activeId && document.visibilityState === "visible";
-    if (visible) markRead(conv);
+    if (visible) {
+      markRead(conv);
+      if (!conv.muted) playInChat();
+    }
     else {
       conv.unread = (conv.unread || 0) + 1;
       if (mentionsMe(msg)) conv.mentions = (conv.mentions || 0) + 1;
@@ -584,37 +589,18 @@ function onTypingChanged(conversationId) {
 }
 
 // --- Aviso de mensajes nuevos ---
-let audioCtx;
-function beep() {
-  if (!prefs.get("sound", true)) return;
-  try {
-    audioCtx ||= new AudioContext();
-    const o = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    o.frequency.value = 880;
-    g.gain.setValueAtTime(0.06, audioCtx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25);
-    o.connect(g).connect(audioCtx.destination);
-    o.start();
-    o.stop(audioCtx.currentTime + 0.25);
-  } catch {
-    /* sin audio */
-  }
-}
-
 function notify(conv, msg) {
   // Silenciado, salvo que te mencionen (como en WhatsApp); "No molestar" silencia todo
   if (conv.muted && !mentionsMe(msg)) return;
   if (state.me.status === "dnd") return;
-  beep();
-  if (document.visibilityState === "visible") toast(previewOf(conv, msg), { avatar: convAvatar(conv), title: convTitle(conv), duration: 3500 });
-  else if ("Notification" in window && Notification.permission === "granted") {
-    const n = new Notification(convTitle(conv), { body: previewOf(conv, msg), icon: convAvatar(conv), tag: `conv-${conv.id}` });
-    n.onclick = () => {
-      window.focus();
-      openChat(conv.id);
-    };
+  if (document.visibilityState === "visible") {
+    playIncoming();
+    if (isMobile()) navigator.vibrate?.(40);
+    toast(previewOf(conv, msg), { avatar: convAvatar(conv), title: convTitle(conv), duration: 3500 });
+    return;
   }
+  // En segundo plano: si este dispositivo tiene push, la notificación llega por ahí (sin duplicados)
+  if (!pushEnabled()) showLocalNotification(convTitle(conv), { body: previewOf(conv, msg), icon: convAvatar(conv), tag: `conv-${conv.id}`, data: { conversationId: conv.id, url: `/chat?c=${conv.id}` } });
 }
 
 // ==========================================================================
@@ -650,6 +636,7 @@ async function send(data, preview) {
     }
     conv.lastMessage = message;
     emit("conversations");
+    playSent();
   } catch (err) {
     store.items = store.items.filter((m) => m.id !== temp.id);
     messagesEl.querySelector(`[data-id="${temp.id}"]`)?.remove();

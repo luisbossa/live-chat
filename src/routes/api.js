@@ -6,6 +6,7 @@ const messages = require("../controllers/messageController");
 const stories = require("../controllers/storyController");
 const wallet = require("../controllers/walletController");
 const dating = require("../controllers/datingController");
+const push = require("../controllers/pushController");
 const upload = require("../middleware/upload");
 const h = require("../utils/asyncHandler");
 const { requireApiAuth } = require("../middleware/auth");
@@ -23,6 +24,14 @@ router.patch("/me", upload.image.single("avatar"), h(users.updateProfile));
 router.patch("/me/settings", h(users.updateSettings));
 router.patch("/me/password", h(users.changePassword));
 router.get("/me/qr", h(users.qr));
+
+// Notificaciones push de este dispositivo
+router.get("/push/key", h(push.key));
+router.post("/push/subscribe", h(push.subscribe));
+router.delete("/push/subscribe", h(push.unsubscribe));
+router.patch("/push/preview", h(push.preview));
+router.post("/push/test", h(push.test));
+router.post("/conversations/:id/read", h(push.markRead));
 
 // Usuarios
 router.get("/users", h(users.search));

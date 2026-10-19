@@ -43,7 +43,18 @@ app.get("/healthz", (req, res, next) => {
 
 // Archivos estáticos y subidas de usuarios (guardadas en la base de datos).
 // Van antes de la sesión para no consultar la tabla de sesiones en cada imagen.
-app.use(express.static(path.join(config.root, "public"), { maxAge: config.isProduction ? "7d" : 0 }));
+app.use(
+  express.static(path.join(config.root, "public"), {
+    maxAge: config.isProduction ? "7d" : 0,
+    setHeaders(res, filePath) {
+      const name = path.basename(filePath);
+      // El service worker y el manifiesto se revisan siempre: así las actualizaciones llegan enseguida
+      if (name === "sw.js") res.set({ "Cache-Control": "no-cache", "Service-Worker-Allowed": "/" });
+      if (name === "manifest.webmanifest") res.set({ "Content-Type": "application/manifest+json; charset=utf-8", "Cache-Control": "no-cache" });
+      if (name === "offline.html") res.set("Cache-Control", "no-cache");
+    },
+  })
+);
 app.get("/uploads/:id", h(pages.upload));
 
 app.use(express.json({ limit: "100kb" }));

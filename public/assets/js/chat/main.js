@@ -24,6 +24,7 @@ import { initMentions } from "./mentions.js";
 import { initTimed } from "./timed.js";
 import { initDiscover } from "./discover.js";
 import { initDatingProfile } from "./dating-profile.js";
+import { initPush } from "./push.js";
 
 const app = $("#app");
 
@@ -182,6 +183,7 @@ async function start() {
   initTimed();
   initDiscover();
   initDatingProfile();
+  initPush({ openChat });
   bindSocket();
   bindClicks();
   bindKeys();
@@ -193,11 +195,23 @@ async function start() {
     if (isMobile() && app.classList.contains("chat-open")) closeChat();
   });
 
-  setTab("chats");
-
-  // ?c=ID abre un chat concreto (enlaces de QR o notificaciones); si no, se ve la pantalla de inicio
-  const requested = Number(new URLSearchParams(location.search).get("c"));
+  // Enlaces directos (QR, notificaciones y accesos rápidos del icono de la app instalada):
+  // ?c=ID abre un chat · ?tab=discover abre «Conocer» · ?action=new-chat abre «Nuevo chat»
+  const params = new URLSearchParams(location.search);
+  setTab(params.get("tab") === "discover" ? "discover" : "chats");
+  const requested = Number(params.get("c"));
+  if (requested && !getConv(requested)) {
+    try {
+      upsertConversation((await api.conversation(requested)).conversation);
+      emit("conversations");
+    } catch {
+      /* el chat ya no existe o no eres miembro */
+    }
+  }
   if (requested && getConv(requested)) openChat(requested);
+  if (params.get("action") === "new-chat") openModal("modal-new-chat");
+  // La dirección queda limpia (sin ?c=… ni ?source=pwa) para que recargar no repita la acción
+  if ([...params.keys()].some((k) => ["c", "tab", "action", "source"].includes(k))) history.replaceState(history.state, "", "/chat");
 
   window.addEventListener("focus", () => markRead());
   window.yabla = { state, rerenderActive }; // depuración

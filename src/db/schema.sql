@@ -230,3 +230,24 @@ CREATE TABLE IF NOT EXISTS sessions (
   sess     TEXT    NOT NULL,
   expires  INTEGER NOT NULL
 );
+
+-- Notificaciones push (Web Push): una fila por navegador/dispositivo suscrito
+CREATE TABLE IF NOT EXISTS push_subscriptions (
+  id           INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id      INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  endpoint     TEXT    NOT NULL UNIQUE,
+  p256dh       TEXT    NOT NULL,
+  auth         TEXT    NOT NULL,
+  preview      INTEGER NOT NULL DEFAULT 1, -- 0 = no mostrar el texto del mensaje en la notificación
+  user_agent   TEXT,
+  created_at   INTEGER NOT NULL,
+  last_used_at INTEGER
+);
+
+CREATE INDEX IF NOT EXISTS idx_push_user ON push_subscriptions(user_id);
+
+-- Ajustes del servidor que deben sobrevivir a los reinicios (p. ej. claves VAPID generadas)
+CREATE TABLE IF NOT EXISTS app_settings (
+  key   TEXT PRIMARY KEY,
+  value TEXT NOT NULL
+);

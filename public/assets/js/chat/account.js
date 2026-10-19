@@ -8,6 +8,7 @@ import { api } from "./api.js";
 import { registerAction, onModalOpen, closeModal, renderPicker } from "./ui.js";
 import { openChat } from "./conversation.js";
 import { setTab } from "./sidebar.js";
+import { forgetDevice } from "./push.js";
 
 /** Pinta los datos del usuario conectado en toda la interfaz. */
 export function renderMe() {
@@ -300,11 +301,8 @@ function initSettings() {
   });
 
   $("#enterSwitch").addEventListener("change", (e) => prefs.set("enterToSend", e.target.checked));
-  $("#soundSwitch").addEventListener("change", (e) => {
-    prefs.set("sound", e.target.checked);
-    // Aprovechamos el gesto del usuario para pedir permiso de notificaciones
-    if (e.target.checked && "Notification" in window && Notification.permission === "default") Notification.requestPermission();
-  });
+  // Las notificaciones push se activan con su propio interruptor (push.js)
+  $("#soundSwitch").addEventListener("change", (e) => prefs.set("sound", e.target.checked));
 
   $$("[data-setting]").forEach((input) =>
     input.addEventListener("change", async () => {
@@ -551,6 +549,8 @@ function initLogout() {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     $("button[type=submit]", form).disabled = true;
+    // Este dispositivo deja de recibir notificaciones de esta cuenta
+    await forgetDevice().catch(() => {});
     try {
       await fetch("/logout", { method: "POST", headers: { Accept: "application/json" }, credentials: "same-origin" });
     } catch {

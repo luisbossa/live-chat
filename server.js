@@ -22,6 +22,9 @@ async function start() {
     if (await seed()) console.log("Datos de demostración creados (contraseña: demo1234).");
   }
 
+  // Claves para las notificaciones push (del entorno o generadas y guardadas en la base de datos)
+  await require("./src/services/push").init();
+
   // Cuenta oficial que da la bienvenida a los usuarios nuevos
   await require("./src/services/welcome").ensureOfficialAccount();
 

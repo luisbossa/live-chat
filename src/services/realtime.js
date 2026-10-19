@@ -24,8 +24,10 @@ const realtime = {
     realtime.toUsers(await Conversation.memberIds(conversationId), event, payload);
   },
 
-  message(message) {
-    return realtime.toConversation(message.conversationId, "message:new", message);
+  async message(message) {
+    await realtime.toConversation(message.conversationId, "message:new", message);
+    // Aviso push a quien no tiene Yabla a la vista (no bloquea el envío)
+    require("./push").notifyMessage(message).catch((err) => console.error("[push]", err));
   },
 
   messageUpdated(message) {

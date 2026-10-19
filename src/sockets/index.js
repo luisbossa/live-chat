@@ -35,13 +35,16 @@ module.exports = function createSocketServer(httpServer) {
 
     if (presence.connect(userId)) safe(async () => realtime.presence(await User.findById(userId)))();
 
+    // La app avisa si está en primer plano: así no se envían notificaciones push a quien ya la está viendo
+    socket.on("app:visibility", ({ visible } = {}) => presence.setVisible(userId, socket.id, Boolean(visible)));
+
     registerChatHandlers(io, socket, safe);
     registerCallHandlers(io, socket, safe);
 
     socket.on(
       "disconnect",
       safe(async () => {
-        if (!presence.disconnect(userId)) return;
+        if (!presence.disconnect(userId, socket.id)) return;
         await User.touchLastSeen(userId);
         await realtime.presence(await User.findById(userId));
       })

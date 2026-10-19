@@ -10,6 +10,13 @@ const form = (data) => {
 export const api = {
   bootstrap: () => req("/api/bootstrap"),
 
+  // Notificaciones push de este dispositivo
+  pushKey: () => req("/api/push/key"),
+  pushSubscribe: (data) => req("/api/push/subscribe", { method: "POST", body: data }),
+  pushUnsubscribe: (endpoint) => req("/api/push/subscribe", { method: "DELETE", body: { endpoint } }),
+  pushPreview: (endpoint, preview) => req("/api/push/preview", { method: "PATCH", body: { endpoint, preview } }),
+  pushTest: () => req("/api/push/test", { method: "POST" }),
+
   searchUsers: (q = "") => req(`/api/users?q=${encodeURIComponent(q)}`),
   toggleBlock: (userId) => req(`/api/users/${userId}/block`, { method: "POST" }),
 

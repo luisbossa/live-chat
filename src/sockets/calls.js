@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const User = require("../models/User");
 const Conversation = require("../models/Conversation");
 const Message = require("../models/Message");
+const push = require("../services/push");
 const realtime = require("../services/realtime");
 const validate = require("../utils/validate");
 
@@ -83,6 +84,8 @@ module.exports = function registerCallHandlers(io, socket, safe) {
       );
 
       realtime.toUsers([calleeId], "call:incoming", { callId: call.id, conversationId: id, type: call.type, from: User.toPublic(caller) });
+      // Si tiene Yabla en segundo plano, también le llega como notificación push
+      push.notifyCall({ callId: call.id, conversationId: id, type: call.type, caller: User.toPublic(caller), calleeId }).catch((err) => console.error("[push]", err));
       ack({ callId: call.id });
     })
   );
