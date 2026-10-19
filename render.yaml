@@ -29,4 +29,12 @@ services:
         value: "true"
       - key: ICE_SERVERS
         value: '[{"urls":"stun:stun.l.google.com:19302"},{"urls":"stun:stun1.l.google.com:19302"}]'
+      # Notificaciones push: opcionales (si faltan, se generan y guardan en la base de datos).
+      # Genéralas con: npx web-push generate-vapid-keys
+      - key: VAPID_PUBLIC_KEY
+        sync: false
+      - key: VAPID_PRIVATE_KEY
+        sync: false
+      - key: VAPID_SUBJECT
+        value: mailto:hola@yabla.app
       # BASE_URL no hace falta: se usa RENDER_EXTERNAL_URL. Defínela solo si usas un dominio propio.

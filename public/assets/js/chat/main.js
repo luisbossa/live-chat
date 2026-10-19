@@ -210,8 +210,12 @@ async function start() {
   }
   if (requested && getConv(requested)) openChat(requested);
   if (params.get("action") === "new-chat") openModal("modal-new-chat");
-  // La dirección queda limpia (sin ?c=… ni ?source=pwa) para que recargar no repita la acción
-  if ([...params.keys()].some((k) => ["c", "tab", "action", "source"].includes(k))) history.replaceState(history.state, "", "/chat");
+  // Se quitan los parámetros de un solo uso (?source=pwa, ?tab, ?action) para que recargar no repita la acción.
+  // ?c=ID se conserva mientras ese chat está abierto: recargar vuelve a él.
+  const url = new URL(location.href);
+  ["tab", "action", "source"].forEach((k) => url.searchParams.delete(k));
+  if (!getConv(Number(url.searchParams.get("c")))) url.searchParams.delete("c");
+  if (url.href !== location.href) history.replaceState(history.state, "", url);
 
   window.addEventListener("focus", () => markRead());
   window.yabla = { state, rerenderActive }; // depuración

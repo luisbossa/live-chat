@@ -287,8 +287,8 @@ export function initPush({ openChat }) {
   window.addEventListener("pagehide", () => socket.emit("app:visibility", { visible: false }));
 
   // Al abrir un chat, se cierran sus notificaciones pendientes
-  on("active", (id) => {
-    if (id) navigator.serviceWorker?.controller?.postMessage({ type: "clear", conversationId: id });
+  on("active", (conv) => {
+    if (conv) navigator.serviceWorker?.controller?.postMessage({ type: "clear", conversationId: conv.id });
   });
   on("conversations", updateBadge);
   on("receipts", updateBadge);

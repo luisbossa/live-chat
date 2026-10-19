@@ -62,12 +62,34 @@ App de **chat y videollamadas en tiempo real** hecha con Node.js, Express, EJS, 
 - **Seguridad**: normas al activar el perfil, pausar el perfil, deshacer un match (el chat desaparece y nadie puede volver a escribir) y **reportar** (bloquea y deshace el match)
 - Verificación con selfie: **es de demostración** (se aprueba automáticamente). En producción hay que conectar un servicio real de verificación facial
 
+**App instalable y notificaciones**
+- **Se instala como una app** (PWA) en Android, iPhone y escritorio: icono propio, pantalla completa, accesos rápidos al mantener pulsado el icono («Nuevo chat», «Conocer gente») y página propia cuando no hay conexión
+- **Notificaciones push** aunque Yabla esté cerrada: nombre y foto de quien escribe, el mensaje, vibración y sonido del teléfono; los mensajes del mismo chat se agrupan («Karla · 3 mensajes nuevos») y tienen los botones **Marcar como leído** y **Responder**
+- Avisos de **llamadas entrantes** con la app en segundo plano
+- Solo se envían si no estás mirando Yabla en ningún dispositivo; se respetan los chats silenciados (salvo @menciones) y el modo «No molestar»
+- **Privacidad:** «Mostrar el contenido» por dispositivo (si se apaga, la notificación solo dice «Tienes un mensaje nuevo»)
+- **Número de no leídos en el icono** de la app y en la pestaña del navegador; al abrir un chat se cierran sus notificaciones
+- **Sonidos propios** con la app abierta: mensaje nuevo, mensaje en el chat abierto y mensaje enviado
+- En Ajustes → Notificaciones: activar en este dispositivo, mostrar el contenido, sonidos, notificación de prueba e **Instalar Yabla**; al cerrar sesión el dispositivo deja de recibir avisos de esa cuenta
+
 **Interfaz**
 - Diseño responsive (escritorio, tablet y móvil con botón "atrás")
 - **Temas**: Sistema (automático), Claro, Sepia, Oscuro, Atenuado, Océano y Medianoche (negro puro para OLED), desde el botón "Tema" de la barra lateral o en Ajustes
 - **Apariencia** en Ajustes: color de la app (6 colores, combinables con cualquier tema), fondo del chat (5 estilos) y tamaño del texto
 - Botón **Salir** en la barra lateral para cerrar sesión
 - **Buscador rápido `Ctrl + K`** para saltar a cualquier chat o acción, y atajos de teclado (`Ctrl + /` los muestra todos)
+
+### Notificaciones en el teléfono
+
+| Dispositivo | Cómo funciona |
+|---|---|
+| **Android** (Chrome, Edge, Samsung Internet) | Funciona con la app cerrada. Se activan en Ajustes → Notificaciones. El sonido es el de notificaciones del teléfono |
+| **iPhone / iPad** | Requiere **iOS 16.4 o posterior** y **agregar Yabla a la pantalla de inicio** (Safari → Compartir → «Agregar a inicio»). Desde Safari sin instalar, iOS no permite notificaciones web. La app muestra estas instrucciones |
+| **Escritorio** (Chrome, Edge, Firefox, Safari) | Funciona con el navegador abierto (aunque la pestaña esté cerrada en Chrome/Edge si el navegador sigue en segundo plano) |
+
+- Necesitan **HTTPS** (en `localhost` también funcionan para desarrollar). En Render ya es HTTPS. Para probar en tu teléfono durante el desarrollo usa un túnel con HTTPS, por ejemplo `npx localtunnel --port 3000` o Cloudflare Tunnel.
+- Las ventanas de incógnito de Chrome no admiten notificaciones push.
+- Una página web no puede elegir su propio tono para las notificaciones push: suena el del sistema. El sonido propio de Yabla se oye cuando la app está abierta.
 
 ## Requisitos
 
@@ -122,7 +144,7 @@ Para probar el tiempo real y las llamadas, abre dos navegadores (o una ventana n
 │   ├── routes/                # web.js (páginas) y api.js (REST)
 │   ├── middleware/            # Autenticación, subida de archivos y errores
 │   ├── sockets/               # Tiempo real: chat (escribiendo, leído) y señalización de llamadas
-│   ├── services/              # Presencia en línea y emisión de eventos
+│   ├── services/              # Presencia en línea, emisión de eventos y notificaciones push (push.js)
 │   └── utils/                 # Validaciones y helpers de vistas
 ├── views/
 │   ├── layouts/main.ejs       # Layout común
@@ -133,7 +155,9 @@ Para probar el tiempo real y las llamadas, abre dos navegadores (o una ventana n
 │   ├── js/                    # common.js, register.js, landing-auth.js…
 │   │   ├── chat/              # Módulos ES del chat (ver abajo)
 │   │   └── landing/           # Código generado por Framer (no editar)
-│   └── images/                # Iconos (sprite SVG), avatares, stickers, estados
+│   └── images/                # Iconos (sprite SVG), avatares, stickers, estados e iconos de la app (pwa/)
+├── public/sw.js               # Service worker: notificaciones push, número del icono y página sin conexión
+├── public/manifest.webmanifest # Manifiesto de la app instalable
 └── data/                      # Base de datos SQLite local para desarrollo (no se versiona)
 ```
 
@@ -158,6 +182,8 @@ Para probar el tiempo real y las llamadas, abre dos navegadores (o una ventana n
 | `mentions.js` | @menciones en grupos |
 | `timed.js` | Mensajes temporales y programados |
 | `stickers.js` | Panel de stickers por packs con recientes |
+| `push.js` | App instalable y notificaciones push: service worker, suscripción, ajustes, número del icono e instalación |
+| `sounds.js` | Sonidos de mensaje recibido, en el chat abierto y enviado (Web Audio) |
 | `discover.js` | «Conocer»: pila de tarjetas, match, filtros, panel de matches, rompehielos y reportes |
 | `dating-profile.js` | Asistente del perfil de citas |
 
@@ -185,6 +211,10 @@ Todas las rutas `/api/*` (salvo la de disponibilidad) requieren sesión y respon
 | `GET/POST /api/conversations/:id/scheduled` · `DELETE /api/scheduled/:id` · `POST /api/scheduled/:id/send` | Mensajes programados |
 | `GET/POST /api/stories` · `POST …/:id/view` · `GET …/:id/viewers` | Estados |
 | `GET /api/wallet` · `POST /api/wallet/send` | Billetera |
+| `GET /api/push/key` | Clave pública VAPID para suscribir el dispositivo |
+| `POST/DELETE /api/push/subscribe` | Activar o desactivar las notificaciones push en este dispositivo |
+| `PATCH /api/push/preview` · `POST /api/push/test` | Mostrar el contenido (por dispositivo) y notificación de prueba |
+| `POST /api/conversations/:id/read` | Marcar un chat como leído (botón de la notificación) |
 | `GET /api/dating/options` | Provincias, intereses, preguntas y motivos de reporte |
 | `GET/PUT /api/dating/profile` · `PATCH /api/dating/profile/pause` | Perfil de citas (valida mayoría de edad) y pausarlo |
 | `POST /api/dating/photos` · `POST /api/dating/verify` | Subir fotos (hasta 6) y verificación con selfie (demostración) |
@@ -198,7 +228,7 @@ Todas las rutas `/api/*` (salvo la de disponibilidad) requieren sesión y respon
 
 | Del servidor | Del cliente |
 |---|---|
-| `message:new`, `message:update` | `typing` |
+| `message:new`, `message:update` | `typing`, `app:visibility` (Yabla a la vista o en segundo plano) |
 | `receipt` (entregado / leído), `typing`, `presence` | `message:delivered`, `conversation:read` |
 | `conversation:new`, `conversation:update`, `conversation:removed` | `call:invite`, `call:accept`, `call:reject` |
 | `story:new`, `story:viewed`, `story:deleted`, `wallet:update`, `user:update`, `star:update`, `message:expired`, `message:hidden` | `call:signal` (SDP e ICE), `call:end` |
@@ -251,6 +281,8 @@ Todas están documentadas en [`.env.example`](.env.example). El archivo `.env` e
 | `SEED_DEMO` | `true` / `false` | Crea los usuarios demo si la base está vacía |
 | `BASE_URL` | opcional | URL pública; Render la detecta sola |
 | `ICE_SERVERS` | opcional | Servidores STUN/TURN para WebRTC |
+| `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` | opcional | Claves de las notificaciones push. Si no las defines, se generan solas la primera vez y se guardan en la base de datos. Genéralas con `npx web-push generate-vapid-keys` |
+| `VAPID_SUBJECT` | opcional | Contacto del emisor (`mailto:tu@correo.com` o una URL https) |
 | `DATABASE_PATH` | no usar | Archivo SQLite para desarrollo local |
 | `PORT` | no definir | Lo asigna Render |
 
@@ -261,11 +293,12 @@ Todas están documentadas en [`.env.example`](.env.example). El archivo `.env` e
 - **Una sola instancia:** la presencia y las llamadas activas viven en memoria; para escalar a varias haría falta un adaptador de Socket.IO (por ejemplo, Redis).
 - Pon `SEED_DEMO=false` antes de abrir la app al público.
 - Para llamadas entre redes distintas (datos móviles, NAT estrictos) añade un servidor **TURN** en `ICE_SERVERS`.
+- **Notificaciones push:** si cambian las claves VAPID (por ejemplo, al borrar la base de datos sin tenerlas en el entorno), cada dispositivo se vuelve a suscribir solo la próxima vez que abra Yabla.
 
 ## Tecnologías
 
-- **Backend:** Node.js, Express, EJS + express-ejs-layouts, SQLite / Turso (@libsql/client), express-session, Socket.IO, multer, bcryptjs, qrcode
-- **Frontend:** HTML, CSS y JavaScript moderno (módulos ES) sin frameworks, WebRTC, MediaRecorder
+- **Backend:** Node.js, Express, EJS + express-ejs-layouts, SQLite / Turso (@libsql/client), express-session, Socket.IO, multer, bcryptjs, qrcode, web-push
+- **Frontend:** HTML, CSS y JavaScript moderno (módulos ES) sin frameworks, WebRTC, MediaRecorder, Service Worker, Push API, Web Audio
 - Tipografía [Inter](https://fonts.google.com/specimen/Inter) e iconos al estilo de [Lucide](https://lucide.dev/)
 - Landing creada con [Framer](https://www.framer.com/)
 
