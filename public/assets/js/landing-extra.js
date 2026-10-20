@@ -129,3 +129,20 @@
     deco.classList.add("is-visible");
   }
 })();
+
+// Imágenes AVIF en navegadores que no las admiten (Safari de iOS 15 o anterior, algunos WebKit):
+// en lugar del marco gris de «imagen rota» se usa la versión WebP. Los errores de <img> no
+// burbujean, por eso se escuchan en la fase de captura (también para las que Framer vuelve a pintar).
+(() => {
+  const toWebp = (img) => {
+    if (img.dataset.avifFallback || !/\.avif(\?|$)/.test(img.currentSrc || img.src)) return;
+    img.dataset.avifFallback = "1";
+    if (img.srcset) img.srcset = img.srcset.replace(/\.avif/g, ".webp");
+    img.src = img.src.replace(/\.avif/g, ".webp");
+  };
+  document.addEventListener("error", (e) => e.target instanceof HTMLImageElement && toWebp(e.target), true);
+  // Las que ya fallaron antes de cargar este script (va con defer)
+  document.querySelectorAll('img[src*=".avif"], img[srcset*=".avif"]').forEach((img) => {
+    if (img.complete && !img.naturalWidth) toWebp(img);
+  });
+})();

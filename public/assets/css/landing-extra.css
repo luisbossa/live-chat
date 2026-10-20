@@ -537,19 +537,6 @@
 
 .yl-made { display: inline-flex; align-items: center; gap: 8px; }
 
-.yl-credit {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-left: auto;
-  color: var(--text);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.yl-credit:hover { color: var(--ink); }
-.yl-credit svg { width: 13px; height: 13px; }
-
 .yl-top {
   display: grid;
   place-items: center;
@@ -561,6 +548,7 @@
   background: #fff;
   color: var(--ink);
   cursor: pointer;
+  margin-left: auto;
   transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.2s, background-color 0.2s, color 0.2s;
 }
 
@@ -588,7 +576,6 @@
   .yl-foot-nav a { flex: 1 1 auto; justify-content: center; }
   .yl-bottom { display: grid; grid-template-columns: 1fr auto; justify-items: start; }
   .yl-bottom .yl-made { grid-column: 1; grid-row: 2; }
-  .yl-bottom .yl-credit { grid-column: 1; grid-row: 3; margin-left: 0; }
   .yl-bottom .yl-top { grid-column: 2; grid-row: 1 / 4; align-self: center; }
 }
 
@@ -671,23 +658,6 @@
 /* --- Logo: sombra suave que sigue su propia forma (sin aros extra) ---------- */
 #main .framer-f8udkx-container .framer-VSirs {
   box-shadow: 0 18px 36px -14px rgba(38, 36, 36, 0.55), 0 4px 10px -4px rgba(38, 36, 36, 0.25);
-}
-
-/* --- Píldora encima del título --------------------------------------------- */
-#main [data-framer-name="header"]::before {
-  content: "Nuevo · Entra solo con tu usuario, sin correo";
-  align-self: center;
-  margin-bottom: 14px;
-  padding: 6px 14px 6px 34px;
-  border: 1px solid #dedfdf;
-  border-radius: 999px;
-  background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233a6fd8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2z'/%3E%3C/svg%3E") 12px center / 15px no-repeat,
-    #fff;
-  box-shadow: 0 4px 14px -6px rgba(0, 0, 0, 0.12);
-  color: #262424;
-  font: 600 13px Inter, system-ui, sans-serif;
-  white-space: nowrap;
 }
 
 /* --- Título: "YABLA" en azul (cada letra es un span animado por Framer) ---- */
@@ -1092,7 +1062,7 @@
    tarjetas con mensajes quedan solo alrededor del teléfono. */
 .yl-orbit {
   position: absolute;
-  top: var(--orbit-y, 300px);
+  top: var(--orbit-y, 245px);
   left: 50%;
   width: 0;
   height: 0;
@@ -1216,12 +1186,12 @@
     0 26px 48px -24px rgba(38, 36, 36, 0.22);
 }
 
+/* Sombra sutil: apenas un halo rosa, sin oscurecer la sección */
 .yl-feat-wide:hover {
-  border-color: rgba(255, 61, 110, 0.28);
+  border-color: rgba(255, 61, 110, 0.2);
   box-shadow:
-    0 1px 2px rgba(38, 36, 36, 0.04),
-    0 12px 24px -14px rgba(255, 61, 110, 0.28),
-    0 30px 56px -28px rgba(255, 61, 110, 0.32);
+    0 1px 2px rgba(38, 36, 36, 0.03),
+    0 10px 24px -18px rgba(255, 61, 110, 0.22);
 }
 
 /* Chips con icono SVG */

@@ -9,46 +9,60 @@
     return { username: pick("Email"), password: pick("Password") };
   }
 
-  // Estilos y animaciones del aviso (la landing es de Framer y no carga base.css)
+  // Estilos y animaciones del aviso (la landing es de Framer y no carga base.css).
+  // Arriba y centrado con márgenes (no con transform): en Safari de iPhone la barra de
+  // direcciones está abajo y tapaba el aviso; con varias líneas se ve como tarjeta, no píldora.
   const TOAST_CSS = `
     #landingAuthError {
-      position: fixed; left: 50%; bottom: 24px; z-index: 1000;
-      display: flex; align-items: center; gap: 10px;
-      max-width: calc(100% - 32px); margin: 0; padding: 8px 18px 8px 8px;
-      border-radius: 999px; background: #262424; color: #fff;
-      font: 500 14px Inter, system-ui, sans-serif;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, .2);
-      transform: translateX(-50%); pointer-events: none;
+      position: fixed; left: 0; right: 0; top: max(16px, calc(env(safe-area-inset-top) + 10px)); z-index: 1000;
+      display: flex; align-items: center; gap: 12px;
+      width: -webkit-max-content; width: max-content; max-width: min(420px, calc(100vw - 32px));
+      margin: 0 auto; padding: 12px 18px 12px 12px; box-sizing: border-box;
+      border: 1px solid rgba(239, 68, 68, .22); border-radius: 18px;
+      background: rgba(255, 255, 255, .94);
+      -webkit-backdrop-filter: saturate(180%) blur(14px); backdrop-filter: saturate(180%) blur(14px);
+      box-shadow: 0 1px 2px rgba(38, 36, 36, .06), 0 18px 40px -16px rgba(38, 36, 36, .35);
+      color: #262424; text-align: left;
+      font: 400 14px/1.4 Inter, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      pointer-events: none; will-change: transform, opacity;
     }
     #landingAuthError[hidden] { display: none; }
     #landingAuthError .lae-icon {
       display: grid; place-items: center; flex: none;
-      width: 30px; height: 30px; border-radius: 50%; background: #ef4444;
+      width: 36px; height: 36px; border-radius: 12px; background: #ef4444;
+      box-shadow: 0 8px 16px -8px rgba(239, 68, 68, .8);
     }
-    /* Entrada: sube desde abajo con un pequeño rebote; el icono "salta" */
+    #landingAuthError .lae-icon svg { display: block; }
+    #landingAuthError .lae-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+    #landingAuthError .lae-title { font-weight: 600; font-size: 14.5px; color: #262424; }
+    #landingAuthError .lae-msg { color: #5f6164; font-size: 13.5px; }
+    /* Entrada: baja desde arriba con un pequeño rebote; el icono "salta" */
     #landingAuthError.is-in { animation: lae-in .45s cubic-bezier(.2, .9, .3, 1.25) both; }
     #landingAuthError.is-in .lae-icon { animation: lae-pop .5s .12s cubic-bezier(.2, .9, .3, 1.4) both; }
     /* Error repetido mientras está visible: se sacude */
     #landingAuthError.is-shake { animation: lae-shake .42s ease-in-out; }
-    /* Salida: baja y se desvanece */
+    /* Salida: sube y se desvanece */
     #landingAuthError.is-out { animation: lae-out .3s ease-in both; }
     @keyframes lae-in {
-      from { opacity: 0; transform: translate(-50%, 24px) scale(.92); }
-      to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+      from { opacity: 0; transform: translateY(-18px) scale(.96); }
+      to { opacity: 1; transform: none; }
     }
     @keyframes lae-out {
-      from { opacity: 1; transform: translate(-50%, 0) scale(1); }
-      to { opacity: 0; transform: translate(-50%, 16px) scale(.96); }
+      from { opacity: 1; transform: none; }
+      to { opacity: 0; transform: translateY(-14px) scale(.97); }
     }
     @keyframes lae-pop {
       from { transform: scale(.3) rotate(-25deg); }
       to { transform: none; }
     }
     @keyframes lae-shake {
-      0%, 100% { transform: translateX(-50%); }
-      20%, 60% { transform: translateX(calc(-50% - 8px)); }
-      40%, 80% { transform: translateX(calc(-50% + 8px)); }
+      0%, 100% { transform: none; }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
     }
+    /* Campo que falta: borde rojo suave */
+    .lae-missing { box-shadow: 0 0 0 3px rgba(239, 68, 68, .18) !important; border-radius: 64px; }
     @media (prefers-reduced-motion: reduce) {
       #landingAuthError.is-in, #landingAuthError.is-in .lae-icon, #landingAuthError.is-shake { animation: lae-fade .2s both; }
       #landingAuthError.is-out { animation: lae-fade .2s reverse both; }
@@ -56,7 +70,7 @@
     }`;
 
   // Mensaje de error bajo el formulario, con animación de entrada, sacudida y salida
-  function showError(message) {
+  function showError(message, title = "No pudimos iniciar sesión") {
     let box = document.getElementById("landingAuthError");
     if (!box) {
       document.head.append(Object.assign(document.createElement("style"), { textContent: TOAST_CSS }));
@@ -67,12 +81,14 @@
       });
       document.body.append(box);
     }
-    // Icono SVG de alerta (mismo estilo que los avisos del chat)
+    // Icono SVG de alerta (mismo estilo que los avisos del chat), título y motivo
     box.innerHTML =
       '<span class="lae-icon">' +
-      '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">' +
-      '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg></span>';
-    box.append(Object.assign(document.createElement("span"), { textContent: message }));
+      '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">' +
+      '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg></span>' +
+      '<span class="lae-text"><strong class="lae-title"></strong><span class="lae-msg"></span></span>';
+    box.querySelector(".lae-title").textContent = title;
+    box.querySelector(".lae-msg").textContent = message;
 
     // Si ya estaba visible se sacude; si no, entra
     const visible = !box.hidden && !box.classList.contains("is-out");
@@ -95,8 +111,19 @@
     if (sending) return;
 
     const { username, password } = fields();
-    if (!username?.value.trim() || !password?.value) return showError("Escribe tu usuario y tu contraseña.");
+    const missing = !username?.value.trim() ? username : !password?.value ? password : null;
+    if (missing) {
+      const both = !username?.value.trim() && !password?.value;
+      showError(both ? "Escribe tu usuario y tu contraseña." : missing === username ? "Escribe tu usuario." : "Escribe tu contraseña.", "Faltan datos");
+      // Se resalta el campo que falta y se pone el cursor ahí
+      const wrap = missing.parentElement;
+      wrap?.classList.add("lae-missing");
+      missing.addEventListener("input", () => wrap?.classList.remove("lae-missing"), { once: true });
+      missing.focus({ preventScroll: true });
+      return;
+    }
 
+    document.querySelectorAll(".lae-missing").forEach((el) => el.classList.remove("lae-missing"));
     sending = true;
     try {
       const res = await fetch("/login", {

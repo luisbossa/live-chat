@@ -171,8 +171,8 @@
                 <span><strong>Cambiar contraseña</strong><small>Te pediremos la actual</small></span>
                 <%- icon('chevron-right', 'icon-sm') %>
             </button>
-            <h4>Ayuda</h4>
-            <button class="setting-row setting-link" data-open="modal-shortcuts">
+            <h4 data-kbd-only>Ayuda</h4>
+            <button class="setting-row setting-link" data-open="modal-shortcuts" data-kbd-only>
                 <span><strong>Atajos de teclado</strong><small>Ctrl + K para ir a cualquier chat</small></span>
                 <%- icon('chevron-right', 'icon-sm') %>
             </button>
@@ -359,7 +359,7 @@
             <kbd>Esc</kbd>
         </label>
         <ul class="quick-list" id="quickList" role="listbox"></ul>
-        <p class="quick-foot muted"><kbd>↑</kbd><kbd>↓</kbd> moverse <kbd>Enter</kbd> abrir <kbd>Ctrl</kbd><kbd>/</kbd> ver atajos</p>
+        <p class="quick-foot muted" data-kbd-only><kbd>↑</kbd><kbd>↓</kbd> moverse <kbd>Enter</kbd> abrir <kbd>Ctrl</kbd><kbd>/</kbd> ver atajos</p>
     </div>
 </div>
 

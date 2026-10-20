@@ -77,7 +77,7 @@ App de **chat y videollamadas en tiempo real** hecha con Node.js, Express, EJS, 
 - **Temas**: Sistema (automático), Claro, Sepia, Oscuro, Atenuado, Océano y Medianoche (negro puro para OLED), desde el botón "Tema" de la barra lateral o en Ajustes
 - **Apariencia** en Ajustes: color de la app (6 colores, combinables con cualquier tema), fondo del chat (5 estilos) y tamaño del texto
 - Botón **Salir** en la barra lateral para cerrar sesión
-- **Buscador rápido `Ctrl + K`** para saltar a cualquier chat o acción, y atajos de teclado (`Ctrl + /` los muestra todos)
+- **Buscador rápido `Ctrl + K`** para saltar a cualquier chat o acción, y atajos de teclado (`Ctrl + /` los muestra todos). En teléfonos y tabletas táctiles no hay atajos ni indicaciones de teclado; el buscador sigue disponible desde «Buscar»
 
 ### Notificaciones en el teléfono
 

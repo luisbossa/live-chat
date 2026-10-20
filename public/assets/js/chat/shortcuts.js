@@ -64,7 +64,7 @@ function buildResults(raw) {
     .filter((c) => !q || norm(convTitle(c)).includes(q) || norm(peerOf(c)?.username).includes(q))
     .slice(0, q ? 12 : 6)
     .map((c) => ({ type: "chat", conv: c }));
-  const actions = ACTIONS.filter((a) => !q || norm(a.label).includes(q))
+  const actions = ACTIONS.filter((a) => (hasKeyboard() || a.label !== "Atajos de teclado") && (!q || norm(a.label).includes(q)))
     .slice(0, q ? 6 : 5)
     .map((a) => ({ type: "action", action: a }));
   return { q, items: [...chats, ...actions], chatCount: chats.length };
@@ -171,7 +171,11 @@ function stepChat(delta) {
   $(`[data-conv="${next}"]`)?.scrollIntoView({ block: "nearest" });
 }
 
+/** Atajos solo con teclado y ratón: en teléfonos y tabletas táctiles no se usan. */
+export const hasKeyboard = () => matchMedia("(hover: hover) and (pointer: fine)").matches;
+
 function onKey(e) {
+  if (!hasKeyboard()) return;
   const mod = isMac ? e.metaKey : e.ctrlKey;
   const key = e.key.toLowerCase();
   const modalOpen = openModals().length > 0;
