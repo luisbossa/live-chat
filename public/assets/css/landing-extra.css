@@ -1290,3 +1290,13 @@ html { scroll-behavior: smooth; }
   transform: translateY(-50%);
   pointer-events: none;
 }
+
+/* Pantallas táctiles: los campos de texto miden al menos 16 px. Con menos, Safari de iPhone
+   hace zoom a toda la página al tocar un campo. */
+@media (hover: none), (pointer: coarse) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}

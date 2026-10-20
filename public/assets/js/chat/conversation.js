@@ -1116,6 +1116,9 @@ $("#chatSearchInput").addEventListener("input", (e) => {
 // Inicialización
 // ==========================================================================
 export function initConversation() {
+  // Teclado del móvil abierto o cerrado: si estabas abajo del todo, sigues viendo el último mensaje
+  on("viewport", () => keepBottom());
+
   input.addEventListener("input", () => {
     autosize();
     if (input.value.trim()) startTyping();

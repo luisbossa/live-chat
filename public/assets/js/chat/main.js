@@ -26,6 +26,7 @@ import { initDiscover } from "./discover.js";
 import { initDatingProfile } from "./dating-profile.js";
 import { initPush } from "./push.js";
 import { initVideoRecorder } from "./video-recorder.js";
+import { initViewport } from "./viewport.js";
 
 const app = $("#app");
 
@@ -186,6 +187,7 @@ async function start() {
   initDatingProfile();
   initPush({ openChat });
   initVideoRecorder();
+  initViewport();
   bindSocket();
   bindClicks();
   bindKeys();

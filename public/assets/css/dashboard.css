@@ -8710,3 +8710,49 @@ button.home-pill:hover { transform: translateY(-2px); }
 @container (max-width: 300px) {
   .media-tabs button:not(.is-active) b { display: none; }
 }
+
+/* ==========================================================================
+   Móvil: la app ocupa exactamente el alto visible (también con el teclado
+   abierto) y no se desplaza ni rebota. --app-h y --vv-top los pone viewport.js.
+   ========================================================================== */
+@media (max-width: 860px) {
+  html,
+  body { overscroll-behavior: none; }
+
+  .app {
+    position: fixed;
+    top: var(--vv-top, 0px);
+    left: 0;
+    right: 0;
+    height: var(--app-h, 100dvh);
+  }
+
+  .sidebar { height: 100%; }
+
+  .chat {
+    inset: var(--vv-top, 0px) 0 auto 0;
+    height: var(--app-h, 100dvh);
+  }
+
+  .modal {
+    inset: var(--vv-top, 0px) 0 auto 0;
+    height: var(--app-h, 100dvh);
+  }
+
+  /* Las listas se desplazan por dentro sin arrastrar la página */
+  .messages,
+  .panel,
+  .info-body,
+  .modal-dialog { overscroll-behavior: contain; }
+
+  /* Sin zoom por doble toque en botones y burbujas (el desplazamiento sigue igual) */
+  button,
+  a,
+  .bubble,
+  .conv { touch-action: manipulation; }
+
+  /* Teclado abierto: la barra de escribir queda pegada al teclado y la barra inferior se oculta */
+  html.kb-open .composer { padding-bottom: 8px; }
+  html.kb-open .rail { display: none; }
+  html.kb-open .sidebar { padding-bottom: 8px; }
+}
