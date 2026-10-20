@@ -25,6 +25,7 @@ import { initTimed } from "./timed.js";
 import { initDiscover } from "./discover.js";
 import { initDatingProfile } from "./dating-profile.js";
 import { initPush } from "./push.js";
+import { initVideoRecorder } from "./video-recorder.js";
 
 const app = $("#app");
 
@@ -184,6 +185,7 @@ async function start() {
   initDiscover();
   initDatingProfile();
   initPush({ openChat });
+  initVideoRecorder();
   bindSocket();
   bindClicks();
   bindKeys();

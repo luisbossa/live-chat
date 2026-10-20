@@ -72,7 +72,7 @@ export function paymentText(msg) {
 export function previewIcon(msg) {
   if (!msg) return null;
   if (msg.deletedAt) return "ban";
-  const icons = { image: "image", audio: "mic", file: "file", sticker: "sticker", payment: "wallet", date: "calendar-heart", game: "dice" };
+  const icons = { image: "image", video: "video", audio: "mic", file: "file", sticker: "sticker", payment: "wallet", date: "calendar-heart", game: "dice" };
   if (msg.type === "call") return msg.meta?.callType === "video" ? "video" : "phone";
   return icons[msg.type] || null;
 }
@@ -89,6 +89,7 @@ export function previewOf(conv, msg = conv.lastMessage) {
 
   const labels = {
     image: msg.body || "Foto",
+    video: msg.body || `Video (${duration(msg.meta?.duration)})`,
     audio: `Nota de voz (${duration(msg.meta?.duration)})`,
     file: msg.meta?.name || "Documento",
     sticker: "Sticker",

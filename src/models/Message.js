@@ -36,7 +36,7 @@ const SQL = {
   media: `
     SELECT * FROM messages
     WHERE conversation_id = @conversationId AND id > @after AND deleted_at IS NULL AND ${VISIBLE}
-      AND (type IN ('image', 'file', 'audio') OR (type = 'text' AND body LIKE '%http%'))
+      AND (type IN ('image', 'video', 'file', 'audio') OR (type = 'text' AND body LIKE '%http%'))
     ORDER BY id DESC LIMIT 120`,
   hide: "INSERT OR IGNORE INTO message_hidden (user_id, message_id) VALUES (?, ?)",
   // Primer momento en que cada miembro llegó (entregado / leído) hasta este mensaje

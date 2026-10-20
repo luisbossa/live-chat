@@ -76,7 +76,7 @@ exports.starred = async (req, res) => {
 // ==========================================================================
 // Reenviar a uno o varios chats (máx. 5 a la vez, como WhatsApp)
 // ==========================================================================
-const FORWARDABLE = ["text", "image", "file", "audio", "sticker"];
+const FORWARDABLE = ["text", "image", "video", "file", "audio", "sticker"];
 const MAX_FORWARD = 5;
 
 exports.forward = async (req, res) => {

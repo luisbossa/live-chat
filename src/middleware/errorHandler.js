@@ -17,7 +17,7 @@ function errorHandler(err, req, res, next) {
 
   if (err instanceof multer.MulterError) {
     status = 400;
-    message = err.code === "LIMIT_FILE_SIZE" ? `El archivo supera el límite de ${config.uploadLimit / 1024 / 1024} MB.` : "No se pudo subir el archivo.";
+    message = err.code === "LIMIT_FILE_SIZE" ? req.uploadLimitMessage || `El archivo supera el límite de ${config.uploadLimit / 1024 / 1024} MB.` : "No se pudo subir el archivo.";
   }
 
   if (status >= 500) console.error(err);

@@ -34,11 +34,29 @@ exports.upload = async (req, res, next) => {
   const file = await File.find(req.params.id);
   if (!file) return next();
   const inline = /^(image|audio|video)\//.test(file.mime);
+  const data = file.data; // Buffer (File.find)
+  const total = data.length;
   res.set({
     "Content-Type": file.mime,
-    "Content-Length": file.size,
+    "Accept-Ranges": "bytes",
     "Cache-Control": "public, max-age=31536000, immutable",
     "Content-Disposition": `${inline ? "inline" : "attachment"}; filename*=UTF-8''${encodeURIComponent(file.name || file.id)}`,
   });
-  res.send(file.data);
+
+  // Peticiones por partes (Range): Safari/iPhone las exige para reproducir video y permiten adelantarlo
+  const range = /^bytes=(\d*)-(\d*)$/.exec(req.get("range") || "");
+  if (range && (range[1] || range[2])) {
+    let start = range[1] ? Number(range[1]) : total - Number(range[2]);
+    let end = range[1] && range[2] ? Number(range[2]) : total - 1;
+    start = Math.max(0, start);
+    end = Math.min(end, total - 1);
+    if (start > end || start >= total) {
+      res.set("Content-Range", `bytes */${total}`);
+      return res.status(416).end();
+    }
+    res.status(206).set({ "Content-Range": `bytes ${start}-${end}/${total}`, "Content-Length": end - start + 1 });
+    return res.end(data.subarray(start, end + 1));
+  }
+  res.set("Content-Length", total);
+  res.end(data);
 };

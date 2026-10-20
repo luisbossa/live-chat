@@ -17,6 +17,7 @@ App de **chat y videollamadas en tiempo real** hecha con Node.js, Express, EJS, 
 **Mensajería en tiempo real**
 - Chats individuales y grupos (crear, añadir participantes, salir, administradores)
 - Texto con enlaces, **más de 1.100 emojis por categorías** (con buscador y recientes, como WhatsApp), stickers, fotos, documentos y **notas de voz**
+- **Grabar video y enviarlo** (como WhatsApp): cámara a pantalla completa, cambiar entre cámara frontal y trasera, hasta **1 minuto** con anillo de progreso, vista previa con comentario y «Repetir». También se envían videos de la galería. Llegan como burbuja con miniatura y duración y se reproducen a pantalla completa. Límite: 16 MB por video (5 MB para fotos y documentos); se graban en MP4 (H.264) cuando el navegador lo permite, para que se vean también en iPhone
 - **61 stickers en 4 packs**: «Pura vida» (perezoso, tucán, rana de ojos rojos, cafecito, gallo pinto, volcán…), «Frases ticas» (¡Tuanis!, ¡Qué chiva!, Mae…, ¡Upe!), «Amor» y los clásicos; los nuevos son SVG animados ligeros, con pestaña de recientes
 - **Vista previa antes de enviar**: varios archivos a la vez (máx. 10), quitar o añadir, comentario por archivo y previsualización de PDF; las fotos pueden enviarse como documento (calidad original)
 - Confirmaciones de lectura con tres estados: enviando, enviado ✓, entregado ✓✓ y leído (✓✓ en color)

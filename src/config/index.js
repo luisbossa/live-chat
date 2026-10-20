@@ -44,6 +44,8 @@ module.exports = {
   sessionMaxAge: 1000 * 60 * 60 * 24 * 30, // 30 días
   storyTtl: 1000 * 60 * 60 * 24, // 24 horas
   uploadLimit: 5 * 1024 * 1024, // 5 MB: los archivos se guardan en la base de datos
+  videoUploadLimit: 16 * 1024 * 1024, // 16 MB solo para videos (≈ 1 minuto en calidad media)
+  videoMaxSeconds: 60,
   initialBalanceCents: 50000, // $500 de saldo de demostración
   initialBalanceCrcCents: 25000000, // ₡250.000 de saldo de demostración
   // Solo para pruebas locales: permite vista previa de enlaces a direcciones internas (nunca en producción)

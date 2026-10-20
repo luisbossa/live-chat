@@ -19,11 +19,14 @@ export const firstName = (name = "") => name.split(" ")[0];
 const sameDay = (a, b) => a.toDateString() === b.toDateString();
 const yesterday = () => new Date(Date.now() - 864e5);
 
+/** Hora como se usa en Costa Rica: 12 horas con a. m. / p. m. (no la de 24 horas). */
+export const CLOCK = { hour: "numeric", minute: "2-digit", hour12: true };
+
 export function timeLabel(ms) {
-  return new Date(ms).toLocaleTimeString("es", { hour: "2-digit", minute: "2-digit" });
+  return new Date(ms).toLocaleTimeString("es-CR", CLOCK);
 }
 
-/** Hora para la lista: hoy → 14:32, ayer → Ayer, esta semana → lunes, antes → 12/10/26. */
+/** Hora para la lista: hoy → 2:32 p. m., ayer → Ayer, esta semana → lunes, antes → 12/10/26. */
 export function listTime(ms) {
   if (!ms) return "";
   const d = new Date(ms);

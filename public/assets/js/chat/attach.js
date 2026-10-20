@@ -5,12 +5,15 @@ import { sendAttachment } from "./conversation.js";
 
 const MAX_FILES = 10;
 const MAX_SIZE = 5 * 1024 * 1024;
+const VIDEO_MAX_SIZE = 16 * 1024 * 1024;
 
 let items = []; // { id, file, kind, url, caption, tooBig }
 let current = 0;
 let nextId = 1;
 
 const isImageFile = (item) => item.file.type.startsWith("image/");
+const isVideo = (item) => item.kind === "video";
+const limitOf = (item) => (isVideo(item) ? VIDEO_MAX_SIZE : MAX_SIZE);
 // Se envía como foto (si se eligió como documento, va como archivo con su calidad original)
 const isImage = (item) => item.kind === "image";
 const isPdf = (item) => item.file.type === "application/pdf";
@@ -28,9 +31,10 @@ export function openAttachPreview(fileList, kind = "auto") {
   if (incoming.length > room) toast(`Puedes enviar hasta ${MAX_FILES} archivos a la vez.`, { tone: "error" });
 
   incoming.slice(0, Math.max(room, 0)).forEach((file) => {
-    const itemKind = kind === "file" || !file.type.startsWith("image/") ? "file" : "image";
-    const item = { id: nextId++, file, kind: itemKind, caption: "", tooBig: file.size > MAX_SIZE };
-    if (isImageFile(item) || isPdf(item)) item.url = URL.createObjectURL(file);
+    const itemKind = kind === "file" ? "file" : file.type.startsWith("image/") ? "image" : file.type.startsWith("video/") ? "video" : "file";
+    const item = { id: nextId++, file, kind: itemKind, caption: "" };
+    item.tooBig = file.size > limitOf(item);
+    if (isImageFile(item) || isVideo(item) || isPdf(item)) item.url = URL.createObjectURL(file);
     items.push(item);
   });
 
@@ -67,7 +71,10 @@ function remove(index) {
 }
 
 function stageHTML(item) {
-  const warning = item.tooBig ? `<p class="attach-warning">${icon("info", "icon-sm")} Supera el límite de 5 MB y no se enviará.</p>` : "";
+  const warning = item.tooBig ? `<p class="attach-warning">${icon("info", "icon-sm")} Supera el límite de ${limitOf(item) / 1024 / 1024} MB y no se enviará.</p>` : "";
+  if (isVideo(item)) {
+    return `<video src="${item.url}" controls playsinline preload="metadata"></video>${warning || `<p class="attach-note">${icon("video", "icon-sm")} Video de hasta 1 minuto · ${fileSize(item.file.size)}</p>`}`;
+  }
   if (isImageFile(item)) {
     const asDocument = !isImage(item) ? `<p class="attach-note">${icon("file", "icon-sm")} Se enviará como documento (calidad original)</p>` : "";
     return `<img src="${item.url}" alt="${escapeHTML(item.file.name)}">${warning || asDocument}`;
@@ -87,7 +94,7 @@ function stageHTML(item) {
 function thumbHTML(item, index) {
   return `
     <div class="attach-thumb ${index === current ? "is-active" : ""} ${item.tooBig ? "is-invalid" : ""}" data-attach-select="${index}" role="button" tabindex="0" aria-label="${escapeHTML(item.file.name)}">
-      ${isImageFile(item) ? `<img src="${item.url}" alt="">` : `<span>${icon("file", "icon-sm")}<b>${escapeHTML(extension(item.file.name))}</b></span>`}
+      ${isVideo(item) ? `<video src="${item.url}#t=0.1" muted playsinline preload="metadata"></video><i class="attach-thumb-play">${icon("play", "icon-sm")}</i>` : isImageFile(item) ? `<img src="${item.url}" alt="">` : `<span>${icon("file", "icon-sm")}<b>${escapeHTML(extension(item.file.name))}</b></span>`}
       <button type="button" class="attach-remove" data-attach-remove="${index}" aria-label="Quitar">${icon("x", "icon-sm")}</button>
     </div>`;
 }
@@ -97,8 +104,9 @@ function render() {
   if (!item) return;
   const valid = items.filter((i) => !i.tooBig).length;
   const images = items.every(isImage);
-
-  $("#attachTitle").textContent = items.length === 1 ? (images ? "Enviar foto" : "Enviar archivo") : `Enviar ${items.length} ${images ? "fotos" : "archivos"}`;
+  const videos = items.every(isVideo);
+  const noun = images ? ["foto", "fotos"] : videos ? ["video", "videos"] : items.every((i) => isImage(i) || isVideo(i)) ? ["archivo", "fotos y videos"] : ["archivo", "archivos"];
+  $("#attachTitle").textContent = items.length === 1 ? `Enviar ${noun[0]}` : `Enviar ${items.length} ${noun[1]}`;
   $("#attachStage").innerHTML = stageHTML(item);
   $("#attachStrip").innerHTML =
     items.map(thumbHTML).join("") +
@@ -122,7 +130,7 @@ async function sendAll() {
     await sendAttachment(item.file, item.caption.trim(), item.kind);
   }
   batch.forEach((i) => i.url && URL.revokeObjectURL(i.url));
-  if (skipped) toast(`${skipped} archivo${skipped === 1 ? " no se envió" : "s no se enviaron"} por superar 5 MB.`, { tone: "error", icon: "file" });
+  if (skipped) toast(`${skipped} archivo${skipped === 1 ? " no se envió" : "s no se enviaron"} por superar el límite (5 MB; videos 16 MB).`, { tone: "error", icon: "file" });
 }
 
 export function initAttach() {

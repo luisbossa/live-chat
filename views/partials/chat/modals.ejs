@@ -6,6 +6,37 @@
 <div class="modal lightbox" id="modal-lightbox">
     <button class="icon-btn lightbox-close" data-close aria-label="Cerrar"><%- icon('x') %></button>
     <img src="" alt="" id="lightboxImg">
+    <video id="lightboxVideo" controls playsinline preload="metadata" hidden></video>
+</div>
+
+<!-- Grabar video (estilo WhatsApp): cámara a pantalla completa, vista previa y envío -->
+<div class="modal video-rec" id="modal-video" aria-label="Grabar video">
+    <div class="vr">
+        <video class="vr-live" id="vrLive" autoplay muted playsinline></video>
+        <video class="vr-preview" id="vrPreview" playsinline loop hidden></video>
+        <div class="vr-top">
+            <button type="button" class="vr-icon" data-vr="close" aria-label="Cerrar"><%- icon('x') %></button>
+            <span class="vr-time" id="vrTime"><i></i><b>0:00</b> / 1:00</span>
+            <button type="button" class="vr-icon" data-vr="flip" id="vrFlip" aria-label="Cambiar de cámara" hidden><%- icon('switch-camera') %></button>
+        </div>
+        <div class="vr-error" id="vrError" hidden></div>
+        <div class="vr-bottom" id="vrControls">
+            <button type="button" class="vr-shutter" id="vrShutter" aria-label="Empezar a grabar">
+                <svg class="vr-ring" viewBox="0 0 100 100" aria-hidden="true"><circle class="vr-ring-bg" cx="50" cy="50" r="46"/><circle class="vr-ring-fg" id="vrRing" cx="50" cy="50" r="46"/></svg>
+                <span class="vr-dot"></span>
+            </button>
+            <small class="vr-hint" id="vrHint">Toca para grabar · hasta 1 minuto</small>
+        </div>
+        <form class="vr-review" id="vrReview" hidden>
+            <button type="button" class="vr-play" id="vrPlay" aria-label="Reproducir"><%- icon('play') %></button>
+            <div class="vr-review-bar">
+                <button type="button" class="vr-retake" data-vr="retake"><%- icon('rotate-ccw', 'icon-sm') %>Repetir</button>
+                <input class="vr-caption" id="vrCaption" placeholder="Añade un comentario…" maxlength="1000" autocomplete="off">
+                <button type="submit" class="vr-send" id="vrSend" aria-label="Enviar video"><%- icon('send') %></button>
+            </div>
+            <small class="vr-size" id="vrSize"></small>
+        </form>
+    </div>
 </div>
 
 <!-- Vista previa de adjuntos antes de enviar -->

@@ -1,4 +1,5 @@
 const fs = require("fs");
+const config = require("../config");
 const path = require("path");
 const User = require("../models/User");
 const Conversation = require("../models/Conversation");
@@ -114,14 +115,29 @@ exports.send = async (req, res) => {
   const data = { conversationId, senderId: req.user.id, type: "text", body: text || null, meta: null, replyToId: null };
 
   if (file) {
+    const isVideo = req.body.kind !== "file" && (file.mimetype.startsWith("video/") || req.body.kind === "video");
+    // Solo los videos pueden pasar de 5 MB (llegan hasta 16 MB)
+    if (!isVideo && file.size > config.uploadLimit) {
+      throw httpError(413, `El archivo supera el límite de ${config.uploadLimit / 1024 / 1024} MB.`);
+    }
     data.mediaUrl = await upload.save(file);
     // kind=file: enviado como documento (p. ej. una foto con su calidad original)
     if (req.body.kind === "file") data.type = "file";
+    else if (isVideo) data.type = "video";
     else if (file.mimetype.startsWith("image/")) data.type = "image";
     else if (file.mimetype.startsWith("audio/") || req.body.kind === "audio") data.type = "audio";
     else data.type = "file";
     data.meta = { name: file.originalname.slice(0, 120), size: file.size, mime: file.mimetype };
     if (data.type === "audio") data.meta.duration = Math.min(Number(req.body.duration) || 0, 60 * 30);
+    if (data.type === "video") {
+      // Datos que mide el navegador: se validan para pintar la miniatura con su proporción
+      const num = (v, max) => Math.max(0, Math.min(Math.round(Number(v) || 0), max));
+      Object.assign(data.meta, {
+        duration: Math.min(Number(req.body.duration) || 0, config.videoMaxSeconds + 5),
+        width: num(req.body.width, 4096),
+        height: num(req.body.height, 4096),
+      });
+    }
   } else if (sticker) {
     if (!STICKERS.has(sticker)) throw httpError(422, "Sticker no válido.");
     Object.assign(data, { type: "sticker", mediaUrl: sticker, body: null });

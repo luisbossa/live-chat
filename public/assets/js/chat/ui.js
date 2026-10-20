@@ -53,10 +53,25 @@ export function confirmDialog({ title, text = "", okText = "Aceptar" }) {
   });
 }
 
-export function openLightbox(src) {
-  $("#lightboxImg").src = src;
+export function openLightbox(src, { video = false } = {}) {
+  const img = $("#lightboxImg");
+  const player = $("#lightboxVideo");
+  img.hidden = video;
+  player.hidden = !video;
+  if (video) {
+    player.src = src;
+    player.play().catch(() => {});
+  } else img.src = src;
   openModal("modal-lightbox");
 }
+
+// Al cerrar el visor, el video se detiene y se libera
+document.getElementById("modal-lightbox")?.addEventListener("modal:close", () => {
+  const player = document.getElementById("lightboxVideo");
+  player.pause();
+  player.removeAttribute("src");
+  player.load();
+});
 
 // --- Paneles emergentes (emojis, stickers, adjuntos) ---
 export function closePopovers() {

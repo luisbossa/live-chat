@@ -75,11 +75,11 @@ function quickTimes() {
   };
   const now = new Date();
   const list = [{ label: "En 1 hora", date: new Date(Math.ceil((Date.now() + 3600e3) / 300e3) * 300e3) }];
-  if (now.getHours() < 19) list.push({ label: "Hoy a las 20:00", date: at(0, 20) });
-  list.push({ label: "Mañana a las 08:00", date: at(1, 8) });
-  // Próximo lunes a las 09:00
+  if (now.getHours() < 19) list.push({ label: "Hoy a las 8:00 p. m.", date: at(0, 20) });
+  list.push({ label: "Mañana a las 8:00 a. m.", date: at(1, 8) });
+  // Próximo lunes a las 9:00 a. m.
   const toMonday = ((8 - now.getDay()) % 7) || 7;
-  list.push({ label: "El lunes a las 09:00", date: at(toMonday, 9) });
+  list.push({ label: "El lunes a las 9:00 a. m.", date: at(toMonday, 9) });
   return list;
 }
 

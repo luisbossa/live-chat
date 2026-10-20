@@ -82,6 +82,8 @@ function messageText(msg) {
       return clip(msg.body);
     case "image":
       return msg.body ? `📷 ${clip(msg.body)}` : "📷 Foto";
+    case "video":
+      return msg.body ? `🎥 ${clip(msg.body)}` : "🎥 Video";
     case "audio":
       return "🎤 Nota de voz";
     case "file":

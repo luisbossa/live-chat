@@ -17,9 +17,22 @@ function safeFiles(req, file, cb) {
   cb(null, true);
 }
 
+// Adjuntos del chat: hasta 16 MB para que quepan los videos; el controlador limita el resto a 5 MB
+const chatUpload = multer({ storage, limits: { fileSize: config.videoUploadLimit }, fileFilter: safeFiles });
+
 module.exports = {
   image: multer({ storage, limits, fileFilter: onlyImages }),
   file: multer({ storage, limits, fileFilter: safeFiles }),
+  chat: {
+    single(field) {
+      const handler = chatUpload.single(field);
+      return (req, res, next) => {
+        // Mensaje de «demasiado grande» acorde a los dos límites (lo usa el errorHandler)
+        req.uploadLimitMessage = `El archivo es demasiado grande: videos hasta ${config.videoUploadLimit / 1024 / 1024} MB; fotos y documentos hasta ${config.uploadLimit / 1024 / 1024} MB.`;
+        handler(req, res, next);
+      };
+    },
+  },
 
   /** Guarda el archivo subido y devuelve su URL pública (o null si no hay archivo). */
   async save(file) {

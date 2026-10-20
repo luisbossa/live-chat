@@ -1,5 +1,5 @@
 // Conversación activa: mensajes, barra de escritura, notas de voz, respuestas, reacciones y lectura.
-import { $, $$, icon, escapeHTML, linkify, toast, timeLabel, dayLabel, lastSeenLabel, duration, fileSize, isMobile, isWide, prefs, firstName, toastError, STATUSES, profileColor, isBirthdayToday } from "./utils.js";
+import { $, $$, icon, escapeHTML, linkify, toast, timeLabel, CLOCK, dayLabel, lastSeenLabel, duration, fileSize, isMobile, isWide, prefs, firstName, toastError, STATUSES, profileColor, isBirthdayToday } from "./utils.js";
 import {
   state, emit, on, getConv, activeConv, isGroup, peerOf, convTitle, convAvatar, userName, messagesOf, receiptOf, isBlockedConv, upsertConversation,
   getDraft, setDraft,
@@ -19,6 +19,7 @@ import { icebreakerHTML, sendThisOrThat, matchForConversation } from "./discover
 import { initStickers } from "./stickers.js";
 import { playIncoming, playInChat, playSent } from "./sounds.js";
 import { pushEnabled, showLocalNotification } from "./push.js";
+import { openVideoRecorder } from "./video-recorder.js";
 import { labelHTML } from "./dz-icons.js";
 
 const app = $("#app");
@@ -38,7 +39,11 @@ let newWhileScrolled = 0;
 let atBottom = true; // ¿estaba abajo del todo? (para mantenerlo al crecer una vista previa)
 // Separador "N mensajes sin leer": se calcula al abrir el chat
 let unreadMarker = null; // { conversationId, messageId, count }
-const FORWARDABLE = ["text", "image", "file", "audio", "sticker"];
+const FORWARDABLE = ["text", "image", "video", "file", "audio", "sticker"];
+// Videos: hasta 1 minuto y 16 MB (el resto de archivos, 5 MB)
+export const VIDEO_MAX_SECONDS = 60;
+export const VIDEO_MAX_BYTES = 16 * 1024 * 1024;
+const FILE_MAX_BYTES = 5 * 1024 * 1024;
 
 // ==========================================================================
 // Render de mensajes
@@ -54,8 +59,8 @@ function highlight(html) {
 function replyQuote(msg) {
   const r = msg.replyTo;
   if (!r) return "";
-  const labels = { image: "Foto", audio: "Nota de voz", file: "Documento", sticker: "Sticker" };
-  const icons = { image: "image", audio: "mic", file: "file", sticker: "sticker" };
+  const labels = { image: "Foto", video: "Video", audio: "Nota de voz", file: "Documento", sticker: "Sticker" };
+  const icons = { image: "image", video: "video", audio: "mic", file: "file", sticker: "sticker" };
   const text = r.deleted ? "Mensaje eliminado" : r.body || labels[r.type] || "";
   const kindIcon = !r.deleted && icons[r.type] ? icon(icons[r.type], "icon-sm") : "";
   return `
@@ -78,6 +83,21 @@ function bodyHTML(msg) {
   switch (msg.type) {
     case "image":
       return { kind: "is-media", html: `<img src="${msg.mediaUrl}" alt="${escapeHTML(msg.body || "Imagen")}" data-lightbox loading="lazy">${text}` };
+    case "video": {
+      // Miniatura = primer fotograma (#t=0.1 lo fuerza también en iPhone), botón de play y duración
+      const m = msg.meta || {};
+      const ratio = m.width && m.height ? Math.max(0.6, Math.min(m.width / m.height, 1.78)) : 0.75;
+      const src = msg.pending ? msg.mediaUrl : `${msg.mediaUrl}#t=0.1`;
+      return {
+        kind: "is-media is-video",
+        html: `
+          <button type="button" class="video-thumb" data-video="${msg.mediaUrl}" style="--ratio:${ratio.toFixed(3)}" aria-label="Reproducir video">
+            <video src="${src}" preload="metadata" muted playsinline disablepictureinpicture></video>
+            ${msg.pending ? `<span class="video-uploading"><span class="spinner"></span>Enviando…</span>` : `<span class="video-play">${icon("play")}</span>`}
+            <span class="video-dur">${icon("video", "icon-sm")}${duration(m.duration)}</span>
+          </button>${text}`,
+      };
+    }
     case "sticker":
       return { kind: "is-sticker", html: `<img src="${msg.mediaUrl}" alt="Sticker" loading="lazy">` };
     case "audio":
@@ -141,7 +161,7 @@ function bodyHTML(msg) {
     }
     case "date": {
       const m = msg.meta || {};
-      const whenText = new Date(m.when).toLocaleString("es", { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" });
+      const whenText = new Date(m.when).toLocaleString("es-CR", { weekday: "long", day: "numeric", month: "long", ...CLOCK });
       const mine = msg.senderId === state.me.id;
       const status = { pending: mine ? "Esperando respuesta…" : "", accepted: `${icon("check-circle", "icon-sm")}¡Cita confirmada!`, declined: `${icon("x", "icon-sm")}Esta vez no` }[m.status] || "";
       return {
@@ -531,7 +551,7 @@ export async function onIncomingMessage(msg) {
   // Quien escribe deja de estar "escribiendo"
   clearTyping(conv.id, msg.senderId);
   emit("conversations");
-  if (msg.type === "image" || msg.type === "file") emit("media", conv);
+  if (["image", "video", "file", "audio"].includes(msg.type)) emit("media", conv);
 }
 
 export function onMessageUpdate(msg) {
@@ -678,11 +698,48 @@ function submitText() {
 }
 
 /** Envía un archivo con su comentario (lo llama la vista previa de adjuntos). */
-export function sendAttachment(file, caption = "", kind = "image") {
-  if (!file) return Promise.resolve();
-  if (file.size > 5 * 1024 * 1024) {
+/** Duración y tamaño de un video (lo lee el propio navegador). */
+export function videoInfo(file) {
+  return new Promise((resolve) => {
+    const v = document.createElement("video");
+    const url = URL.createObjectURL(file);
+    const done = (info) => {
+      clearTimeout(timer);
+      URL.revokeObjectURL(url);
+      resolve(info);
+    };
+    const timer = setTimeout(() => done({ duration: 0, width: 0, height: 0 }), 5000);
+    v.preload = "metadata";
+    v.muted = true;
+    v.onloadedmetadata = () => done({ duration: Number.isFinite(v.duration) ? v.duration : 0, width: v.videoWidth, height: v.videoHeight });
+    v.onerror = () => done({ duration: 0, width: 0, height: 0 });
+    v.src = url;
+  });
+}
+
+/** Envía un video (grabado o de la galería): aparece al instante y se sube en segundo plano. */
+export function sendVideo(file, { duration: seconds = 0, width = 0, height = 0, caption = "" } = {}) {
+  const meta = { duration: Math.round(seconds * 10) / 10, width, height, size: file.size };
+  const replyToId = composeState.mode === "reply" ? composeState.message.id : undefined;
+  cancelContext();
+  return send(
+    { file, kind: "video", text: caption || undefined, replyToId, duration: meta.duration, width, height },
+    { type: "video", mediaUrl: URL.createObjectURL(file), body: caption || null, meta }
+  );
+}
+
+export async function sendAttachment(file, caption = "", kind = "image") {
+  if (!file) return;
+  const isVideo = kind === "video" || (kind !== "file" && file.type.startsWith("video/"));
+  if (isVideo) {
+    if (file.size > VIDEO_MAX_BYTES) return toast(`El video supera el límite de ${VIDEO_MAX_BYTES / 1024 / 1024} MB.`, { tone: "error", icon: "video" });
+    const info = await videoInfo(file);
+    if (info.duration > VIDEO_MAX_SECONDS + 1) return toast("El video dura más de 1 minuto. Recórtalo o grábalo desde «Grabar video».", { tone: "error", icon: "video" });
+    return sendVideo(file, { ...info, caption });
+  }
+  if (file.size > FILE_MAX_BYTES) {
     toast("El archivo supera el límite de 5 MB.", { tone: "error", icon: "file" });
-    return Promise.resolve();
+    return;
   }
   const isImage = file.type.startsWith("image/") && kind !== "file";
   const preview = isImage
@@ -892,7 +949,7 @@ messagesEl.addEventListener("click", (e) => {
   const remind = t.closest("[data-date-remind]");
   if (remind) {
     const when = Number(remind.dataset.dateRemind);
-    input.value = `⏰ Recordatorio: nuestra cita es ${new Date(when).toLocaleString("es", { weekday: "long", hour: "2-digit", minute: "2-digit" })} 💞`;
+    input.value = `⏰ Recordatorio: nuestra cita es ${new Date(when).toLocaleString("es-CR", { weekday: "long", ...CLOCK })} 💞`;
     autosize();
     return openSchedule();
   }
@@ -909,6 +966,12 @@ messagesEl.addEventListener("click", (e) => {
   const jump = t.closest("[data-jump]");
   if (jump) return jumpToMessage(Number(jump.dataset.jump));
   if (t.matches("img[data-lightbox]")) return openLightbox(t.src);
+  const videoThumb = t.closest("[data-video]");
+  if (videoThumb) {
+    const msg = findMessage(videoThumb.closest(".msg").dataset.id);
+    if (msg && !msg.pending) return openLightbox(videoThumb.dataset.video, { video: true });
+    return;
+  }
   if (t.closest(".audio-play")) return toggleAudio(t.closest(".audio"));
   const wave = t.closest(".audio-wave");
   if (wave) seekAudio(wave, e);
@@ -1129,13 +1192,14 @@ export function initConversation() {
     if (type === "schedule") return openSchedule();
     if (type === "this-or-that") return sendThisOrThat();
     if (type === "date") return openModal("modal-propose-date");
+    if (type === "video") return openVideoRecorder();
     if (type === "payment") {
       const peer = peerOf(activeConv());
       return openModal("modal-wallet", peer?.id);
     }
     fileInput.dataset.kind = type;
     fileInput.multiple = type !== "camera";
-    fileInput.accept = type === "file" ? "" : "image/*";
+    fileInput.accept = type === "file" ? "" : type === "image" ? "image/*,video/*" : "image/*";
     if (type === "camera") fileInput.setAttribute("capture", "environment");
     else fileInput.removeAttribute("capture");
     fileInput.click();

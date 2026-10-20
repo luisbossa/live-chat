@@ -36,7 +36,7 @@ let mediaTab = "media";
 function groupMedia(messages) {
   const groups = { media: [], docs: [], links: [], audio: [] };
   messages.forEach((m) => {
-    if (m.type === "image") groups.media.push(m);
+    if (m.type === "image" || m.type === "video") groups.media.push(m);
     else if (m.type === "file") groups.docs.push(m);
     else if (m.type === "audio") groups.audio.push(m);
     else if (m.type === "text") (m.body.match(URL_RE) || []).forEach((url) => groups.links.push({ ...m, url }));
@@ -64,7 +64,7 @@ const host = (url) => {
 function mediaPanelHTML(groups) {
   const list = groups[mediaTab];
   const empty = {
-    media: ["image", "Aún no hay fotos en este chat."],
+    media: ["image", "Aún no hay fotos ni videos en este chat."],
     docs: ["file", "Aún no hay documentos."],
     links: ["link", "Aún no hay enlaces."],
     audio: ["mic", "Aún no hay notas de voz."],
@@ -74,7 +74,11 @@ function mediaPanelHTML(groups) {
   if (mediaTab === "media") {
     return `<div class="media-grid">${list
       .slice(0, 30)
-      .map((m) => `<button data-lightbox-src="${m.mediaUrl}" title="${escapeHTML(listTime(m.createdAt))}"><img src="${m.mediaUrl}" alt="" loading="lazy"></button>`)
+      .map((m) =>
+        m.type === "video"
+          ? `<button class="media-video" data-video-src="${m.mediaUrl}" title="${escapeHTML(listTime(m.createdAt))}"><video src="${m.mediaUrl}#t=0.1" muted playsinline preload="metadata"></video><span>${icon("play", "icon-sm")}${duration(m.meta?.duration)}</span></button>`
+          : `<button data-lightbox-src="${m.mediaUrl}" title="${escapeHTML(listTime(m.createdAt))}"><img src="${m.mediaUrl}" alt="" loading="lazy"></button>`
+      )
       .join("")}</div>`;
   }
   const row = (m, iconName, title, sub, href) => `
@@ -353,6 +357,8 @@ export function initInfo() {
     renderMedia(activeConv());
   });
   $("#mediaPanel").addEventListener("click", (e) => {
+    const video = e.target.closest("[data-video-src]");
+    if (video) return openLightbox(video.dataset.videoSrc, { video: true });
     const jump = e.target.closest("[data-media-jump]");
     if (!jump) return;
     if (!isWide()) toggleInfo(false);
