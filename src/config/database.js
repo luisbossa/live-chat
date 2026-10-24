@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 const { createClient } = require("@libsql/client");
@@ -54,6 +55,9 @@ const COLUMN_MIGRATIONS = [
   ["users", "profile_color", "TEXT NOT NULL DEFAULT 'blue'"],
   ["users", "birthday", "TEXT"],
   ["conversations", "origin", "TEXT NOT NULL DEFAULT 'chat'"],
+  // Presencia (antes en memoria): la marcan los webhooks de Pusher y el latido de la app visible
+  ["users", "online", "INTEGER NOT NULL DEFAULT 0"],
+  ["users", "active_until", "INTEGER NOT NULL DEFAULT 0"],
 ];
 
 // Índices sobre columnas añadidas por migración (deben crearse después de ellas)
@@ -98,7 +102,10 @@ const db = {
     return results.map((r) => ({ changes: r.rowsAffected, lastInsertRowid: Number(r.lastInsertRowid ?? 0) }));
   },
 
-  /** Crea las tablas si no existen y aplica las migraciones pendientes. Se llama una vez al arrancar. */
+  /**
+   * Crea las tablas si no existen y aplica las migraciones pendientes. Se llama una vez al arrancar
+   * (en Vercel, en cada instancia nueva): si la huella del esquema no cambió, no se repite.
+   */
   async init() {
     if (isLocal) {
       await client.execute("PRAGMA journal_mode = WAL");
@@ -107,8 +114,20 @@ const db = {
       await client.execute("PRAGMA busy_timeout = 5000");
     }
     await client.execute("PRAGMA foreign_keys = ON");
-    await client.executeMultiple(fs.readFileSync(path.join(__dirname, "../db/schema.sql"), "utf8"));
+    const schema = fs.readFileSync(path.join(__dirname, "../db/schema.sql"), "utf8");
+    const version = crypto.createHash("sha1").update(schema + JSON.stringify([COLUMN_MIGRATIONS, POST_MIGRATION])).digest("hex");
+    const current = await client
+      .execute("SELECT value FROM app_settings WHERE key = 'schema_version'")
+      .then((r) => r.rows[0]?.[0])
+      .catch(() => null); // base de datos nueva: aún no existe la tabla
+    if (current === version) return;
+
+    await client.executeMultiple(schema);
     await migrate();
+    await client.execute({
+      sql: "INSERT INTO app_settings (key, value) VALUES ('schema_version', ?) ON CONFLICT (key) DO UPDATE SET value = excluded.value",
+      args: [version],
+    });
   },
 
   close() {

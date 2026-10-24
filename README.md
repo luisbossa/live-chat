@@ -1,6 +1,6 @@
 # Yabla Chat
 
-App de **chat y videollamadas en tiempo real** hecha con Node.js, Express, EJS, SQLite y Socket.IO, con arquitectura MVC. Las llamadas de voz y video usan **WebRTC**: el audio y el video viajan directamente entre los navegadores y el servidor solo hace de intermediario para conectarlos.
+App de **chat y videollamadas en tiempo real** hecha con Node.js, Express, EJS, SQLite (Turso) y Pusher, con arquitectura MVC. Las llamadas de voz y video usan **WebRTC**: el audio y el video viajan directamente entre los navegadores y el servidor solo hace de intermediario para conectarlos.
 
 ## Funcionalidades
 
@@ -17,7 +17,7 @@ App de **chat y videollamadas en tiempo real** hecha con Node.js, Express, EJS, 
 **Mensajería en tiempo real**
 - Chats individuales y grupos (crear, añadir participantes, salir, administradores)
 - Texto con enlaces, **más de 1.100 emojis por categorías** (con buscador y recientes, como WhatsApp), stickers, fotos, documentos y **notas de voz**
-- **Grabar video y enviarlo** (como WhatsApp): cámara a pantalla completa, cambiar entre cámara frontal y trasera, hasta **1 minuto** con anillo de progreso, vista previa con comentario y «Repetir». También se envían videos de la galería. Llegan como burbuja con miniatura y duración y se reproducen a pantalla completa. Límite: 16 MB por video (5 MB para fotos y documentos); se graban en MP4 (H.264) cuando el navegador lo permite, para que se vean también en iPhone
+- **Grabar video y enviarlo** (como WhatsApp): cámara a pantalla completa, cambiar entre cámara frontal y trasera, hasta **1 minuto** con anillo de progreso, vista previa con comentario y «Repetir». También se envían videos de la galería. Llegan como burbuja con miniatura y duración y se reproducen a pantalla completa. Límite: 16 MB por video (4 MB para fotos y documentos); se graban en MP4 (H.264) cuando el navegador lo permite, para que se vean también en iPhone
 - **61 stickers en 4 packs**: «Pura vida» (perezoso, tucán, rana de ojos rojos, cafecito, gallo pinto, volcán…), «Frases ticas» (¡Tuanis!, ¡Qué chiva!, Mae…, ¡Upe!), «Amor» y los clásicos; los nuevos son SVG animados ligeros, con pestaña de recientes
 - **Vista previa antes de enviar**: varios archivos a la vez (máx. 10), quitar o añadir, comentario por archivo y previsualización de PDF; las fotos pueden enviarse como documento (calidad original)
 - Confirmaciones de lectura con tres estados: enviando, enviado ✓, entregado ✓✓ y leído (✓✓ en color)
@@ -88,7 +88,7 @@ App de **chat y videollamadas en tiempo real** hecha con Node.js, Express, EJS, 
 | **iPhone / iPad** | Requiere **iOS 16.4 o posterior** y **agregar Yabla a la pantalla de inicio** (Safari → Compartir → «Agregar a inicio»). Desde Safari sin instalar, iOS no permite notificaciones web. La app muestra estas instrucciones |
 | **Escritorio** (Chrome, Edge, Firefox, Safari) | Funciona con el navegador abierto (aunque la pestaña esté cerrada en Chrome/Edge si el navegador sigue en segundo plano) |
 
-- Necesitan **HTTPS** (en `localhost` también funcionan para desarrollar). En Render ya es HTTPS. Para probar en tu teléfono durante el desarrollo usa un túnel con HTTPS, por ejemplo `npx localtunnel --port 3000` o Cloudflare Tunnel.
+- Necesitan **HTTPS** (en `localhost` también funcionan para desarrollar). En Vercel ya es HTTPS. Para probar en tu teléfono durante el desarrollo usa un túnel con HTTPS, por ejemplo `npx localtunnel --port 3000` o Cloudflare Tunnel.
 - Las ventanas de incógnito de Chrome no admiten notificaciones push.
 - Una página web no puede elegir su propio tono para las notificaciones push: suena el del sistema. El sonido propio de Yabla se oye cuando la app está abierta.
 
@@ -135,7 +135,9 @@ Para probar el tiempo real y las llamadas, abre dos navegadores (o una ventana n
 
 ```
 .
-├── server.js                  # Punto de entrada: HTTP + Socket.IO
+├── api/index.js               # Entrada en Vercel (función serverless con Express)
+├── server.js                  # Servidor para desarrollo local (+ tareas periódicas cada 10 s)
+├── vercel.json                # Rutas, cabeceras, archivos de la función y cron diario
 ├── src/
 │   ├── app.js                 # Configuración de Express (vistas, estáticos, sesión, rutas)
 │   ├── config/                # Variables de entorno, conexión SQLite y sesiones
@@ -144,8 +146,7 @@ Para probar el tiempo real y las llamadas, abre dos navegadores (o una ventana n
 │   ├── controllers/           # Lógica de cada ruta (auth, páginas, chats, mensajes, estados, billetera)
 │   ├── routes/                # web.js (páginas) y api.js (REST)
 │   ├── middleware/            # Autenticación, subida de archivos y errores
-│   ├── sockets/               # Tiempo real: chat (escribiendo, leído) y señalización de llamadas
-│   ├── services/              # Presencia en línea, emisión de eventos y notificaciones push (push.js)
+│   ├── services/              # Tiempo real (Pusher), presencia, llamadas, tareas periódicas (cron.js) y push
 │   └── utils/                 # Validaciones y helpers de vistas
 ├── views/
 │   ├── layouts/main.ejs       # Layout común
@@ -166,9 +167,9 @@ Para probar el tiempo real y las llamadas, abre dos navegadores (o una ventana n
 
 | Módulo | Responsabilidad |
 |---|---|
-| `main.js` | Arranque, eventos del socket, clics globales y teclado |
+| `main.js` | Arranque, eventos en tiempo real, clics globales y teclado |
 | `state.js` | Estado compartido y bus de eventos |
-| `api.js` / `socket.js` | Comunicación con el servidor |
+| `api.js` / `socket.js` | Comunicación con el servidor (`socket.js`: Pusher con la interfaz `on`/`emit`) |
 | `sidebar.js` | Lista de chats, pestañas e insignias |
 | `conversation.js` | Mensajes, envío, notas de voz, respuestas, reacciones y lectura |
 | `info.js` | Panel de información del chat o grupo |
@@ -225,80 +226,94 @@ Todas las rutas `/api/*` (salvo la de disponibilidad) requieren sesión y respon
 | `POST /api/dating/report` | Reportar (`userId`, `reason`, `details`): bloquea y deshace el match |
 | `POST /api/conversations/:id/this-or-that` · `POST /api/conversations/:id/date` · `POST /api/messages/:id/answer` | «Esto o aquello», propuesta de cita y responderlos |
 
-## Eventos en tiempo real (Socket.IO)
+## Tiempo real (Pusher Channels)
 
-| Del servidor | Del cliente |
+El servidor envía los eventos por [Pusher Channels](https://pusher.com/channels) al canal privado de cada usuario (`private-user-<id>`). Lo que avisa el navegador va por HTTP, porque en Vercel el servidor no mantiene conexiones abiertas. [`socket.js`](public/assets/js/chat/socket.js) conserva la interfaz `socket.on` / `socket.emit` para el resto del cliente.
+
+| Del servidor (Pusher) | Del cliente (HTTP) |
 |---|---|
-| `message:new`, `message:update` | `typing`, `app:visibility` (Yabla a la vista o en segundo plano) |
-| `receipt` (entregado / leído), `typing`, `presence` | `message:delivered`, `conversation:read` |
-| `conversation:new`, `conversation:update`, `conversation:removed` | `call:invite`, `call:accept`, `call:reject` |
-| `story:new`, `story:viewed`, `story:deleted`, `wallet:update`, `user:update`, `star:update`, `message:expired`, `message:hidden` | `call:signal` (SDP e ICE), `call:end` |
-| `call:incoming`, `call:accepted`, `call:signal`, `call:ended` | |
-| `dating:match`, `dating:like`, `dating:unmatch` | |
+| `message:new`, `message:update` | `POST /api/realtime/typing` (escribiendo) |
+| `receipt` (entregado / leído), `typing`, `presence` | `POST /api/realtime/receipt` (`kind`: `delivered` o `read`) |
+| `conversation:new`, `conversation:update`, `conversation:removed` | `POST /api/realtime/visibility` (latido cada 30 s con la app a la vista) |
+| `story:new`, `story:viewed`, `story:deleted`, `wallet:update`, `user:update`, `star:update`, `message:expired`, `message:hidden` | `POST /api/realtime/hello` (al conectarse: en línea y "entregado") |
+| `call:incoming`, `call:accepted`, `call:ended` | `POST /api/calls` · `…/:id/accept` · `…/reject` · `…/end` · `…/timeout` |
+| `dating:match`, `dating:like`, `dating:unmatch`, `session:revoked` | |
+| `sync`: el evento no cabía en Pusher (10 KB) y el cliente recarga su estado | |
 
-## Despliegue gratis (Render + Turso)
+- **Señalización de llamadas:** la oferta, la respuesta y los candidatos ICE van directos entre los dos navegadores como eventos de cliente (`client-signal`) en el canal `presence-call-<id>`.
+- **Presencia:** los webhooks de Pusher (`POST /api/realtime/webhook`) marcan a cada usuario como en línea o desconectado, y avisan si alguien cierra la pestaña durante una llamada.
 
-La app necesita un **servidor Node siempre encendido** (Socket.IO mantiene conexiones abiertas), así que **no funciona en Vercel, Netlify ni otras plataformas serverless**. Esta combinación es **100 % gratuita**:
+## Despliegue (Vercel + Turso + Pusher)
 
-| Pieza | Servicio gratuito | Qué guarda |
+| Pieza | Servicio | Plan gratuito |
 |---|---|---|
-| Servidor (Express + Socket.IO) | [Render](https://render.com) · plan Free | La app |
-| Base de datos | [Turso](https://turso.tech) · plan Free | Usuarios, mensajes, sesiones **y archivos subidos** |
+| App (Express en una función serverless) | [Vercel](https://vercel.com) | Hobby |
+| Base de datos | [Turso](https://turso.tech) | Free |
+| Tiempo real | [Pusher Channels](https://pusher.com/channels) | Sandbox: 200.000 mensajes al día y 100 conexiones simultáneas |
+| Archivos subidos | [Vercel Blob](https://vercel.com/docs/vercel-blob) | Incluido en Hobby |
+| Tareas cada minuto | [cron-job.org](https://cron-job.org) | Gratis |
 
-En local, sin variables de Turso, la app usa un archivo SQLite en `data/`. El código es el mismo en los dos casos.
+En local, sin las variables de Turso, la app usa un archivo SQLite en `data/` y guarda los archivos en la base de datos. El código es el mismo en los dos casos.
 
-### 1. Crear la base de datos en Turso
+### 1. Base de datos en Turso
 
-1. Crea una cuenta gratis en [turso.tech](https://turso.tech) (puedes entrar con GitHub).
-2. **Create Database**: ponle un nombre (p. ej. `yabla`) y elige la región **más cercana a Render Oregon** (por ejemplo *AWS US West (Oregon)*) para que vaya rápido.
-3. En la base de datos copia la **URL**, que empieza por `libsql://…turso.io`.
-4. **Create Token** (sin caducidad, permiso de lectura y escritura) y copia el token.
+Si ya tienes la base de datos en Turso, **se reutiliza tal cual**: la app añade sola las tablas y columnas nuevas al arrancar. Si es nueva:
 
-No hace falta crear tablas: la app las crea sola al arrancar.
+1. Crea una base de datos en [turso.tech](https://turso.tech), en la región más cercana a tus funciones de Vercel (por defecto *Washington, D.C.*, `iad1`: elige *AWS US East (Virginia)*).
+2. Copia la **URL** (`libsql://…turso.io`) y crea un **token** de lectura y escritura sin caducidad.
 
-### 2. Desplegar en Render
+### 2. Pusher Channels
 
-1. Sube el repositorio a GitHub.
-2. En [Render](https://dashboard.render.com): **New → Blueprint** y elige el repositorio. Render lee [`render.yaml`](render.yaml).
-3. Te pedirá dos valores: pega la URL en `TURSO_DATABASE_URL` y el token en `TURSO_AUTH_TOKEN`.
-4. Pulsa **Apply**. En unos minutos tendrás la app en `https://yabla-chat.onrender.com` (o el nombre que elijas). Con `SEED_DEMO=true` ya podrás entrar con el usuario `andres` y la contraseña `demo1234`.
+1. Crea una cuenta en [pusher.com](https://pusher.com) → **Channels** → **Create app** (elige el cluster más cercano, por ejemplo `us2`).
+2. En **App Keys** copia `app_id`, `key`, `secret` y `cluster`.
+3. En **App Settings** activa **Enable client events** (lo usan las llamadas).
+4. Cuando ya tengas la URL de Vercel, en **Webhooks** añade `https://tu-app.vercel.app/api/realtime/webhook` con los eventos **Channel existence** y **Presence**.
 
-`SESSION_SECRET` lo genera Render automáticamente; no tienes que crearlo.
+### 3. Desplegar en Vercel
 
-### 3. (Opcional) Evitar que se duerma
+1. Sube el repositorio a GitHub e impórtalo en [Vercel](https://vercel.com/new). No hace falta elegir framework: [`vercel.json`](vercel.json) ya lo configura todo.
+2. En **Storage** crea un **Blob store** y conéctalo al proyecto. Vercel añade `BLOB_READ_WRITE_TOKEN` automáticamente.
+3. En **Settings → Environment Variables** añade las variables de la tabla de abajo y vuelve a desplegar.
 
-En el plan Free, Render **apaga la app tras 15 minutos sin visitas** y la primera visita después tarda ~1 minuto en despertar. Para evitarlo, crea un monitor gratuito en [UptimeRobot](https://uptimerobot.com) o [cron-job.org](https://cron-job.org) que visite `https://tu-app.onrender.com/healthz` cada 10 minutos. Render Free incluye 750 horas al mes, suficientes para un servicio encendido todo el mes.
+### 4. Tareas periódicas
+
+Los mensajes programados, los mensajes temporales, los estados caducados, las sesiones viejas y las llamadas que se quedaron sonando se procesan en `GET /api/cron/tick`. En el plan Hobby, Vercel Cron solo se ejecuta **una vez al día** (está en `vercel.json` como respaldo), así que:
+
+1. En [cron-job.org](https://cron-job.org) crea un trabajo **cada 1 minuto** con la URL `https://tu-app.vercel.app/api/cron/tick`.
+2. En **Advanced → Headers** añade `Authorization: Bearer <tu CRON_SECRET>`.
+
+Los mensajes programados salen con hasta un minuto de retraso. Con Vercel Pro puedes cambiar el `schedule` de `vercel.json` a `* * * * *` y prescindir de cron-job.org.
 
 ### Variables de entorno
 
 Todas están documentadas en [`.env.example`](.env.example). El archivo `.env` es solo para desarrollo local y no se sube a git.
 
-| Variable | En Render | Descripción |
+| Variable | En Vercel | Descripción |
 |---|---|---|
-| `TURSO_DATABASE_URL` | **la pegas tú** | URL `libsql://…` de Turso (vacía = SQLite local) |
-| `TURSO_AUTH_TOKEN` | **la pegas tú** | Token de Turso |
-| `SESSION_SECRET` | automática | Firma de la cookie de sesión (mín. 32 caracteres) |
+| `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` | **obligatorias** | Base de datos de Turso (vacías = SQLite local) |
+| `SESSION_SECRET` | **obligatoria** | Firma de la cookie de sesión (mín. 32 caracteres). Si ya la tenías en Render, usa la misma para no cerrar las sesiones abiertas |
 | `NODE_ENV` | `production` | Cookies seguras y validaciones estrictas |
+| `PUSHER_APP_ID` / `PUSHER_KEY` / `PUSHER_SECRET` / `PUSHER_CLUSTER` | **obligatorias** | Tiempo real |
+| `BLOB_READ_WRITE_TOKEN` | automática | La añade Vercel al conectar el Blob store |
+| `CRON_SECRET` | **obligatoria** | Clave de `/api/cron/tick` (Vercel Cron la envía sola) |
 | `SEED_DEMO` | `true` / `false` | Crea los usuarios demo si la base está vacía |
-| `BASE_URL` | opcional | URL pública; Render la detecta sola |
+| `BASE_URL` | opcional | URL pública; Vercel la detecta sola (defínela si usas un dominio propio) |
 | `ICE_SERVERS` | opcional | Servidores STUN/TURN para WebRTC |
-| `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` | opcional | Claves de las notificaciones push. Si no las defines, se generan solas la primera vez y se guardan en la base de datos. Genéralas con `npx web-push generate-vapid-keys` |
+| `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` | opcional | Claves de las notificaciones push. Si no las defines, se generan solas la primera vez y se guardan en la base de datos |
 | `VAPID_SUBJECT` | opcional | Contacto del emisor (`mailto:tu@correo.com` o una URL https) |
-| `DATABASE_PATH` | no usar | Archivo SQLite para desarrollo local |
-| `PORT` | no definir | Lo asigna Render |
 
-### Límites del plan gratuito
+### Límites
 
-- **Arranque en frío:** si la app se durmió, la primera carga tarda ~1 minuto (ver paso 3).
-- **Archivos de hasta 5 MB:** fotos, documentos y notas de voz se guardan dentro de la base de datos de Turso.
-- **Una sola instancia:** la presencia y las llamadas activas viven en memoria; para escalar a varias haría falta un adaptador de Socket.IO (por ejemplo, Redis).
+- **Archivos:** fotos y documentos de hasta 4 MB (Vercel no acepta peticiones de más de 4,5 MB). Los videos del chat, de hasta 16 MB, se suben directamente a Vercel Blob desde el navegador. Los archivos antiguos guardados en Turso se siguen viendo en `/uploads/…`.
+- **Pusher Sandbox:** 100 conexiones simultáneas (cada pestaña abierta cuenta como una) y 200.000 mensajes al día.
+- **Arranque en frío:** la primera petición a una instancia nueva tarda un poco más, porque prepara la conexión con Turso. Aun así es mucho menos que despertar un servidor dormido.
 - Pon `SEED_DEMO=false` antes de abrir la app al público.
 - Para llamadas entre redes distintas (datos móviles, NAT estrictos) añade un servidor **TURN** en `ICE_SERVERS`.
 - **Notificaciones push:** si cambian las claves VAPID (por ejemplo, al borrar la base de datos sin tenerlas en el entorno), cada dispositivo se vuelve a suscribir solo la próxima vez que abra Yabla.
 
 ## Tecnologías
 
-- **Backend:** Node.js, Express, EJS + express-ejs-layouts, SQLite / Turso (@libsql/client), express-session, Socket.IO, multer, bcryptjs, qrcode, web-push
+- **Backend:** Node.js, Express, EJS + express-ejs-layouts, SQLite / Turso (@libsql/client), express-session, Pusher Channels, Vercel Blob, multer, bcryptjs, qrcode, web-push
 - **Frontend:** HTML, CSS y JavaScript moderno (módulos ES) sin frameworks, WebRTC, MediaRecorder, Service Worker, Push API, Web Audio
 - Tipografía [Inter](https://fonts.google.com/specimen/Inter) e iconos al estilo de [Lucide](https://lucide.dev/)
 - Landing creada con [Framer](https://www.framer.com/)

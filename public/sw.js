@@ -1,5 +1,5 @@
 // Service worker de Yabla: notificaciones push (también con la app cerrada), número en el
-// icono de la app y página sin conexión. Las llamadas a /api y Socket.IO nunca se guardan en caché.
+// icono de la app y página sin conexión. Las llamadas a /api nunca se guardan en caché.
 const VERSION = "yabla-v1";
 const STATIC_CACHE = `${VERSION}-static`;
 const RUNTIME_CACHE = `${VERSION}-runtime`;
@@ -27,7 +27,7 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET") return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
-  if (url.pathname.startsWith("/api/") || url.pathname.startsWith("/socket.io/") || url.pathname.startsWith("/uploads/")) return;
+  if (url.pathname.startsWith("/api/") || url.pathname.startsWith("/uploads/")) return;
 
   if (request.mode === "navigate") {
     event.respondWith(fetch(request).catch(() => caches.match(OFFLINE_URL)));

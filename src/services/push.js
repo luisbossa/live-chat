@@ -133,10 +133,12 @@ async function notifyMessage(message) {
   if (!conversation) return;
 
   const mentions = new Set(message.meta?.mentions || []);
-  const candidates = members.filter((m) => m.user_id !== message.senderId && (!m.muted || mentions.has(m.user_id)) && !presence.isActive(m.user_id));
-  if (!candidates.length) return;
+  const listeners = members.filter((m) => m.user_id !== message.senderId && (!m.muted || mentions.has(m.user_id)));
+  if (!listeners.length) return;
 
-  const users = await User.findMany([...candidates.map((m) => m.user_id), message.senderId]);
+  const users = await User.findMany([...listeners.map((m) => m.user_id), message.senderId]);
+  const candidates = listeners.filter((m) => !presence.isActive(users.get(m.user_id)));
+  if (!candidates.length) return;
   const sender = users.get(message.senderId);
   const isGroup = conversation.type === "group";
 
@@ -165,11 +167,11 @@ async function notifyMessage(message) {
   );
 }
 
-/** Llamada entrante para quien tiene Yabla en segundo plano (el socket sigue conectado). */
+/** Llamada entrante para quien tiene Yabla en segundo plano o cerrada. */
 async function notifyCall({ callId, conversationId, type, caller, calleeId }) {
-  if (!keys || presence.isActive(calleeId)) return;
+  if (!keys) return;
   const callee = await User.findById(calleeId);
-  if (!callee || callee.presence_status === "dnd") return;
+  if (!callee || presence.isActive(callee) || callee.presence_status === "dnd") return;
   await sendToUsers(
     [calleeId],
     (sub) => ({

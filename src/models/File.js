@@ -8,10 +8,15 @@ const SQL = {
 };
 
 const File = {
-  /** Guarda el archivo (Buffer) y devuelve su id público, p. ej. "1729…-a1b2c3.jpg". */
-  async save({ buffer, mimetype, originalname, size }) {
+  /** Nombre único con la extensión original, p. ej. "1729…-a1b2c3.jpg". */
+  newId(originalname) {
     const ext = path.extname(originalname || "").toLowerCase().replace(/[^.a-z0-9]/g, "").slice(0, 10);
-    const id = `${Date.now()}-${crypto.randomBytes(8).toString("hex")}${ext}`;
+    return `${Date.now()}-${crypto.randomBytes(8).toString("hex")}${ext}`;
+  },
+
+  /** Guarda el archivo (Buffer) en la base de datos y devuelve su id público. */
+  async save({ buffer, mimetype, originalname, size }) {
+    const id = File.newId(originalname);
     await db.run(SQL.insert, [id, mimetype, (originalname || "").slice(0, 120), size, buffer, Date.now()]);
     return id;
   },

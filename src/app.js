@@ -41,7 +41,8 @@ app.get("/healthz", (req, res, next) => {
     .catch(next);
 });
 
-// Archivos estáticos y subidas de usuarios (guardadas en la base de datos).
+// Archivos estáticos y subidas antiguas guardadas en la base de datos.
+// En Vercel, public/ lo sirve directamente su CDN (vercel.json) y esto solo actúa en local.
 // Van antes de la sesión para no consultar la tabla de sesiones en cada imagen.
 app.use(
   express.static(path.join(config.root, "public"), {
@@ -57,7 +58,8 @@ app.use(
 );
 app.get("/uploads/:id", h(pages.upload));
 
-app.use(express.json({ limit: "100kb" }));
+// rawBody: los webhooks de Pusher se verifican con la firma del cuerpo original
+app.use(express.json({ limit: "100kb", verify: (req, res, buf) => (req.rawBody = buf) }));
 app.use(express.urlencoded({ extended: false, limit: "100kb" }));
 app.use(sessionMiddleware);
 app.use(h(loadUser));

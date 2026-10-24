@@ -107,7 +107,7 @@ exports.changePassword = async (req, res) => {
   let closed = 0;
   if (validate.toBool(req.body.logoutOthers)) {
     closed = await User.destroyOtherSessions(req.user.id, req.sessionID);
-    await realtime.disconnectOtherSessions(req.user.id, req.sessionID);
+    await realtime.disconnectOtherSessions(req.user.id, req.session.tag);
   }
   res.json({ ok: true, closedSessions: closed });
 };

@@ -42,14 +42,4 @@ async function purgeExpired() {
   }
 }
 
-function start() {
-  const tick = (fn, label) => () => fn().catch((err) => console.error(`[${label}]`, err));
-  const scheduled = tick(sendDue, "programados");
-  const expired = tick(purgeExpired, "temporales");
-  scheduled();
-  expired();
-  setInterval(scheduled, 10 * 1000).unref();
-  setInterval(expired, 30 * 1000).unref();
-}
-
-module.exports = { start, deliver, sendDue, purgeExpired };
+module.exports = { deliver, sendDue, purgeExpired };

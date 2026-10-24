@@ -7,6 +7,10 @@ const stories = require("../controllers/storyController");
 const wallet = require("../controllers/walletController");
 const dating = require("../controllers/datingController");
 const push = require("../controllers/pushController");
+const live = require("../controllers/realtimeController");
+const calls = require("../controllers/callController");
+const blob = require("../controllers/blobController");
+const cron = require("../controllers/cronController");
 const upload = require("../middleware/upload");
 const h = require("../utils/asyncHandler");
 const { requireApiAuth } = require("../middleware/auth");
@@ -16,7 +20,28 @@ const router = express.Router();
 // Pública: disponibilidad del nombre de usuario durante el registro
 router.get("/username-available", h(auth.checkUsername));
 
+// Sin sesión: los llaman Pusher (firma propia) y el cron externo (CRON_SECRET)
+router.post("/realtime/webhook", h(live.webhook));
+router.get("/cron/tick", h(cron.tick));
+
 router.use(requireApiAuth);
+
+// Tiempo real (Pusher): permisos de canales y avisos que antes iban por Socket.IO
+router.post("/realtime/auth", h(live.auth));
+router.post("/realtime/hello", h(live.hello));
+router.post("/realtime/typing", h(live.typing));
+router.post("/realtime/receipt", h(live.receipt));
+router.post("/realtime/visibility", h(live.visibility));
+
+// Llamadas (la señalización WebRTC va directa entre navegadores por Pusher)
+router.post("/calls", h(calls.invite));
+router.post("/calls/:id/accept", h(calls.accept));
+router.post("/calls/:id/reject", h(calls.reject));
+router.post("/calls/:id/end", h(calls.end));
+router.post("/calls/:id/timeout", h(calls.timeout));
+
+// Subida directa de adjuntos a Vercel Blob
+router.post("/blob/upload", h(blob.token));
 
 // Usuario actual
 router.get("/bootstrap", h(users.bootstrap));

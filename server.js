@@ -1,43 +1,20 @@
+// Servidor para desarrollo local (npm run dev). En Vercel la entrada es api/index.js.
 const http = require("http");
 const config = require("./src/config");
 const db = require("./src/config/database");
 const app = require("./src/app");
-const createSocketServer = require("./src/sockets");
-const Story = require("./src/models/Story");
+const bootstrap = require("./src/bootstrap");
+const cron = require("./src/services/cron");
 
 async function start() {
-  if (config.isProduction && db.isLocal) {
-    console.warn(
-      "⚠️  Producción sin TURSO_DATABASE_URL: se usa un archivo SQLite local. " +
-        "En Render Free el disco se borra en cada reinicio y se perderán los datos."
-    );
-  }
-
-  // Crea las tablas si no existen (SQLite local o Turso)
-  await db.init();
-
-  // Primer despliegue: datos de demostración si la base está vacía (SEED_DEMO=true)
-  if (config.seedDemo) {
-    const { seed } = require("./src/db/seed");
-    if (await seed()) console.log("Datos de demostración creados (contraseña: demo1234).");
-  }
-
-  // Claves para las notificaciones push (del entorno o generadas y guardadas en la base de datos)
-  await require("./src/services/push").init();
-
-  // Cuenta oficial que da la bienvenida a los usuarios nuevos
-  await require("./src/services/welcome").ensureOfficialAccount();
+  await bootstrap();
 
   const server = http.createServer(app);
-  const io = createSocketServer(server);
 
-  // Los estados caducan a las 24 h
-  const purgeStories = () => Story.purgeExpired().catch((err) => console.error("[estados]", err));
-  purgeStories();
-  setInterval(purgeStories, 10 * 60 * 1000).unref();
-
-  // Mensajes programados y temporales
-  require("./src/services/scheduler").start();
+  // Mensajes programados, temporales, estados caducados, sesiones y llamadas sin respuesta.
+  // En Vercel lo hace un cron externo llamando a /api/cron/tick.
+  cron.tick();
+  setInterval(cron.tick, 10 * 1000).unref();
 
   // Puerto ocupado (otra copia del servidor ya está encendida): mensaje claro en lugar de un error largo
   server.on("error", (err) => {
@@ -55,11 +32,9 @@ async function start() {
     console.log(`Yabla escuchando en ${config.isProduction ? config.baseUrl : `http://localhost:${config.port}`} · base de datos: ${where}`);
   });
 
-  // Cierre ordenado: la plataforma envía SIGTERM al redesplegar
   function shutdown(signal) {
     console.log(`${signal} recibido, cerrando…`);
-    // io.close() también cierra el servidor HTTP
-    io.close(() => {
+    server.close(() => {
       db.close();
       process.exit(0);
     });

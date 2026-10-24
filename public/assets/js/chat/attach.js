@@ -4,7 +4,7 @@ import { openModal, closeModal } from "./ui.js";
 import { sendAttachment } from "./conversation.js";
 
 const MAX_FILES = 10;
-const MAX_SIZE = 5 * 1024 * 1024;
+const MAX_SIZE = 4 * 1024 * 1024;
 const VIDEO_MAX_SIZE = 16 * 1024 * 1024;
 
 let items = []; // { id, file, kind, url, caption, tooBig }
@@ -130,7 +130,7 @@ async function sendAll() {
     await sendAttachment(item.file, item.caption.trim(), item.kind);
   }
   batch.forEach((i) => i.url && URL.revokeObjectURL(i.url));
-  if (skipped) toast(`${skipped} archivo${skipped === 1 ? " no se envió" : "s no se enviaron"} por superar el límite (5 MB; videos 16 MB).`, { tone: "error", icon: "file" });
+  if (skipped) toast(`${skipped} archivo${skipped === 1 ? " no se envió" : "s no se enviaron"} por superar el límite (4 MB; videos 16 MB).`, { tone: "error", icon: "file" });
 }
 
 export function initAttach() {

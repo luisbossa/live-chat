@@ -157,7 +157,7 @@ const User = {
       avatar: user.avatar || DEFAULT_AVATAR,
       bio: user.bio,
       phone: user.phone,
-      online: presence.isOnline(user.id),
+      online: presence.isOnline(user),
       lastSeen: user.show_last_seen ? user.last_seen : null,
       official: user.username === OFFICIAL_USERNAME,
       status: user.presence_status || "available",

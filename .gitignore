@@ -16,3 +16,6 @@ desktop.ini
 # Datos locales
 .env
 data/
+
+# Vercel
+.vercel/

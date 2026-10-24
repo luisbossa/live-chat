@@ -1,8 +1,10 @@
+const crypto = require("crypto");
 const config = require("../config");
 const User = require("../models/User");
 const Conversation = require("../models/Conversation");
 const File = require("../models/File");
 const realtime = require("../services/realtime");
+const live = require("./realtimeController");
 
 exports.landing = (req, res) => {
   if (req.user) return res.redirect("/chat");
@@ -10,11 +12,21 @@ exports.landing = (req, res) => {
 };
 
 exports.chat = (req, res) => {
+  // Identifica esta sesión en los avisos en vivo (p. ej. "se cerraron las otras sesiones")
+  if (!req.session.tag) req.session.tag = crypto.randomBytes(12).toString("hex");
   res.render("pages/chat", {
     title: "Chats",
     styles: ["dashboard"],
     bodyClass: "is-app",
-    clientConfig: { iceServers: config.iceServers, userId: req.user.id },
+    clientConfig: {
+      iceServers: config.iceServers,
+      userId: req.user.id,
+      sessionTag: req.session.tag,
+      pusher: live.clientConfig(),
+      blobUploads: Boolean(config.blobToken),
+      uploadLimit: config.uploadLimit,
+      videoUploadLimit: config.videoUploadLimit,
+    },
   });
 };
 

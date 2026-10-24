@@ -40,10 +40,10 @@ let atBottom = true; // ¿estaba abajo del todo? (para mantenerlo al crecer una 
 // Separador "N mensajes sin leer": se calcula al abrir el chat
 let unreadMarker = null; // { conversationId, messageId, count }
 const FORWARDABLE = ["text", "image", "video", "file", "audio", "sticker"];
-// Videos: hasta 1 minuto y 16 MB (el resto de archivos, 5 MB)
+// Videos: hasta 1 minuto y 16 MB (el resto de archivos, 4 MB)
 export const VIDEO_MAX_SECONDS = 60;
 export const VIDEO_MAX_BYTES = 16 * 1024 * 1024;
-const FILE_MAX_BYTES = 5 * 1024 * 1024;
+const FILE_MAX_BYTES = 4 * 1024 * 1024;
 
 // ==========================================================================
 // Render de mensajes
@@ -738,7 +738,7 @@ export async function sendAttachment(file, caption = "", kind = "image") {
     return sendVideo(file, { ...info, caption });
   }
   if (file.size > FILE_MAX_BYTES) {
-    toast("El archivo supera el límite de 5 MB.", { tone: "error", icon: "file" });
+    toast(`El archivo supera el límite de ${FILE_MAX_BYTES / 1024 / 1024} MB.`, { tone: "error", icon: "file" });
     return;
   }
   const isImage = file.type.startsWith("image/") && kind !== "file";

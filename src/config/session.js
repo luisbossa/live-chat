@@ -12,10 +12,9 @@ const SQL = {
 
 /** Guarda las sesiones de express-session en la tabla `sessions` (SQLite local o Turso). */
 class DatabaseStore extends session.Store {
-  constructor() {
-    super();
-    // Limpieza de sesiones caducadas cada hora
-    setInterval(() => db.run(SQL.purge, [Date.now()]).catch(() => {}), 60 * 60 * 1000).unref();
+  /** Borra las sesiones caducadas (lo llama la tarea periódica, ver services/cron.js). */
+  static purge() {
+    return db.run(SQL.purge, [Date.now()]);
   }
 
   expiresAt(sess) {
@@ -41,7 +40,7 @@ class DatabaseStore extends session.Store {
   }
 }
 
-module.exports = session({
+const middleware = session({
   name: "yabla.sid",
   secret: config.sessionSecret,
   store: new DatabaseStore(),
@@ -55,3 +54,7 @@ module.exports = session({
     maxAge: config.sessionMaxAge,
   },
 });
+
+middleware.purge = DatabaseStore.purge;
+
+module.exports = middleware;

@@ -7,6 +7,7 @@ const Message = require("../models/Message");
 const Story = require("../models/Story");
 const Dating = require("../models/Dating");
 const upload = require("../middleware/upload");
+const blob = require("./blobController");
 const realtime = require("../services/realtime");
 const validate = require("../utils/validate");
 const { httpError } = require("../middleware/errorHandler");
@@ -110,17 +111,18 @@ exports.send = async (req, res) => {
   const text = validate.str(req.body.text, MAX_TEXT);
   const replyToId = validate.toId(req.body.replyToId);
   const sticker = validate.str(req.body.sticker, 200);
-  const file = req.file;
+  // Con Vercel Blob el navegador ya subió el archivo y envía su URL (mediaUrl); si no, llega por multipart
+  const file = req.file || (req.body.mediaUrl ? await blob.fileFromUrl(req.body.mediaUrl, req.body.fileName) : null);
 
   const data = { conversationId, senderId: req.user.id, type: "text", body: text || null, meta: null, replyToId: null };
 
   if (file) {
     const isVideo = req.body.kind !== "file" && (file.mimetype.startsWith("video/") || req.body.kind === "video");
-    // Solo los videos pueden pasar de 5 MB (llegan hasta 16 MB)
+    // Solo los videos pueden pasar de 4 MB (llegan hasta 16 MB)
     if (!isVideo && file.size > config.uploadLimit) {
       throw httpError(413, `El archivo supera el límite de ${config.uploadLimit / 1024 / 1024} MB.`);
     }
-    data.mediaUrl = await upload.save(file);
+    data.mediaUrl = file.url || (await upload.save(file));
     // kind=file: enviado como documento (p. ej. una foto con su calidad original)
     if (req.body.kind === "file") data.type = "file";
     else if (isVideo) data.type = "video";

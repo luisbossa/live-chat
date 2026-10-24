@@ -1,0 +1,5 @@
+# No se suben a Vercel (la base de datos de producción está en Turso)
+node_modules/
+data/
+.env
+*.log

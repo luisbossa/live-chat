@@ -1,8 +1,9 @@
 const multer = require("multer");
+const { put } = require("@vercel/blob");
 const config = require("../config");
 const File = require("../models/File");
 
-// En memoria: el archivo se guarda después en la base de datos (no hay disco en el hosting gratuito)
+// En memoria: el archivo se guarda después en Vercel Blob o en la base de datos (no hay disco en serverless)
 const storage = multer.memoryStorage();
 const limits = { fileSize: config.uploadLimit };
 
@@ -17,7 +18,8 @@ function safeFiles(req, file, cb) {
   cb(null, true);
 }
 
-// Adjuntos del chat: hasta 16 MB para que quepan los videos; el controlador limita el resto a 5 MB
+// Adjuntos del chat: hasta 16 MB para que quepan los videos; el controlador limita el resto a 4 MB.
+// Con Vercel Blob los adjuntos no pasan por aquí: el navegador los sube directamente (ver blobController).
 const chatUpload = multer({ storage, limits: { fileSize: config.videoUploadLimit }, fileFilter: safeFiles });
 
 module.exports = {
@@ -34,8 +36,17 @@ module.exports = {
     },
   },
 
+  BLOCKED,
+
   /** Guarda el archivo subido y devuelve su URL pública (o null si no hay archivo). */
   async save(file) {
-    return file ? `/uploads/${await File.save(file)}` : null;
+    if (!file) return null;
+    if (!config.blobToken) return `/uploads/${await File.save(file)}`;
+    const blob = await put(`uploads/${File.newId(file.originalname)}`, file.buffer, {
+      access: "public",
+      contentType: file.mimetype,
+      token: config.blobToken,
+    });
+    return blob.url;
   },
 };

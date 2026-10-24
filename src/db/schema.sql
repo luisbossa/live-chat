@@ -251,3 +251,18 @@ CREATE TABLE IF NOT EXISTS app_settings (
   key   TEXT PRIMARY KEY,
   value TEXT NOT NULL
 );
+
+-- Llamadas en curso (en serverless no hay memoria compartida entre peticiones).
+-- Al terminar se guarda ended_at y queda un mensaje de tipo "call" en el chat.
+CREATE TABLE IF NOT EXISTS calls (
+  id              TEXT    PRIMARY KEY,
+  conversation_id INTEGER NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
+  type            TEXT    NOT NULL CHECK (type IN ('audio', 'video')),
+  caller_id       INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  callee_id       INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  answered_at     INTEGER,
+  created_at      INTEGER NOT NULL,
+  ended_at        INTEGER
+);
+
+CREATE INDEX IF NOT EXISTS idx_calls_open ON calls(ended_at, caller_id, callee_id);

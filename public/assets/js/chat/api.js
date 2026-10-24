@@ -7,6 +7,28 @@ const form = (data) => {
   return fd;
 };
 
+// En Vercel los adjuntos del chat se suben directo a Vercel Blob (las peticiones no pueden pasar
+// de 4,5 MB y los videos llegan a 16 MB); el mensaje solo lleva la URL del archivo.
+const { blobUploads } = JSON.parse(document.getElementById("clientConfig").textContent);
+let blobClient = null;
+
+async function uploadToBlob(file) {
+  blobClient ||= import("https://esm.sh/@vercel/blob@2.8.0/client");
+  const { upload } = await blobClient;
+  const name = (file.name || "archivo").normalize("NFD").replace(/[^\w.-]+/g, "-").slice(-80);
+  const blob = await upload(`chat/${name}`, file, { access: "public", handleUploadUrl: "/api/blob/upload", contentType: file.type || undefined }).catch((err) => {
+    blobClient = null; // si falló la descarga de la librería, se reintenta la próxima vez
+    throw Object.assign(new Error("No se pudo subir el archivo. Revisa tu conexión e inténtalo de nuevo."), { cause: err });
+  });
+  return blob.url;
+}
+
+async function withUploadedFile(data) {
+  if (!blobUploads || !(data.file instanceof Blob)) return data;
+  const { file, ...rest } = data;
+  return { ...rest, mediaUrl: await uploadToBlob(file), fileName: file.name || undefined };
+}
+
 export const api = {
   bootstrap: () => req("/api/bootstrap"),
 
@@ -31,7 +53,7 @@ export const api = {
   createGroup: (formData) => req("/api/conversations", { method: "POST", body: formData }),
   messages: (id, before) => req(`/api/conversations/${id}/messages${before ? `?before=${before}` : ""}`),
   media: (id) => req(`/api/conversations/${id}/media`),
-  send: (id, data) => req(`/api/conversations/${id}/messages`, { method: "POST", body: form(data) }),
+  send: async (id, data) => req(`/api/conversations/${id}/messages`, { method: "POST", body: form(await withUploadedFile(data)) }),
   convSettings: (id, settings) => req(`/api/conversations/${id}/settings`, { method: "PATCH", body: settings }),
   clear: (id) => req(`/api/conversations/${id}/clear`, { method: "POST" }),
   addMembers: (id, userIds) => req(`/api/conversations/${id}/members`, { method: "POST", body: { userIds } }),
